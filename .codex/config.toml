@@ -1,0 +1,10 @@
+# MCP servers (project copy)
+# Tip: ln -s "$(pwd)/.codex/config.toml" ~/.codex/config.toml
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+
+[mcp_servers.codex-cli]
+command = "npx"
+args = ["-y", "codex-mcp-server"]
