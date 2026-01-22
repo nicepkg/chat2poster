@@ -19,13 +19,18 @@
     "typecheck": "pnpm -r run typecheck",
     "format": "pnpm -r run format:write",
     "format:check": "pnpm -r run format:check",
-    "clean": "rm -rf node_modules website/node_modules website/.next"
+    "clean": "rm -rf node_modules website/node_modules website/.next",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=9.0.0"
   },
   "devDependencies": {
-    "eslint": "^9.39.2"
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
+    "@commitlint/types": "^20.3.1",
+    "eslint": "^9.39.2",
+    "husky": "^9.1.7"
   }
 }

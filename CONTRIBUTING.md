@@ -58,15 +58,55 @@ pnpm lint
 
 ## Commit Convention
 
-We follow [Conventional Commits](https://www.conventionalcommits.org/):
+We follow the [Angular Commit Convention](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit). All commits and PR titles must follow this format:
 
-- `feat:` - New feature
-- `fix:` - Bug fix
-- `docs:` - Documentation changes
-- `style:` - Code style changes (formatting, etc.)
-- `refactor:` - Code refactoring
-- `test:` - Adding or updating tests
-- `chore:` - Maintenance tasks
+```
+<type>(<scope>): <subject>
+```
+
+### Types
+
+| Type | Description |
+|------|-------------|
+| `feat` | A new feature |
+| `fix` | A bug fix |
+| `docs` | Documentation only changes |
+| `style` | Changes that do not affect the meaning of the code |
+| `refactor` | A code change that neither fixes a bug nor adds a feature |
+| `perf` | A code change that improves performance |
+| `test` | Adding missing tests or correcting existing tests |
+| `build` | Changes that affect the build system or external dependencies |
+| `ci` | Changes to CI configuration files and scripts |
+| `chore` | Other changes that don't modify src or test files |
+| `revert` | Reverts a previous commit |
+
+### Scopes (optional)
+
+- `website` - Changes to the website package
+- `docs` - Documentation changes
+- `deps` - Dependency updates
+
+### Examples
+
+```bash
+feat(website): add dark mode toggle
+fix(website): resolve hydration mismatch on mobile
+docs: update README with new installation steps
+chore(deps): update dependencies
+refactor: simplify authentication logic
+```
+
+### Rules
+
+- **Subject** must not be empty
+- **Subject** must not end with a period
+- **Subject** should not start with uppercase
+- **Header** (type + scope + subject) max 100 characters
+
+### Enforcement
+
+- **Commits**: Validated by commitlint via husky pre-commit hook
+- **PR Titles**: Validated by GitHub Action on PR open/edit
 
 ## Questions?
 

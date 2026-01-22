@@ -388,6 +388,29 @@ I need some information to set up your project:
 - **Animation**: Framer Motion + React Three Fiber
 - **Language**: TypeScript 5
 - **Package Manager**: pnpm
+- **Git Hooks**: Husky + Commitlint (Angular convention)
+
+## Commit Convention
+
+All commits must follow [Angular Commit Convention](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit):
+
+```
+<type>(<scope>): <subject>
+```
+
+**Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+
+**Examples**:
+```bash
+feat(website): add dark mode toggle
+fix: resolve hydration mismatch
+docs: update installation guide
+chore(deps): update dependencies
+```
+
+**Enforcement**:
+- Commits validated by commitlint via husky hook
+- PR titles validated by GitHub Action
 
 ## Files with Placeholders
 
