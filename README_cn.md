@@ -53,6 +53,7 @@ docs/prd.md       →  你的产品需求文档
 ```
 
 AI 读取这些文件，**自动**：
+
 - 替换所有 `[project-name]`、`[repo-name]`、`[github-username]`
 - 更新 `site-info.ts`、`package.json`、`LICENSE`、workflows...
 - 生成 README、GitHub 模板、落地页内容
@@ -90,14 +91,14 @@ flowchart LR
 <details>
 <summary>📋 详细流程（点击展开）</summary>
 
-| 阶段 | AI 执行内容 |
-|------|------------|
-| **准备** | 克隆模板 → 创建 `docs/config.md` 和 `docs/prd.md` → 告诉 AI "开始配置" |
+| 阶段       | AI 执行内容                                                                                            |
+| ---------- | ------------------------------------------------------------------------------------------------------ |
+| **准备**   | 克隆模板 → 创建 `docs/config.md` 和 `docs/prd.md` → 告诉 AI "开始配置"                                 |
 | **阶段 1** | 替换 `site-info.ts` 占位符 → 更新 `package.json`、`LICENSE`、workflows → 配置主题 → `pnpm typecheck` ✓ |
-| **阶段 2** | 定制落地页 → 更新 logo 和 favicon → 视觉检查 ✓ |
-| **阶段 3** | 删除模板 README → 生成项目 README → 创建 GitHub 模板 → 无占位符残留 ✓ |
-| **阶段 4** | `pnpm lint && typecheck` → 运行 `validate-setup.sh` → 约定式提交 ✓ |
-| **部署** | `git push` → GitHub Actions CI → Cloudflare Pages → 网站上线！ ✅ |
+| **阶段 2** | 定制落地页 → 更新 logo 和 favicon → 视觉检查 ✓                                                         |
+| **阶段 3** | 删除模板 README → 生成项目 README → 创建 GitHub 模板 → 无占位符残留 ✓                                  |
+| **阶段 4** | `pnpm lint && typecheck` → 运行 `validate-setup.sh` → 约定式提交 ✓                                     |
+| **部署**   | `git push` → GitHub Actions CI → Cloudflare Pages → 网站上线！ ✅                                      |
 
 </details>
 
@@ -105,14 +106,14 @@ flowchart LR
 
 ## 🎯 我们解决的问题
 
-| 😫 传统开发                                 | 🎉 用了 AI Vibe Coding Starter |
-| :------------------------------------------ | :----------------------------- |
-| 花几小时配置 Next.js、TypeScript、ESLint... | AI 读取配置，直接开干          |
-| "Cloudflare Pages 怎么部署？"               | 预配置好了，`gh pr merge` 搞定 |
-| 从 Stack Overflow 复制粘贴 CI/CD            | GitHub Actions 开箱即用        |
-| README？文档？以后再说...                   | AI 根据你的 PRD 自动生成       |
-| "husky 我迟早会配的..."                     | Commitlint + Husky 已就位      |
-| 每个 AI 工具都要配 MCP？头疼。              | 4 个工具，1 套配置，零摩擦     |
+| 😫 传统 Starter                      | 🎉 AI Vibe Coding Starter                        |
+| :----------------------------------- | :----------------------------------------------- |
+| 克隆后手动改 N 个文件里的占位符      | 填 `config.md`，AI 一次性全局替换 + 生成适配文件 |
+| 手动创建 GitHub Issue/PR             | `/fix-github-issue`、`/create-pr` 一句话搞定     |
+| 手动配置 Cloudflare Pages 部署       | AI 调用 `wrangler` 自动创建 Pages、绑 KV/R2/D1   |
+| 想加个 MCP？4 个工具配置文件改 4 遍  | `/mcp-manager add xxx` 一句话同步所有 AI 工具    |
+| 没有 AI 友好性                       | Claude Code / Codex / Cursor / OpenCode 全适配   |
+| "这个 starter 怎么用？" 看文档半小时 | 告诉 AI 你的想法，它读 `CLAUDE.md` 带你走完全程  |
 
 ---
 
@@ -129,27 +130,27 @@ flowchart LR
 
 预配置的斜杠命令，覆盖常见工作流：
 
-| 命令 | 描述 |
-|------|------|
-| `/create-pr` | 创建符合 Angular 规范的 PR |
-| `/fix-github-issue` | 自动分析并修复 GitHub issue |
-| `/code-review` | 代码审查（质量、安全、最佳实践） |
-| `/review-pr` | 结构化的 PR 审查 |
-| `/commit` | 创建约定式提交 |
-| `/add-changelog` | 生成 changelog 条目 |
-| `/prepare-release` | 准备版本发布 |
-| `/mcp-manager` | 管理 4 个 AI 工具的 MCP 配置 |
-| `/nextjs-performance-audit` | Next.js 性能审计 |
+| 命令                        | 描述                             |
+| --------------------------- | -------------------------------- |
+| `/create-pr`                | 创建符合 Angular 规范的 PR       |
+| `/fix-github-issue`         | 自动分析并修复 GitHub issue      |
+| `/code-review`              | 代码审查（质量、安全、最佳实践） |
+| `/review-pr`                | 结构化的 PR 审查                 |
+| `/commit`                   | 创建约定式提交                   |
+| `/add-changelog`            | 生成 changelog 条目              |
+| `/prepare-release`          | 准备版本发布                     |
+| `/mcp-manager`              | 管理 4 个 AI 工具的 MCP 配置     |
+| `/nextjs-performance-audit` | Next.js 性能审计                 |
 
 ### 🧩 共享 Skills
 
 可复用的 AI 能力（通过软链接跨工具共享）：
 
-| Skill | 描述 |
-|-------|------|
-| `resource-scout` | 从市场搜索发现 MCP 服务器和 skills |
-| `skill-creator` | 创建新自定义 skill 的指南 |
-| `skill-downloader` | 从 GitHub 或压缩包下载安装 skills |
+| Skill              | 描述                               |
+| ------------------ | ---------------------------------- |
+| `resource-scout`   | 从市场搜索发现 MCP 服务器和 skills |
+| `skill-creator`    | 创建新自定义 skill 的指南          |
+| `skill-downloader` | 从 GitHub 或压缩包下载安装 skills  |
 
 ### ⚡ 生产级技术栈
 
@@ -239,28 +240,41 @@ gh repo create my-project --public --push
 ## 📦 包含什么
 
 ```
-├── CLAUDE.md                 # AI 指令手册
+├── CLAUDE.md                 # AI 指令手册（AGENTS.md 软链接指向它）
 ├── CHECKLIST.md              # 配置进度追踪
+│
 ├── .mcp.json                 # Claude Code MCP 配置
 ├── .cursor/mcp.json          # Cursor MCP 配置
 ├── .codex/config.toml        # Codex MCP 配置
 ├── opencode.json             # OpenCode MCP 配置
-├── .claude/commands/         # 自定义 AI 命令
-│   ├── create-pr.md
-│   ├── fix-github-issue.md
-│   ├── code-review.md
-│   ├── review-pr.md
-│   └── mcp-manager.md
+│
+├── .claude/
+│   ├── commands/             # 自定义 AI 命令（/create-pr, /mcp-manager...）
+│   └── skills/               # 共享 Skills（源目录）
+│       ├── resource-scout/
+│       ├── skill-creator/
+│       └── skill-downloader/
+├── .cursor/skills/           # → .claude/skills/ 软链接
+├── .codex/skills/            # → .claude/skills/ 软链接
+├── .opencode/skill/          # → .claude/skills/ 软链接
+│
 ├── .github/
 │   ├── actions/              # 可复用的组合 action
-│   ├── workflows/            # CI/CD 流水线
-│   └── *.example.*           # Issue/PR 模板
-├── website/                  # Next.js + Nextra 网站
-│   ├── src/lib/site-info.ts  # 集中配置
-│   └── ...
+│   ├── workflows/            # CI/CD 流水线（ci.yml, deploy-website.yml）
+│   └── *.example.*           # Issue/PR 模板（复制并重命名使用）
+│
+├── website/                  # Next.js 15 + Nextra 4 + shadcn/ui + Tailwind 4
+│   ├── src/
+│   │   ├── components/       # React 组件（落地页、共享组件）
+│   │   ├── lib/site-info.ts  # 集中配置（改这里，全局生效）
+│   │   └── styles/           # 全局样式和主题色
+│   ├── content/              # Nextra 文档内容（中英双语）
+│   └── public/               # 静态资源（icon.svg, og-image...）
+│
 ├── docs/
-│   ├── config.example.md     # 你的项目配置
-│   └── prd.example.md        # 你的需求文档
+│   ├── config.example.md     # 项目配置模板
+│   └── prd.example.md        # PRD 模板
+│
 └── scripts/
     └── validate-setup.sh     # 验证配置完整性
 ```
@@ -274,6 +288,7 @@ gh repo create my-project --public --push
 - Node.js 24+
 - pnpm 10+
 - GitHub CLI (`gh`)
+- Cloudflare CLI (`wrangler`)
 - 一个 AI 编程助手（Claude Code、Codex、Cursor 或 OpenCode）
 
 ### 1. 使用这个模板
@@ -339,7 +354,7 @@ git push          # 部署到 Cloudflare
 
 ## 📄 开源协议
 
-MIT © [Your Name](https://github.com/your-username)
+MIT © [Jinming Yang](https://github.com/2214962083)
 
 ---
 

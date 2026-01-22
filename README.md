@@ -53,6 +53,7 @@ docs/prd.md       →  Your product requirements
 ```
 
 AI reads these files and **automatically**:
+
 - Replaces `[project-name]`, `[repo-name]`, `[github-username]` everywhere
 - Updates `site-info.ts`, `package.json`, `LICENSE`, workflows...
 - Generates README, GitHub templates, landing page content
@@ -90,14 +91,14 @@ flowchart LR
 <details>
 <summary>📋 Detailed Workflow (click to expand)</summary>
 
-| Phase | What AI Does |
-|-------|-------------|
-| **Setup** | Clone template → Create `docs/config.md` & `docs/prd.md` → Tell AI "Start setup" |
+| Phase       | What AI Does                                                                                                                |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Setup**   | Clone template → Create `docs/config.md` & `docs/prd.md` → Tell AI "Start setup"                                            |
 | **Phase 1** | Replace placeholders in `site-info.ts` → Update `package.json`, `LICENSE`, workflows → Configure theme → `pnpm typecheck` ✓ |
-| **Phase 2** | Customize landing page → Update logo & favicon → Visual review ✓ |
-| **Phase 3** | Delete template READMEs → Generate project README → Create GitHub templates → No placeholders left ✓ |
-| **Phase 4** | `pnpm lint && typecheck` → Run `validate-setup.sh` → Conventional commit ✓ |
-| **Deploy** | `git push` → GitHub Actions CI → Cloudflare Pages → Site Live! ✅ |
+| **Phase 2** | Customize landing page → Update logo & favicon → Visual review ✓                                                            |
+| **Phase 3** | Delete template READMEs → Generate project README → Create GitHub templates → No placeholders left ✓                        |
+| **Phase 4** | `pnpm lint && typecheck` → Run `validate-setup.sh` → Conventional commit ✓                                                  |
+| **Deploy**  | `git push` → GitHub Actions CI → Cloudflare Pages → Site Live! ✅                                                           |
 
 </details>
 
@@ -105,14 +106,14 @@ flowchart LR
 
 ## 🎯 The Problem We Solve
 
-| 😫 Traditional Development                      | 🎉 With AI Vibe Coding Starter     |
-| :---------------------------------------------- | :--------------------------------- |
-| Hours setting up Next.js, TypeScript, ESLint... | AI reads config, starts coding     |
-| "How do I deploy to Cloudflare Pages?"          | Pre-configured, just `gh pr merge` |
-| Copy-paste CI/CD from Stack Overflow            | GitHub Actions ready to go         |
-| README? Documentation? Maybe later...           | AI generates it from your PRD      |
-| "I'll set up husky eventually..."               | Commitlint + Husky pre-configured  |
-| MCP configs for each AI tool? Pain.             | 4 tools, 1 sync, zero friction     |
+| 😫 Traditional Starters                            | 🎉 AI Vibe Coding Starter                              |
+| :------------------------------------------------- | :----------------------------------------------------- |
+| Clone then manually edit N files with placeholders | Fill `config.md`, AI replaces all + generates files    |
+| Manually create GitHub Issues/PRs                  | `/fix-github-issue`, `/create-pr` - one command        |
+| Manually configure Cloudflare Pages deployment     | AI runs `wrangler` to create Pages, bind KV/R2/D1      |
+| Want to add MCP? Edit 4 config files manually      | `/mcp-manager add xxx` syncs all AI tools at once      |
+| Not AI Ready                                       | Claude Code / Codex / Cursor / OpenCode all supported  |
+| "How does this starter work?" Read docs for ages   | Tell AI your idea, it reads `CLAUDE.md` and guides you |
 
 ---
 
@@ -129,27 +130,27 @@ flowchart LR
 
 Pre-configured slash commands for common workflows:
 
-| Command | Description |
-|---------|-------------|
-| `/create-pr` | Create PR with Angular commit convention |
-| `/fix-github-issue` | Analyze and fix GitHub issues automatically |
-| `/code-review` | Review code for quality, security, best practices |
-| `/review-pr` | Review pull requests with structured feedback |
-| `/commit` | Create conventional commits |
-| `/add-changelog` | Generate changelog entries |
-| `/prepare-release` | Prepare version releases |
-| `/mcp-manager` | Manage MCP configs across all 4 AI tools |
-| `/nextjs-performance-audit` | Audit Next.js performance |
+| Command                     | Description                                       |
+| --------------------------- | ------------------------------------------------- |
+| `/create-pr`                | Create PR with Angular commit convention          |
+| `/fix-github-issue`         | Analyze and fix GitHub issues automatically       |
+| `/code-review`              | Review code for quality, security, best practices |
+| `/review-pr`                | Review pull requests with structured feedback     |
+| `/commit`                   | Create conventional commits                       |
+| `/add-changelog`            | Generate changelog entries                        |
+| `/prepare-release`          | Prepare version releases                          |
+| `/mcp-manager`              | Manage MCP configs across all 4 AI tools          |
+| `/nextjs-performance-audit` | Audit Next.js performance                         |
 
 ### 🧩 Shared Skills
 
 Reusable AI capabilities (symlinked across tools):
 
-| Skill | Description |
-|-------|-------------|
-| `resource-scout` | Search & discover MCP servers and skills from marketplaces |
-| `skill-creator` | Guide for creating new custom skills |
-| `skill-downloader` | Download & install skills from GitHub or archives |
+| Skill              | Description                                                |
+| ------------------ | ---------------------------------------------------------- |
+| `resource-scout`   | Search & discover MCP servers and skills from marketplaces |
+| `skill-creator`    | Guide for creating new custom skills                       |
+| `skill-downloader` | Download & install skills from GitHub or archives          |
 
 ### ⚡ Production-Ready Stack
 
@@ -239,30 +240,43 @@ gh repo create my-project --public --push
 ## 📦 What's Included
 
 ```
-├── CLAUDE.md                 # AI instruction manual
+├── CLAUDE.md                 # AI instruction manual (AGENTS.md symlinks here)
 ├── CHECKLIST.md              # Setup progress tracker
+│
 ├── .mcp.json                 # Claude Code MCP config
 ├── .cursor/mcp.json          # Cursor MCP config
 ├── .codex/config.toml        # Codex MCP config
 ├── opencode.json             # OpenCode MCP config
-├── .claude/commands/         # Custom AI commands
-│   ├── create-pr.md
-│   ├── fix-github-issue.md
-│   ├── code-review.md
-│   ├── review-pr.md
-│   └── mcp-manager.md
+│
+├── .claude/
+│   ├── commands/             # Custom AI commands (/create-pr, /mcp-manager...)
+│   └── skills/               # Shared skills (source directory)
+│       ├── resource-scout/
+│       ├── skill-creator/
+│       └── skill-downloader/
+├── .cursor/skills/           # → symlink to .claude/skills/
+├── .codex/skills/            # → symlink to .claude/skills/
+├── .opencode/skill/          # → symlink to .claude/skills/
+│
 ├── .github/
 │   ├── actions/              # Reusable composite actions
-│   ├── workflows/            # CI/CD pipelines
-│   └── *.example.*           # Issue/PR templates
-├── website/                  # Next.js + Nextra site
-│   ├── src/lib/site-info.ts  # Central config
-│   └── ...
+│   ├── workflows/            # CI/CD pipelines (ci.yml, deploy-website.yml)
+│   └── *.example.*           # Issue/PR templates (copy & rename to use)
+│
+├── website/                  # Next.js 15 + Nextra 4 + shadcn/ui + Tailwind 4
+│   ├── src/
+│   │   ├── components/       # React components (landing page, shared)
+│   │   ├── lib/site-info.ts  # Central config (edit here, applies globally)
+│   │   └── styles/           # Global styles and theme colors
+│   ├── content/              # Nextra docs content (EN/ZH bilingual)
+│   └── public/               # Static assets (icon.svg, og-image...)
+│
 ├── docs/
-│   ├── config.example.md     # Your project config
-│   └── prd.example.md        # Your requirements
+│   ├── config.example.md     # Project config template
+│   └── prd.example.md        # PRD template
+│
 └── scripts/
-    └── validate-setup.sh     # Verify everything is configured
+    └── validate-setup.sh     # Verify setup completeness
 ```
 
 ---
@@ -274,6 +288,7 @@ gh repo create my-project --public --push
 - Node.js 24+
 - pnpm 10+
 - GitHub CLI (`gh`)
+- Cloudflare CLI (`wrangler`)
 - An AI coding assistant (Claude Code, Codex, Cursor, or OpenCode)
 
 ### 1. Use This Template
@@ -339,7 +354,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
-MIT © [Your Name](https://github.com/your-username)
+MIT © [Jinming Yang](https://github.com/2214962083)
 
 ---
 
