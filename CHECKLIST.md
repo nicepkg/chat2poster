@@ -70,8 +70,13 @@ If verification fails, fix issues before proceeding to the next phase.
 
 ### README Files
 
-- [ ] Copy `README.example.md` to `README.md`
-- [ ] Copy `README_cn.example.md` to `README_cn.md`
+> **Note**: The existing `README.md` and `README_cn.md` are template introduction files.
+> They must be deleted and replaced with project-specific READMEs.
+
+- [ ] **Delete** existing `README.md` (template intro)
+- [ ] **Delete** existing `README_cn.md` (template intro)
+- [ ] Copy `README.example.md` → `README.md`
+- [ ] Copy `README_cn.example.md` → `README_cn.md`
 - [ ] Replace all placeholders in both README files
 - [ ] Write compelling project description
 - [ ] Add actual screenshots/demos

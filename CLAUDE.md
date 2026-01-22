@@ -321,9 +321,17 @@ After collecting all values, modify in this order:
 
 #### 3.3 Documentation Files
 
-| File | Changes |
-|------|---------|
-| `README.example.md` | Copy to `README.md`, replace placeholders, write description |
+**IMPORTANT**: The current `README.md` and `README_cn.md` are template introduction files.
+When user starts their project, you MUST:
+
+1. **Delete** the existing `README.md` and `README_cn.md` (they introduce the template, not the user's project)
+2. **Copy** from `.example.md` files and customize for the user's project
+
+| File | Action |
+|------|--------|
+| `README.md` | **DELETE** (template intro) |
+| `README_cn.md` | **DELETE** (template intro) |
+| `README.example.md` | Copy to `README.md`, replace placeholders, write project description |
 | `README_cn.example.md` | Copy to `README_cn.md`, Chinese version |
 | `CONTRIBUTING.md` | Replace placeholders, customize guidelines |
 | `.github/ISSUE_TEMPLATE/*.example.*` | Copy to non-example names, customize |
