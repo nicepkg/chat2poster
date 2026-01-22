@@ -1,0 +1,71 @@
+import { Banner } from "nextra/components";
+import { getPageMap } from "nextra/page-map";
+import { Layout, LocaleSwitch, Navbar, ThemeSwitch } from "nextra-theme-docs";
+import { Logo } from "~/components/shared/logo";
+import { SiteFooter } from "~/components/shared/site-footer";
+
+type LayoutProps = {
+  children: React.ReactNode;
+  params: Promise<{
+    locale: string;
+  }>;
+};
+
+export default async function LocaleLayout({ children, params }: LayoutProps) {
+  const { locale } = await params;
+  const pageMap = await getPageMap(`/${locale}`);
+
+  return (
+    <>
+      <Layout
+        pageMap={pageMap}
+        docsRepositoryBase="https://github.com/[github-username]/[project-name]/tree/main/website"
+        editLink="Edit this page on GitHub"
+        sidebar={{
+          defaultMenuCollapseLevel: 1,
+          toggleButton: true,
+        }}
+        toc={{
+          backToTop: true,
+        }}
+        feedback={{
+          content: "Question? Give us feedback →",
+          labels: "feedback,documentation",
+          link: "https://github.com/[github-username]/[project-name]/issues/new?labels=feedback,documentation&template=feedback.md",
+        }}
+        i18n={[
+          { locale: "en", name: "English" },
+          { locale: "zh", name: "中文" },
+        ]}
+        navbar={
+          <Navbar
+            logo={<Logo height={32} width={32} />}
+            logoLink={`/${locale}`}
+            projectLink="https://github.com/[github-username]/[project-name]"
+          >
+            <LocaleSwitch className="x:ml-2" />
+            <ThemeSwitch className="x:ml-2" />
+          </Navbar>
+        }
+        footer={<SiteFooter />}
+        banner={
+          <Banner storageKey="project-name-banner">
+            <span>
+              🎉 [project-name] is now open source!{" "}
+              <a
+                href="https://github.com/[github-username]/[project-name]"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="x:underline x:underline-offset-2"
+              >
+                Star us on GitHub
+              </a>
+            </span>
+          </Banner>
+        }
+      >
+        {children}
+      </Layout>
+    </>
+  );
+}

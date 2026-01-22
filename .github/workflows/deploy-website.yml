@@ -1,0 +1,136 @@
+name: Deploy Website to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      # NOTE: Update this path to match your WEBSITE_DIR (e.g., 'website/**')
+      - 'website/**'
+      - '.github/workflows/deploy-website.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      # NOTE: Update this path to match your WEBSITE_DIR (e.g., 'website/**')
+      - 'website/**'
+  workflow_dispatch:
+
+env:
+  # Project Configuration - Update these values for your project
+  PROJECT_NAME: '[project-name]'
+  SITE_DOMAIN: '[project-domain]'
+  WEBSITE_DIR: 'website'
+  BUILD_OUTPUT_DIR: 'website/out'
+  BUILD_COMMAND: 'pnpm build:website'
+  
+  # Node.js Configuration
+  NODE_VERSION: '20'
+  PNPM_VERSION: '10'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
+          install-dependencies: 'true'
+          setup-cache: 'true'
+
+      - name: Build website
+        run: ${{ env.BUILD_COMMAND }}
+        env:
+          NEXT_PUBLIC_SITE_URL: https://${{ env.SITE_DOMAIN }}
+          NEXT_PUBLIC_GIT_SHA: ${{ github.sha }}
+          SKIP_ENV_VALIDATION: true
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-build
+          path: ${{ env.BUILD_OUTPUT_DIR }}
+          retention-days: 1
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
+          install-dependencies: 'false'
+          setup-cache: 'false'
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: website-build
+          path: ${{ env.BUILD_OUTPUT_DIR }}
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ${{ env.BUILD_OUTPUT_DIR }} --project-name=${{ env.PROJECT_NAME }} --commit-dirty=true
+
+  # Preview deployment for pull requests
+  preview:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      deployments: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
+          install-dependencies: 'false'
+          setup-cache: 'false'
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: website-build
+          path: ${{ env.BUILD_OUTPUT_DIR }}
+
+      - name: Deploy Preview to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ${{ env.BUILD_OUTPUT_DIR }} --project-name=${{ env.PROJECT_NAME }} --branch=${{ github.head_ref }} --commit-dirty=true
+
+      - name: Comment PR with preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🚀 Preview Deployment Ready!\n\nPreview URL: ${{ steps.deploy.outputs.deployment-url }}\n\nThis preview will be available until the PR is closed.`
+            })

@@ -1,0 +1,31 @@
+{
+  "name": "[project-name]",
+  "version": "1.0.1",
+  "private": true,
+  "type": "module",
+  "description": "[project-name] - [slogan]",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/[github-username]/[project-name].git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "dev:website": "pnpm --filter website dev",
+    "build:website": "pnpm --filter website build",
+    "start:website": "pnpm --filter website start",
+    "start:static-website": "pnpm --filter website start:static",
+    "lint": "pnpm lint",
+    "lint:fix": "pnpm lint:fix",
+    "typecheck": "pnpm typecheck",
+    "format": "pnpm format:write",
+    "format:check": "pnpm format:check",
+    "clean": "rm -rf node_modules website/node_modules website/.next"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.2"
+  }
+}
