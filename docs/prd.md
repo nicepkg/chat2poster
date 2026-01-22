@@ -1,1 +1,1 @@
-# prd
+# Product Requirements Document (PRD)
