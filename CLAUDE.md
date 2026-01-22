@@ -37,6 +37,42 @@ This is a starter template. Your job is to:
 
 ---
 
+### 🔑 GitHub Actions Token Naming
+
+When creating GitHub Actions workflows that require secrets, use these **standard token names**:
+
+| Purpose | Secret Name | Description |
+|---------|-------------|-------------|
+| **NPM Publish** | `NPM_TOKEN` | Token for publishing packages to npm registry |
+| **VSCode Marketplace** | `VSCE_TOKEN` | Token for publishing VSCode extensions to official marketplace |
+| **OpenVSX** | `OVSX_TOKEN` | Token for publishing VSCode extensions to OpenVSX registry |
+| **GitHub API** | `GITHUB_TOKEN` | Built-in, no need to create (auto-provided) |
+
+**Why these names?**
+- Users typically configure these names in their local environment and GitHub organization secrets
+- Using consistent names avoids confusion and reduces setup friction
+- These are de-facto standards in the ecosystem
+
+**Example workflow snippet:**
+```yaml
+- name: Publish to npm
+  run: npm publish
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+- name: Publish to VSCode Marketplace
+  run: vsce publish
+  env:
+    VSCE_PAT: ${{ secrets.VSCE_TOKEN }}
+
+- name: Publish to OpenVSX
+  run: ovsx publish
+  env:
+    OVSX_PAT: ${{ secrets.OVSX_TOKEN }}
+```
+
+---
+
 ### 🚨 Error Handling
 
 #### When TypeScript/Lint Errors Occur
