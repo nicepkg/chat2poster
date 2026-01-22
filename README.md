@@ -203,7 +203,7 @@ Write once in `.claude/`, all tools benefit.
 ### Step 1: Clone & Tell AI Your Idea
 
 ```bash
-git clone https://github.com/2214962083/ai-vibe-coding-starter my-project
+git clone https://github.com/2214962083/vibe-coding-starter my-project
 cd my-project
 ```
 
@@ -295,7 +295,7 @@ gh repo create my-project --public --push
 
 ```bash
 # Clone
-git clone https://github.com/2214962083/ai-vibe-coding-starter my-awesome-project
+git clone https://github.com/2214962083/vibe-coding-starter my-awesome-project
 cd my-awesome-project
 
 # Install

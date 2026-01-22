@@ -203,7 +203,7 @@ AGENTS.md           → CLAUDE.md        # 通用 AI 指令
 ### 第一步：克隆 & 告诉 AI 你的想法
 
 ```bash
-git clone https://github.com/2214962083/ai-vibe-coding-starter my-project
+git clone https://github.com/2214962083/vibe-coding-starter my-project
 cd my-project
 ```
 
@@ -295,7 +295,7 @@ gh repo create my-project --public --push
 
 ```bash
 # 克隆
-git clone https://github.com/2214962083/ai-vibe-coding-starter my-awesome-project
+git clone https://github.com/2214962083/vibe-coding-starter my-awesome-project
 cd my-awesome-project
 
 # 安装
