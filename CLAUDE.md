@@ -37,6 +37,54 @@ This is a starter template. Your job is to:
 
 ---
 
+### 🤖 Automation & CLI Tools
+
+**User Preference**: The user prefers automation and minimal manual steps. Execute tasks directly instead of providing instructions.
+
+#### Default CLI Tools
+
+| Task | Tool | Example |
+|------|------|---------|
+| **GitHub operations** | `gh` CLI | `gh pr create`, `gh issue list`, `gh repo clone` |
+| **Cloudflare operations** | `wrangler` CLI | `wrangler pages deploy`, `wrangler d1`, `wrangler kv` |
+| **Package management** | `pnpm` | `pnpm install`, `pnpm add`, `pnpm run` |
+
+#### Automation Rules
+
+1. **DO automatically**:
+   - Run lint/typecheck after code changes
+   - Create branches, commits, PRs
+   - Deploy to preview environments
+   - Install dependencies when needed
+
+2. **ASK before** (dangerous operations):
+   - `git push --force` or `git reset --hard`
+   - Deleting branches, repos, or production resources
+   - Publishing to npm/registries
+   - Deploying to production
+   - Modifying billing-related resources
+   - Any irreversible destructive action
+
+#### Examples
+
+```bash
+# GitHub: Create PR (DO automatically)
+gh pr create --title "feat: add feature" --body "Description"
+
+# GitHub: Delete branch (ASK first)
+# ⚠️ "Are you sure you want to delete branch 'feature-x'?"
+gh branch delete feature-x
+
+# Cloudflare: Deploy preview (DO automatically)
+wrangler pages deploy ./out --project-name=my-project
+
+# Cloudflare: Delete production resource (ASK first)
+# ⚠️ "Are you sure you want to delete KV namespace 'production-data'?"
+wrangler kv:namespace delete --namespace-id=xxx
+```
+
+---
+
 ### 🔑 GitHub Actions Token Naming
 
 When creating GitHub Actions workflows that require secrets, use these **standard token names**:
