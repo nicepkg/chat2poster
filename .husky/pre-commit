@@ -1,1 +1,2 @@
-pnpm lint && pnpm typecheck
+# Lightweight checks only - fast feedback
+# Heavy checks (lint, typecheck) moved to pre-push

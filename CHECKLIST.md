@@ -80,10 +80,11 @@ If verification fails, fix issues before proceeding to the next phase.
 
 ### GitHub Templates
 
-- [ ] Review and customize `.github/ISSUE_TEMPLATE/bug_report.md`
-- [ ] Review and customize `.github/ISSUE_TEMPLATE/feature_request.md`
-- [ ] Update URLs in `.github/ISSUE_TEMPLATE/config.yml`
-- [ ] Review and customize `.github/PULL_REQUEST_TEMPLATE.md`
+- [ ] Copy `.github/ISSUE_TEMPLATE/bug_report.example.md` → `bug_report.md`, customize
+- [ ] Copy `.github/ISSUE_TEMPLATE/feature_request.example.md` → `feature_request.md`, customize
+- [ ] Copy `.github/ISSUE_TEMPLATE/config.example.yml` → `config.yml`, update URLs
+- [ ] Copy `.github/ISSUE_TEMPLATE/feedback.example.md` → `feedback.md`, customize
+- [ ] Copy `.github/PULL_REQUEST_TEMPLATE.example.md` → `PULL_REQUEST_TEMPLATE.md`, customize
 - [ ] Update `CONTRIBUTING.md` with project-specific guidelines
 - [ ] Remove template notices (⚠️ blocks) from all files
 
@@ -115,6 +116,8 @@ If verification fails, fix issues before proceeding to the next phase.
 
 - [ ] Delete `docs/config.example.md` and `docs/prd.example.md`
 - [ ] Delete `README.example.md` and `README_cn.example.md`
+- [ ] Delete `.github/ISSUE_TEMPLATE/*.example.*` files
+- [ ] Delete `.github/PULL_REQUEST_TEMPLATE.example.md`
 - [ ] Delete this `CHECKLIST.md` file
 
 ### ✅ Phase 4 Checkpoint
@@ -171,8 +174,14 @@ website/src/styles/globals.css    # Theme colors
 package.json                      # Package info
 LICENSE                           # Copyright
 .github/workflows/deploy-website.yml
-.github/ISSUE_TEMPLATE/config.yml
 CONTRIBUTING.md
-README.example.md                 # Template → copy to README.md
-README_cn.example.md              # Template → copy to README_cn.md
+
+# Templates (copy and customize):
+README.example.md                           → README.md
+README_cn.example.md                        → README_cn.md
+.github/ISSUE_TEMPLATE/bug_report.example.md      → bug_report.md
+.github/ISSUE_TEMPLATE/feature_request.example.md → feature_request.md
+.github/ISSUE_TEMPLATE/config.example.yml         → config.yml
+.github/ISSUE_TEMPLATE/feedback.example.md        → feedback.md
+.github/PULL_REQUEST_TEMPLATE.example.md          → PULL_REQUEST_TEMPLATE.md
 ```

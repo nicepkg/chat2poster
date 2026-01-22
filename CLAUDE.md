@@ -262,7 +262,7 @@ After collecting all values, modify in this order:
 | `package.json` | Replace `[repo-name]`, `[project-name]`, `[github-username]` |
 | `LICENSE` | Replace `[github-username]` |
 | `.github/workflows/deploy-website.yml` | Replace `[repo-name]`, `[project-domain]` |
-| `.github/ISSUE_TEMPLATE/config.yml` | Replace URLs |
+| `.github/ISSUE_TEMPLATE/config.example.yml` | Copy to `config.yml`, replace URLs |
 
 #### 3.2 Content Files
 
@@ -278,8 +278,8 @@ After collecting all values, modify in this order:
 | `README.example.md` | Copy to `README.md`, replace placeholders, write description |
 | `README_cn.example.md` | Copy to `README_cn.md`, Chinese version |
 | `CONTRIBUTING.md` | Replace placeholders, customize guidelines |
-| `.github/ISSUE_TEMPLATE/*.md` | Remove template notices, customize |
-| `.github/PULL_REQUEST_TEMPLATE.md` | Remove template notices, customize |
+| `.github/ISSUE_TEMPLATE/*.example.*` | Copy to non-example names, customize |
+| `.github/PULL_REQUEST_TEMPLATE.example.md` | Copy to `PULL_REQUEST_TEMPLATE.md`, customize |
 
 ### Step 4: Customize Landing Page
 
@@ -322,6 +322,8 @@ When project is fully set up:
 - Delete `docs/prd.example.md`
 - Delete `README.example.md`
 - Delete `README_cn.example.md`
+- Delete `.github/ISSUE_TEMPLATE/*.example.*`
+- Delete `.github/PULL_REQUEST_TEMPLATE.example.md`
 - Delete `CHECKLIST.md`
 - Remove `⚠️ TEMPLATE NOTICE` blocks from all files
 
@@ -384,13 +386,19 @@ I need some information to set up your project:
 │   ├── prd.md                     # User's PRD (create from example)
 │   └── prd.example.md             # PRD template
 ├── .github/
+│   ├── actions/
+│   │   └── setup-node-pnpm/       # Reusable composite action
+│   │       └── action.yml
 │   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.md
-│   │   ├── feature_request.md
-│   │   └── config.yml
-│   ├── PULL_REQUEST_TEMPLATE.md
+│   │   ├── bug_report.example.md        # Template → copy to bug_report.md
+│   │   ├── feature_request.example.md   # Template → copy to feature_request.md
+│   │   ├── feedback.example.md          # Template → copy to feedback.md
+│   │   └── config.example.yml           # Template → copy to config.yml
+│   ├── PULL_REQUEST_TEMPLATE.example.md # Template → copy to PULL_REQUEST_TEMPLATE.md
 │   └── workflows/
-│       └── deploy-website.yml
+│       ├── ci.yml                 # Lint & TypeCheck
+│       ├── pr-title.yml           # PR title validation (Angular convention)
+│       └── deploy-website.yml     # Cloudflare Pages deployment
 ├── website/
 │   ├── content/                   # MDX content (en/zh)
 │   ├── public/                    # Static assets
@@ -460,8 +468,14 @@ website/content/zh/index.mdx       # Frontmatter
 package.json                       # Package info
 LICENSE                            # Copyright
 .github/workflows/deploy-website.yml
-.github/ISSUE_TEMPLATE/config.yml
 CONTRIBUTING.md
-README.example.md                  # Copy to README.md
-README_cn.example.md               # Copy to README_cn.md
+
+# Templates (copy and customize):
+README.example.md                           → README.md
+README_cn.example.md                        → README_cn.md
+.github/ISSUE_TEMPLATE/bug_report.example.md      → bug_report.md
+.github/ISSUE_TEMPLATE/feature_request.example.md → feature_request.md
+.github/ISSUE_TEMPLATE/config.example.yml         → config.yml
+.github/ISSUE_TEMPLATE/feedback.example.md        → feedback.md
+.github/PULL_REQUEST_TEMPLATE.example.md          → PULL_REQUEST_TEMPLATE.md
 ```
