@@ -7,7 +7,7 @@
 - **Project Name**: My Awesome Project
 - **Repo Name**: my-awesome-project
 - **Slogan**: Build faster with AI
-- **Domain**: myproject.com
+- **Domain**: my-awesome-project.xiaominglab.com
 
 ## GitHub
 
@@ -15,16 +15,16 @@
 
 ## Author
 
-- **Name**: John Doe
-- **Website**: https://johndoe.com
-- **Email**: support@myproject.com
+- **Name**: Jinming Yang
+- **Website**: https://github.com/2214962083
+- **Email**: 2214962083@qq.com
 
 ## Social Links (leave empty to hide)
 
-- **Twitter**: johndoe
-- **Bilibili UID**: 12345678
-- **Douyin UID**: MS4wLjABAAAAxxxxxx
-- **Douyin Nickname**: 小明
+- **Twitter**: jinmingyang666
+- **Bilibili UID**: 83540912
+- **Douyin UID**: 79841360454
+- **Douyin Nickname**: 葬爱非主流小明
 
 ## Theme Colors
 
