@@ -1,3 +1,5 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { FlatCompat } from "@eslint/eslintrc";
 import { defineConfig, globalIgnores } from "eslint/config";
 import prettier from "eslint-config-prettier/flat";
@@ -5,13 +7,41 @@ import eslintPluginImport from "eslint-plugin-import";
 import eslintPluginPrettier from "eslint-plugin-prettier";
 import tseslint from "typescript-eslint";
 
+const configDir = path.dirname(fileURLToPath(import.meta.url));
+
 const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
+  baseDirectory: configDir,
 });
+
+const nextConfigs = compat
+  .extends("next/core-web-vitals", "next/typescript")
+  .map((config) => {
+    const languageOptions =
+      config.languageOptions && typeof config.languageOptions === "object"
+        ? config.languageOptions
+        : {};
+    const parserOptions =
+      "parserOptions" in languageOptions &&
+      languageOptions.parserOptions &&
+      typeof languageOptions.parserOptions === "object"
+        ? languageOptions.parserOptions
+        : {};
+
+    return {
+      ...config,
+      languageOptions: {
+        ...languageOptions,
+        parserOptions: {
+          ...parserOptions,
+          tsconfigRootDir: configDir,
+        },
+      },
+    };
+  });
 
 export default defineConfig(
   // Next.js Core Web Vitals config (includes React, React Hooks, and Next.js rules)
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...nextConfigs,
 
   // Prettier config (disables conflicting ESLint rules)
   prettier,
@@ -38,7 +68,7 @@ export default defineConfig(
     },
     settings: {
       next: {
-        rootDir: import.meta.dirname,
+        rootDir: configDir,
       },
     },
     rules: {
@@ -82,7 +112,7 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: configDir,
       },
     },
     rules: {

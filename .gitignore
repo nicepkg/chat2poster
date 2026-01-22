@@ -125,3 +125,6 @@ secrets.json
 progress.json
 status.json
 logs/
+.vscode-test-web
+**/.vitepress/cache
+**/.vitepress/.temp

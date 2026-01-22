@@ -11,7 +11,7 @@
   "eslint.enable": true,
   "eslint.useFlatConfig": true,
   "eslint.format.enable": true,
-  "eslint.nodePath": "website/node_modules",
+  // "eslint.nodePath": "./node_modules",
   "eslint.validate": [
     "javascript",
     "javascriptreact",
@@ -35,10 +35,10 @@
     "markdown",
     "mdx"
   ],
-  
+
   // TypeScript settings
   "typescript.preferences.importModuleSpecifier": "relative",
-  "typescript.tsdk": "website/node_modules/typescript/lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
 
   // File associations
