@@ -36,8 +36,8 @@ import {
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
 import { githubConfig } from "~/lib/site-info";
+import { cn } from "~/lib/utils";
 
 const Hero3D = dynamic(() => import("./hero-3d").then((mod) => mod.Hero3D), {
   ssr: false,
@@ -236,10 +236,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                     {t.hero.getStarted} <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <Link
-                  href={githubConfig.url}
-                  target="_blank"
-                >
+                <Link href={githubConfig.url} target="_blank">
                   <Button
                     variant="outline"
                     size="lg"

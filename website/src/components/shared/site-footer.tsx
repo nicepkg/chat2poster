@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { cn } from "~/lib/utils";
 import {
   siteConfig,
   socialLinksConfig,
   footerConfig,
   authorConfig,
 } from "~/lib/site-info";
+import { cn } from "~/lib/utils";
 import { GitHubIcon, BilibiliIcon, DouyinIcon, XIcon } from "./social-icons";
 
 const socialIconMap = {

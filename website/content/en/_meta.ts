@@ -14,5 +14,5 @@ export default {
       copyPage: false,
       timestamp: false,
     },
-  }
+  },
 } satisfies MetaRecord;
