@@ -2,18 +2,28 @@
 // AI VIBE CODING STARTER - SITE CONFIGURATION
 // ============================================================================
 // Replace the following placeholders with your actual values:
+//
+// REQUIRED:
 // - [project-name]: Display name, can include spaces (e.g., "My Awesome Project")
 // - [repo-name]: Repository name, no spaces allowed (e.g., "my-awesome-project")
 // - [project-slogan]: Your project slogan (e.g., "Build faster with AI")
-// - [project-domain]: Your domain name (e.g., "myproject.com")
-// - [github-username]: Your GitHub username (e.g., "johndoe")
+// - [project-domain]: Your domain name without https:// (e.g., "myproject.com")
+// - [github-username]: Your GitHub username (e.g., "nicepkg")
+//
+// OPTIONAL (set to empty string "" to hide):
 // - [support-email]: Your support email (e.g., "support@example.com")
 // - [author-name]: Your display name (e.g., "John Doe")
-// - [author-website]: Your personal website (e.g., "https://johndoe.com")
-// - [twitter-handle]: Your Twitter/X handle (e.g., "johndoe")
+// - [author-website]: Your personal website with https:// (e.g., "https://johndoe.com")
+// - [twitter-handle]: Your Twitter/X handle without @ (e.g., "johndoe")
 // - [bilibili-uid]: Your Bilibili UID (e.g., "12345678")
 // - [douyin-uid]: Your Douyin UID (e.g., "MS4wLjABAAAAxxxxxx")
 // - [douyin-nickname]: Your Douyin nickname (e.g., "小明")
+//
+// THEME COLORS:
+// Primary and secondary colors are defined in: website/src/styles/globals.css
+// Look for --primary and --secondary CSS variables in :root and .dark sections
+// Use oklch() format, e.g.: oklch(0.6 0.2 260) for purple
+// Recommended: Use https://oklch.com to pick colors
 // ============================================================================
 
 // ---------- Basic Site Config ----------

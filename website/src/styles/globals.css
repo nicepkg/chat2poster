@@ -1,3 +1,32 @@
+/**
+ * =============================================================================
+ * TODO: CUSTOMIZE THEME COLORS
+ * =============================================================================
+ * To change the primary/secondary colors, modify the CSS variables below:
+ *
+ * :root (light mode):
+ *   --primary: oklch(0.6 0.2 260)     <- Primary color (buttons, links, accents)
+ *   --secondary: oklch(0.95 0.02 260) <- Secondary color (subtle backgrounds)
+ *
+ * .dark (dark mode):
+ *   --primary: oklch(0.7 0.15 260)    <- Primary color for dark mode
+ *   --secondary: oklch(0.25 0.02 260) <- Secondary color for dark mode
+ *
+ * COLOR FORMAT: oklch(lightness chroma hue)
+ *   - lightness: 0 (black) to 1 (white)
+ *   - chroma: 0 (gray) to 0.4 (vivid)
+ *   - hue: 0-360 (0=pink, 30=red, 60=orange, 120=green, 200=cyan, 260=blue, 300=purple)
+ *
+ * TOOL: Use https://oklch.com to pick colors visually
+ *
+ * COMMON BRAND COLORS (approximate oklch values):
+ *   Purple: oklch(0.55 0.25 290)
+ *   Blue:   oklch(0.55 0.2 260)
+ *   Green:  oklch(0.6 0.2 145)
+ *   Orange: oklch(0.65 0.2 50)
+ *   Pink:   oklch(0.65 0.25 0)
+ * =============================================================================
+ */
 @import "tailwindcss";
 @import "tw-animate-css";
 
