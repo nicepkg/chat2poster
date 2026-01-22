@@ -18,7 +18,7 @@ on:
 
 env:
   # Project Configuration - Update these values for your project
-  PROJECT_NAME: '[project-name]'
+  PROJECT_NAME: '[repo-name]'
   SITE_DOMAIN: '[project-domain]'
   WEBSITE_DIR: 'website'
   BUILD_OUTPUT_DIR: 'website/out'

@@ -2,27 +2,27 @@ import type { Metadata } from "next";
 import { Head } from "nextra/components";
 import "nextra-theme-docs/style.css";
 import "../styles/globals.css";
+import { siteConfig } from "~/lib/site-info";
 
 export const metadata: Metadata = {
   title: {
-    default: "AI Workflow",
-    template: "%s - AI Workflow",
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
   },
-  description:
-    "Pre-configured skill sets for AI coding assistants like Claude Code, Cursor, Codex, and more.",
-  metadataBase: new URL("https://ai-workflow.xiaominglab.com"),
+  description: siteConfig.description,
+  metadataBase: new URL(siteConfig.url),
   openGraph: {
-    title: "AI Workflow",
-    description: "Pre-configured skill sets for AI coding assistants",
-    url: "https://ai-workflow.xiaominglab.com",
-    siteName: "AI Workflow",
-    locale: "en_US",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Workflow",
-    description: "Pre-configured skill sets for AI coding assistants",
+    title: siteConfig.name,
+    description: siteConfig.description,
   },
   robots: {
     index: true,

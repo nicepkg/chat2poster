@@ -1,4 +1,21 @@
+/**
+ * =============================================================================
+ * TODO: REPLACE THIS EXAMPLE LOGO WITH YOUR OWN
+ * =============================================================================
+ * This is a sample logo component. You should replace it with your own design.
+ *
+ * Options:
+ * 1. Replace the SVG below with your own SVG logo
+ * 2. Use an image: <Image src="/logo.png" alt="Logo" width={32} height={32} />
+ * 3. Use text only: just remove the <svg> and keep the <span>
+ *
+ * The logo appears in:
+ * - Navigation bar (via [locale]/layout.tsx)
+ * - You can also use it in footer, about page, etc.
+ * =============================================================================
+ */
 import React from "react";
+import { siteConfig } from "~/lib/site-info";
 
 export function Logo({
   width = 32,
@@ -58,7 +75,7 @@ export function Logo({
         <circle cx="192" cy="112" r="14" fill="url(#logo-gradient)" />
       </svg>
       <span className="font-bold text-xl tracking-tight hidden sm:inline-block">
-        [project-name]
+        {siteConfig.name}
       </span>
     </div>
   );

@@ -3,6 +3,7 @@ import { getPageMap } from "nextra/page-map";
 import { Layout, LocaleSwitch, Navbar, ThemeSwitch } from "nextra-theme-docs";
 import { Logo } from "~/components/shared/logo";
 import { SiteFooter } from "~/components/shared/site-footer";
+import { githubConfig, bannerConfig } from "~/lib/site-info";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -14,12 +15,13 @@ type LayoutProps = {
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
   const pageMap = await getPageMap(`/${locale}`);
+  const lang = locale as "en" | "zh";
 
   return (
     <>
       <Layout
         pageMap={pageMap}
-        docsRepositoryBase="https://github.com/[github-username]/[project-name]/tree/main/website"
+        docsRepositoryBase={githubConfig.docsBase}
         editLink="Edit this page on GitHub"
         sidebar={{
           defaultMenuCollapseLevel: 1,
@@ -31,7 +33,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
         feedback={{
           content: "Question? Give us feedback →",
           labels: "feedback,documentation",
-          link: "https://github.com/[github-username]/[project-name]/issues/new?labels=feedback,documentation&template=feedback.md",
+          link: githubConfig.issuesUrl,
         }}
         i18n={[
           { locale: "en", name: "English" },
@@ -41,24 +43,24 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
           <Navbar
             logo={<Logo height={32} width={32} />}
             logoLink={`/${locale}`}
-            projectLink="https://github.com/[github-username]/[project-name]"
+            projectLink={githubConfig.url}
           >
             <LocaleSwitch className="x:ml-2" />
             <ThemeSwitch className="x:ml-2" />
           </Navbar>
         }
-        footer={<SiteFooter />}
+        footer={<SiteFooter lang={lang} />}
         banner={
-          <Banner storageKey="project-name-banner">
+          <Banner storageKey={bannerConfig.storageKey}>
             <span>
-              🎉 [project-name] is now open source!{" "}
+              {bannerConfig.text[lang]}{" "}
               <a
-                href="https://github.com/[github-username]/[project-name]"
+                href={githubConfig.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="x:underline x:underline-offset-2"
               >
-                Star us on GitHub
+                {bannerConfig.linkText[lang]}
               </a>
             </span>
           </Banner>

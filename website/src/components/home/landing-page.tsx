@@ -1,3 +1,23 @@
+/**
+ * =============================================================================
+ * TODO: CUSTOMIZE THIS LANDING PAGE FOR YOUR PROJECT
+ * =============================================================================
+ * This is a feature-rich landing page template. Customize or simplify as needed.
+ *
+ * STRUCTURE OVERVIEW:
+ * 1. Hero Section     - Main headline, subtitle, CTA buttons, demo command
+ * 2. Problem Section  - Before/After comparison cards (edit `problems` array)
+ * 3. Workflows Grid   - Feature cards linking to docs (edit `workflows` array)
+ * 4. CTA Section      - Final call-to-action
+ *
+ * QUICK CUSTOMIZATION:
+ * - Edit translations in the `t` object inside LandingPage component
+ * - Edit `workflows` array to change feature cards
+ * - Edit `problems` array to change comparison cards
+ * - Change the demo command in Hero section (search "npx your-cli-command")
+ * - Remove sections you don't need
+ * =============================================================================
+ */
 "use client";
 
 import { motion } from "framer-motion";
@@ -15,18 +35,19 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import {
-  AiToolIcon,
-  toolLabelNameMap,
-  toolLabels,
-} from "~/components/shared/ai-tool-icon";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import { githubConfig } from "~/lib/site-info";
 
 const Hero3D = dynamic(() => import("./hero-3d").then((mod) => mod.Hero3D), {
   ssr: false,
 });
 
+// =============================================================================
+// TODO: CUSTOMIZE WORKFLOWS - These appear as feature cards on the landing page
+// Each workflow links to a documentation page. Update titles, descriptions, and links.
+// Icons are from lucide-react: https://lucide.dev/icons
+// =============================================================================
 const workflows = [
   {
     icon: BookOpen,
@@ -78,6 +99,10 @@ const workflows = [
   },
 ];
 
+// =============================================================================
+// TODO: CUSTOMIZE PROBLEMS - Before/After comparison cards showing your value prop
+// Each card shows a pain point (before) and the solution (after).
+// =============================================================================
 const problems = [
   {
     role: { en: "Content Creator", zh: "内容创作者" },
@@ -131,9 +156,6 @@ type Translation = {
     title: string;
     subtitle: string;
   };
-  tools: {
-    title: string;
-  };
   cta: {
     title: string;
     desc: string;
@@ -168,10 +190,6 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
         lang === "en"
           ? " Specialized skills for every role"
           : "为每个角色打造的专业技能",
-    },
-    tools: {
-      title:
-        lang === "en" ? "Works with your favorite tools" : "支持你喜爱的工具",
     },
     cta: {
       title:
@@ -219,7 +237,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                   </Button>
                 </Link>
                 <Link
-                  href="https://github.com/[github-username]/[project-name]"
+                  href={githubConfig.url}
                   target="_blank"
                 >
                   <Button
@@ -232,6 +250,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                 </Link>
               </div>
 
+              {/* TODO: Update this demo command to match your project */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -243,8 +262,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                     <div className="flex items-center overflow-x-auto text-left font-mono text-sm whitespace-nowrap md:text-base">
                       <span className="text-primary mr-3 select-none">$</span>
                       <span className="text-foreground">
-                        npx add-skill
-                        nicepkg/ai-workflow/workflows/content-creator-workflow
+                        npx your-cli-command --example
                       </span>
                     </div>
                   </div>
@@ -402,80 +420,6 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                 </motion.div>
               </Link>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Tools Section */}
-      <section className="relative overflow-hidden border-y bg-muted/20 pt-24 pb-20">
-        <div className="absolute inset-0 z-0 opacity-30">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        </div>
-
-        <div className="container relative z-10 mx-auto px-4 text-center">
-          <h2 className="mb-6 text-3xl font-bold md:text-5xl">
-            {t.tools.title}
-          </h2>
-          <p className="mx-auto mb-16 max-w-2xl text-xl text-muted-foreground">
-            {lang === "en"
-              ? "Seamlessly integrates with the AI coding assistants you already use."
-              : "与你现有的 AI 编程助手无缝集成，即插即用。"}
-          </p>
-        </div>
-
-        <div className="relative flex w-full flex-col gap-8">
-          {/* Gradient Masks */}
-          <div className="absolute top-0 bottom-0 left-0 z-20 w-32 bg-gradient-to-r from-background to-transparent" />
-          <div className="absolute top-0 right-0 bottom-0 z-20 w-32 bg-gradient-to-l from-background to-transparent" />
-
-          {/* First Row - Scrolling Left */}
-          <div className="flex w-full overflow-hidden">
-            <div className="flex animate-marquee items-center gap-6 pt-2 pb-6">
-              {[...toolLabels, ...toolLabels.reverse()]
-                .slice(0, 14)
-                .map((toolLabel, i) => (
-                  <div
-                    key={`row1-${i}`}
-                    className="group flex w-[240px] cursor-default items-center gap-4 rounded-2xl border border-white/5 bg-background/40 p-5 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:bg-background/80 hover:shadow-xl hover:shadow-primary/10"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-background shadow-inner">
-                      <AiToolIcon
-                        label={toolLabel}
-                        size={28}
-                        className="text-muted-foreground transition-all duration-300 group-hover:scale-110 group-hover:text-foreground"
-                      />
-                    </div>
-                    <span className="text-lg font-semibold text-muted-foreground transition-colors group-hover:text-foreground">
-                      {toolLabelNameMap[toolLabel]}
-                    </span>
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          {/* Second Row - Scrolling Right */}
-          <div className="flex w-full overflow-hidden">
-            <div className="flex animate-marquee-reverse items-center gap-6 pt-2 pb-6">
-              {[...toolLabels, ...toolLabels]
-                .slice(7, 21)
-                .map((toolLabel, i) => (
-                  <div
-                    key={`row2-${i}`}
-                    className="group flex w-[240px] cursor-default items-center gap-4 rounded-2xl border border-white/5 bg-background/40 p-5 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-primary/50 hover:bg-background/80 hover:shadow-xl hover:shadow-primary/10"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-background shadow-inner">
-                      <AiToolIcon
-                        label={toolLabel}
-                        size={28}
-                        className="text-muted-foreground transition-all duration-300 group-hover:scale-110 group-hover:text-foreground"
-                      />
-                    </div>
-                    <span className="text-lg font-semibold text-muted-foreground transition-colors group-hover:text-foreground">
-                      {toolLabelNameMap[toolLabel]}
-                    </span>
-                  </div>
-                ))}
-            </div>
           </div>
         </div>
       </section>

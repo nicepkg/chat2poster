@@ -1,3 +1,23 @@
+/**
+ * =============================================================================
+ * TODO: CUSTOMIZE OR REMOVE THIS 3D HERO COMPONENT
+ * =============================================================================
+ * This is an optional 3D animated background for the landing page hero section.
+ * It uses React Three Fiber (@react-three/fiber) and Drei (@react-three/drei).
+ *
+ * Options:
+ * 1. KEEP IT: Customize colors, shapes, animation speed below
+ * 2. SIMPLIFY: Replace with a static gradient or image background
+ * 3. REMOVE IT: Delete this file and remove <Hero3D /> from landing-page.tsx
+ *
+ * Customization tips:
+ * - Change sphere color: modify `color` and `emissive` in MeshDistortMaterial
+ * - Adjust animation: modify `distort`, `speed` values
+ * - Change stars: adjust `count`, `factor` in Stars component
+ *
+ * Note: This adds ~200KB to your bundle. Remove if not needed.
+ * =============================================================================
+ */
 "use client";
 
 import {

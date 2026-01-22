@@ -1,12 +1,12 @@
 {
-  "name": "[project-name]",
+  "name": "[repo-name]",
   "version": "1.0.1",
   "private": true,
   "type": "module",
   "description": "[project-name] - [slogan]",
   "repository": {
     "type": "git",
-    "url": "https://github.com/[github-username]/[project-name].git"
+    "url": "https://github.com/[github-username]/[repo-name].git"
   },
   "license": "MIT",
   "scripts": {
