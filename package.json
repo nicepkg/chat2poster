@@ -14,6 +14,8 @@
     "build:website": "pnpm --filter website build",
     "start:website": "pnpm --filter website start",
     "start:static-website": "pnpm --filter website start:static",
+    "test": "pnpm -r run test",
+    "test:coverage": "pnpm -r run test:coverage",
     "lint": "pnpm -r run lint",
     "lint:fix": "pnpm -r run lint:fix",
     "typecheck": "pnpm -r run typecheck",
@@ -23,8 +25,8 @@
     "prepare": "husky"
   },
   "engines": {
-    "node": ">=20.0.0",
-    "pnpm": ">=9.0.0"
+    "node": ">=24.0.0",
+    "pnpm": ">=10.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.3.1",
