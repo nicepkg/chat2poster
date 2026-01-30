@@ -1,19 +1,3 @@
-/**
- * =============================================================================
- * TODO: REPLACE THIS EXAMPLE LOGO WITH YOUR OWN
- * =============================================================================
- * This is a sample logo component. You should replace it with your own design.
- *
- * Options:
- * 1. Replace the SVG below with your own SVG logo
- * 2. Use an image: <Image src="/logo.png" alt="Logo" width={32} height={32} />
- * 3. Use text only: just remove the <svg> and keep the <span>
- *
- * The logo appears in:
- * - Navigation bar (via [locale]/layout.tsx)
- * - You can also use it in footer, about page, etc.
- * =============================================================================
- */
 import React from "react";
 import { siteConfig } from "~/lib/site-info";
 
@@ -42,37 +26,25 @@ export function Logo({
             x2="100%"
             y2="100%"
           >
-            <stop offset="0%" stopColor="#8b5cf6" /> {/* Purple-500 */}
-            <stop offset="100%" stopColor="#3b82f6" /> {/* Blue-500 */}
+            <stop offset="0%" stopColor="#6366f1" />
+            <stop offset="100%" stopColor="#fb7185" />
           </linearGradient>
         </defs>
 
-        {/* Outer Hexagon/Circle hint */}
+        {/* Chat bubble */}
         <path
-          d="M216,128A88,88,0,1,1,128,40,88,88,0,0,1,216,128Z"
-          fill="none"
-          stroke="currentColor"
-          strokeOpacity="0.1"
-          strokeWidth="16"
-          strokeLinecap="round"
-          strokeDasharray="40 20"
-          className="animate-[spin_10s_linear_infinite]"
-          style={{ transformOrigin: "center" }}
+          d="M40 32 h136 a24 24 0 0 1 24 24 v80 a24 24 0 0 1 -24 24 h-88 l-40 40 v-40 h-8 a24 24 0 0 1 -24 -24 v-80 a24 24 0 0 1 24 -24 z"
+          fill="url(#logo-gradient)"
         />
 
-        {/* The W Wave */}
-        <path
-          d="M64,112l32,48l32-48l32,48l32-48"
-          fill="none"
-          stroke="url(#logo-gradient)"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="28"
-        />
+        {/* Chat lines */}
+        <rect x="56" y="72" width="88" height="12" rx="6" fill="white" opacity="0.9" />
+        <rect x="56" y="100" width="64" height="12" rx="6" fill="white" opacity="0.7" />
+        <rect x="56" y="128" width="80" height="12" rx="6" fill="white" opacity="0.5" />
 
-        {/* Start/End Dots */}
-        <circle cx="64" cy="112" r="14" fill="url(#logo-gradient)" />
-        <circle cx="192" cy="112" r="14" fill="url(#logo-gradient)" />
+        {/* Image frame at bottom right */}
+        <rect x="152" y="168" width="80" height="64" rx="8" fill="url(#logo-gradient)" />
+        <rect x="160" y="176" width="64" height="48" rx="4" fill="white" opacity="0.9" />
       </svg>
       <span className="font-bold text-xl tracking-tight hidden sm:inline-block">
         {siteConfig.name}

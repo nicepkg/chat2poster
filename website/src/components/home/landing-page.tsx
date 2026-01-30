@@ -1,23 +1,3 @@
-/**
- * =============================================================================
- * TODO: CUSTOMIZE THIS LANDING PAGE FOR YOUR PROJECT
- * =============================================================================
- * This is a feature-rich landing page template. Customize or simplify as needed.
- *
- * STRUCTURE OVERVIEW:
- * 1. Hero Section     - Main headline, subtitle, CTA buttons, demo command
- * 2. Problem Section  - Before/After comparison cards (edit `problems` array)
- * 3. Workflows Grid   - Feature cards linking to docs (edit `workflows` array)
- * 4. CTA Section      - Final call-to-action
- *
- * QUICK CUSTOMIZATION:
- * - Edit translations in the `t` object inside LandingPage component
- * - Edit `workflows` array to change feature cards
- * - Edit `problems` array to change comparison cards
- * - Change the demo command in Hero section (search "npx your-cli-command")
- * - Remove sections you don't need
- * =============================================================================
- */
 "use client";
 
 import { motion } from "framer-motion";
@@ -44,97 +24,94 @@ const Hero3D = dynamic(() => import("./hero-3d").then((mod) => mod.Hero3D), {
 });
 
 // =============================================================================
-// TODO: CUSTOMIZE WORKFLOWS - These appear as feature cards on the landing page
-// Each workflow links to a documentation page. Update titles, descriptions, and links.
-// Icons are from lucide-react: https://lucide.dev/icons
+// FEATURE CARDS - chat2poster core features
 // =============================================================================
 const workflows = [
   {
-    icon: BookOpen,
-    title: { en: "Content Creator", zh: "内容创作者" },
-    desc: { en: "SEO, Blog, Social Media", zh: "SEO, 博客, 社交媒体" },
-    link: "/workflows/content-creator",
+    icon: Presentation,
+    title: { en: "Beautiful Themes", zh: "精美主题" },
+    desc: { en: "Dark, Light, Custom Styles", zh: "暗色、亮色、自定义样式" },
+    link: "/docs/themes",
+    color: "text-purple-500",
+    bg: "bg-purple-500/10",
+  },
+  {
+    icon: BarChart2,
+    title: { en: "Smart Pagination", zh: "智能分页" },
+    desc: { en: "Auto-split Long Chats", zh: "自动拆分超长对话" },
+    link: "/docs/pagination",
     color: "text-blue-500",
     bg: "bg-blue-500/10",
   },
   {
     icon: Zap,
-    title: { en: "Marketing Pro", zh: "营销专家" },
-    desc: { en: "Growth, Copywriting, Funnels", zh: "增长, 文案, 漏斗" },
-    link: "/workflows/marketing-pro",
-    color: "text-purple-500",
-    bg: "bg-purple-500/10",
+    title: { en: "One-Click Export", zh: "一键导出" },
+    desc: { en: "PNG at 1x/2x/3x DPI", zh: "1x/2x/3x 倍率 PNG" },
+    link: "/docs/export",
+    color: "text-green-500",
+    bg: "bg-green-500/10",
+  },
+  {
+    icon: BookOpen,
+    title: { en: "Multi-Platform", zh: "多平台支持" },
+    desc: { en: "ChatGPT, Claude, Gemini", zh: "ChatGPT, Claude, Gemini" },
+    link: "/docs/platforms",
+    color: "text-orange-500",
+    bg: "bg-orange-500/10",
   },
   {
     icon: Video,
-    title: { en: "Video Creator", zh: "视频创作者" },
-    desc: { en: "Script, Hooks, Thumbnails", zh: "脚本, 钩子, 封面" },
-    link: "/workflows/video-creator",
+    title: { en: "Browser Extension", zh: "浏览器扩展" },
+    desc: { en: "Export from Any Chat", zh: "从任意对话页面导出" },
+    link: "/docs/extension",
     color: "text-red-500",
     bg: "bg-red-500/10",
   },
   {
     icon: TrendingUp,
-    title: { en: "Stock Trader", zh: "股票交易员" },
-    desc: { en: "Technical Analysis, Macro", zh: "技术分析, 宏观" },
-    link: "/workflows/stock-trader",
-    color: "text-green-500",
-    bg: "bg-green-500/10",
-  },
-  {
-    icon: BarChart2,
-    title: { en: "Product Manager", zh: "产品经理" },
-    desc: { en: "PRD, User Stories, Strategy", zh: "PRD, 用户故事, 策略" },
-    link: "/workflows/product-manager",
-    color: "text-orange-500",
-    bg: "bg-orange-500/10",
-  },
-  {
-    icon: Presentation,
-    title: { en: "Talk to Slidev", zh: "Talk to Slidev" },
-    desc: { en: "Presentations, Storytelling", zh: "演示文稿, 讲故事" },
-    link: "/workflows/talk-to-slidev",
+    title: { en: "Web App", zh: "网页版" },
+    desc: { en: "Share Link & Manual Input", zh: "分享链接 & 手动输入" },
+    link: "/docs/web-app",
     color: "text-yellow-500",
     bg: "bg-yellow-500/10",
   },
 ];
 
 // =============================================================================
-// TODO: CUSTOMIZE PROBLEMS - Before/After comparison cards showing your value prop
-// Each card shows a pain point (before) and the solution (after).
+// PROBLEM/SOLUTION CARDS - User pain points and chat2poster solutions
 // =============================================================================
 const problems = [
   {
     role: { en: "Content Creator", zh: "内容创作者" },
     pain: {
-      en: "Explaining SEO basics, H2 structure, meta descriptions... every single time",
-      zh: "每次都要解释 SEO 基础、H2 结构、meta 描述...",
+      en: "Screenshots look ugly, inconsistent formatting, can't fit long chats",
+      zh: "截图丑、格式乱、长对话截不全",
     },
     gain: {
-      en: "AI pre-loaded with SEO best practices, content frameworks",
-      zh: "AI 已预装 SEO 最佳实践、内容框架",
+      en: "Beautiful posters with consistent themes, auto-pagination for any length",
+      zh: "统一主题的精美海报，自动分页适配任意长度",
     },
   },
   {
-    role: { en: "Marketer", zh: "营销人员" },
+    role: { en: "Developer", zh: "开发者" },
     pain: {
-      en: "Teaching UTM parameters, AIDA copywriting, funnel optimization...",
-      zh: "教 UTM 参数、AIDA 文案法、漏斗优化...",
+      en: "Code blocks look terrible in screenshots, syntax highlighting lost",
+      zh: "代码块截图难看，语法高亮丢失",
     },
     gain: {
-      en: "AI equipped with GTM strategy, campaign templates, analytics frameworks",
-      zh: "AI 已配备 GTM 策略、活动模板、分析框架",
+      en: "Shiki-powered code highlighting, preserves formatting perfectly",
+      zh: "Shiki 代码高亮，完美保留格式",
     },
   },
   {
-    role: { en: "Stock Trader", zh: "股票交易员" },
+    role: { en: "Social Sharer", zh: "社交分享者" },
     pain: {
-      en: "MACD means..., RSI indicates..., check the 200-day MA...",
-      zh: "MACD 意味着...、RSI 表示...、看 200 日均线...",
+      en: "Platform limits image size, manual cropping is tedious",
+      zh: "平台限制图片大小，手动裁剪很麻烦",
     },
     gain: {
-      en: "AI loaded with technical analysis, fundamentals, multi-market expertise",
-      zh: "AI 已加载技术分析、基本面、多市场专业知识",
+      en: "Export at 1x/2x/3x, multi-page zip for long chats",
+      zh: "1x/2x/3x 倍率导出，长对话多页打包",
     },
   },
 ];
@@ -167,39 +144,39 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
   const t: Translation = {
     hero: {
       title:
-        lang === "en" ? "Supercharge your AI Workflow" : "AI 工作流的究极形态",
+        lang === "en" ? "Turn AI Chats into Posters" : "把 AI 聊天变成海报",
       subtitle:
         lang === "en"
-          ? "Stop repeating yourself. Start with context."
-          : "告别重复解释。让 AI 真正懂你。",
+          ? "Share-worthy images in one click."
+          : "一键生成能直接发的精美图片。",
       desc:
         lang === "en"
-          ? "Every session starts from zero. One command adds professional skills, best practices, and project context to your AI."
-          : "每次对话都从零开始？一条命令，为你的 AI 注入专业技能、最佳实践和项目上下文。",
+          ? "Export ChatGPT, Claude, Gemini conversations as beautiful, paginated PNG images. Perfect for Twitter, WeChat, blogs, and docs."
+          : "将 ChatGPT、Claude、Gemini 对话导出为精美的分页 PNG 图片。完美适配推特、微信、博客和文档。",
       getStarted: lang === "en" ? "Get Started" : "开始使用",
       viewGithub: lang === "en" ? "Star on GitHub" : "Star on GitHub",
     },
     problem: {
-      title: lang === "en" ? "The Problem We Solve" : "我们解决的痛点",
-      without: lang === "en" ? "Without AI Workflow" : "没有 AI Workflow",
-      with: lang === "en" ? "With AI Workflow" : "有了 AI Workflow",
+      title: lang === "en" ? "Why chat2poster?" : "为什么选择 chat2poster？",
+      without: lang === "en" ? "Without chat2poster" : "没有 chat2poster",
+      with: lang === "en" ? "With chat2poster" : "有了 chat2poster",
     },
     workflows: {
-      title: lang === "en" ? "Explore Workflows" : "探索工作流",
+      title: lang === "en" ? "Core Features" : "核心功能",
       subtitle:
         lang === "en"
-          ? " Specialized skills for every role"
-          : "为每个角色打造的专业技能",
+          ? "Everything you need for beautiful AI chat exports"
+          : "导出精美 AI 对话所需的一切",
     },
     cta: {
       title:
         lang === "en"
-          ? "Ready to upgrade your AI?"
-          : "准备好升级你的 AI 了吗？",
+          ? "Ready to share your AI chats?"
+          : "准备好分享你的 AI 对话了吗？",
       desc:
         lang === "en"
-          ? "Join the community and start building better context."
-          : "加入社区，开始构建更好的上下文。",
+          ? "Install the extension or try the web app. Start creating beautiful posters today."
+          : "安装扩展或使用网页版。今天就开始创建精美海报。",
       button: lang === "en" ? "Get Started Now" : "立即开始",
     },
   };
@@ -247,7 +224,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                 </Link>
               </div>
 
-              {/* TODO: Update this demo command to match your project */}
+              {/* Demo: Install browser extension */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -257,9 +234,11 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                 <div className="via-primary/20 rounded-2xl bg-gradient-to-r from-transparent to-transparent p-1">
                   <div className="bg-card/80 border-primary/10 rounded-xl border p-6 shadow-2xl backdrop-blur-md">
                     <div className="flex items-center overflow-x-auto text-left font-mono text-sm whitespace-nowrap md:text-base">
-                      <span className="text-primary mr-3 select-none">$</span>
+                      <span className="text-primary mr-3 select-none">1.</span>
                       <span className="text-foreground">
-                        npx your-cli-command --example
+                        {lang === "en"
+                          ? "Install extension → Open ChatGPT → Click Export → Done!"
+                          : "安装扩展 → 打开 ChatGPT → 点击导出 → 搞定！"}
                       </span>
                     </div>
                   </div>

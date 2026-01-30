@@ -1,18 +1,39 @@
 <svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#818cf8" />
-      <stop offset="100%" stop-color="#c084fc" />
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#fb7185" />
     </linearGradient>
   </defs>
 
-  <!-- Simple "V" for Vibe - clean, modern -->
+  <!-- Chat bubble transforming to poster/image -->
+  <!-- Chat bubble -->
   <path
-    d="M40 56 L128 200 L216 56"
+    d="M48 40 h120 a24 24 0 0 1 24 24 v72 a24 24 0 0 1 -24 24 h-80 l-32 32 v-32 h-8 a24 24 0 0 1 -24 -24 v-72 a24 24 0 0 1 24 -24 z"
+    fill="url(#g)"
+    opacity="0.9"
+  />
+
+  <!-- Chat lines -->
+  <rect x="56" y="72" width="80" height="8" rx="4" fill="white" opacity="0.9" />
+  <rect x="56" y="96" width="56" height="8" rx="4" fill="white" opacity="0.7" />
+  <rect x="56" y="120" width="72" height="8" rx="4" fill="white" opacity="0.5" />
+
+  <!-- Arrow indicating transformation -->
+  <path
+    d="M180 128 L220 128 M205 113 L220 128 L205 143"
     fill="none"
     stroke="url(#g)"
-    stroke-width="40"
+    stroke-width="12"
     stroke-linecap="round"
     stroke-linejoin="round"
   />
+
+  <!-- Image/Poster frame -->
+  <rect x="136" y="152" width="96" height="80" rx="12" fill="url(#g)" />
+  <rect x="148" y="164" width="72" height="56" rx="4" fill="white" opacity="0.9" />
+
+  <!-- Image placeholder mountain/sun -->
+  <circle cx="168" cy="182" r="8" fill="#6366f1" opacity="0.6" />
+  <path d="M156 208 L184 184 L200 196 L212 208 Z" fill="#fb7185" opacity="0.6" />
 </svg>

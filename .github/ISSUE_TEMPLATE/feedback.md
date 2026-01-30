@@ -1,5 +1,5 @@
 ---
-name: 💬 Feedback
+name: Feedback
 about: Share feedback about documentation, website, or general experience
 title: '[Feedback] '
 labels: feedback,documentation
@@ -8,10 +8,10 @@ assignees: ''
 
 ## Feedback Type
 
-- [ ] 📚 Documentation unclear or incorrect
-- [ ] 🌐 Website issue
-- [ ] 💡 General suggestion
-- [ ] ❓ Question
+- [ ] Documentation unclear or incorrect
+- [ ] Website issue
+- [ ] General suggestion
+- [ ] Question
 
 ## Page/Section (if applicable)
 

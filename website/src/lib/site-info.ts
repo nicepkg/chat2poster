@@ -28,16 +28,16 @@
 
 // ---------- Basic Site Config ----------
 export const siteConfig = {
-  name: "[project-name]",
-  description: "[project-slogan]",
-  url: "https://[project-domain]",
+  name: "chat2poster",
+  description: "Turn AI chats into share-worthy posters.",
+  url: "https://chat2poster.xiaominglab.com",
   locale: "en_US",
 };
 
 // ---------- GitHub Config ----------
 export const githubConfig = {
-  username: "[github-username]",
-  repo: "[repo-name]",
+  username: "nicepkg",
+  repo: "chat2poster",
   get url() {
     return `https://github.com/${this.username}/${this.repo}`;
   },
@@ -51,9 +51,9 @@ export const githubConfig = {
 
 // ---------- Author Config ----------
 export const authorConfig = {
-  name: "[author-name]",
-  website: "[author-website]",
-  email: "[support-email]",
+  name: "Jinming Yang",
+  website: "https://github.com/2214962083",
+  email: "2214962083@qq.com",
   github: `https://github.com/${githubConfig.username}`,
 };
 
@@ -66,28 +66,28 @@ export const socialLinksConfig = {
   },
   bilibili: {
     label: "Bilibili",
-    href: "https://space.bilibili.com/[bilibili-uid]",
+    href: "https://space.bilibili.com/83540912",
   },
   douyin: {
     label: "Douyin",
-    href: "https://www.douyin.com/user/[douyin-uid]",
-    handle: "[douyin-nickname]",
+    href: "https://www.douyin.com/user/79841360454",
+    handle: "葬爱非主流小明",
   },
   twitter: {
     label: "X (Twitter)",
-    href: "https://x.com/[twitter-handle]",
+    href: "https://x.com/jinmingyang666",
   },
 };
 
 // ---------- Footer Config ----------
 export const footerConfig = {
   description: {
-    en: "Supercharge your AI coding workflow with context-aware skills and best practices. Built for developers who want to stop repeating themselves.",
-    zh: "为你的 AI 编程工作流注入上下文感知技能和最佳实践。专为不想重复自己的开发者打造。",
+    en: "Turn AI chats into share-worthy posters. Export ChatGPT, Claude, Gemini conversations as beautiful images.",
+    zh: "把 AI 聊天变成能直接发的海报图。将 ChatGPT、Claude、Gemini 对话导出为精美图片。",
   },
   links: [
     {
-      label: "[author-name]",
+      label: "Jinming Yang",
       href: authorConfig.website,
     },
     {

@@ -1,23 +1,3 @@
-/**
- * =============================================================================
- * TODO: CUSTOMIZE OR REMOVE THIS 3D HERO COMPONENT
- * =============================================================================
- * This is an optional 3D animated background for the landing page hero section.
- * It uses React Three Fiber (@react-three/fiber) and Drei (@react-three/drei).
- *
- * Options:
- * 1. KEEP IT: Customize colors, shapes, animation speed below
- * 2. SIMPLIFY: Replace with a static gradient or image background
- * 3. REMOVE IT: Delete this file and remove <Hero3D /> from landing-page.tsx
- *
- * Customization tips:
- * - Change sphere color: modify `color` and `emissive` in MeshDistortMaterial
- * - Adjust animation: modify `distort`, `speed` values
- * - Change stars: adjust `count`, `factor` in Stars component
- *
- * Note: This adds ~200KB to your bundle. Remove if not needed.
- * =============================================================================
- */
 "use client";
 
 import {
@@ -45,14 +25,14 @@ function AnimatedSphere() {
   return (
     <Sphere visible args={[1, 64, 64]} scale={2.0} ref={sphereRef}>
       <MeshDistortMaterial
-        color="#a78bfa" // Lighter purple (Purple-400)
+        color="#818cf8"
         attach="material"
         distort={0.4}
         speed={2}
-        roughness={0.4} // Increased roughness to show color better
-        metalness={0.2} // Decreased metalness so it doesn't reflect the black void
-        emissive="#8b5cf6" // Purple-500 glow
-        emissiveIntensity={0.8} // Strong glow
+        roughness={0.4}
+        metalness={0.2}
+        emissive="#6366f1"
+        emissiveIntensity={0.8}
         wireframe={true}
       />
     </Sphere>
@@ -66,7 +46,7 @@ export function Hero3D() {
         <PerspectiveCamera makeDefault position={[0, 0, 6]} />
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1.5} />
-        <pointLight position={[-10, -10, -10]} color="#3b82f6" intensity={1} />
+        <pointLight position={[-10, -10, -10]} color="#fb7185" intensity={1} />
 
         <Stars
           radius={100}

@@ -6,12 +6,6 @@ labels: enhancement
 assignees: ""
 ---
 
-<!--
-  ⚠️ TEMPLATE NOTICE - DELETE THIS BLOCK AFTER CUSTOMIZATION
-  This is a starter template. Customize the sections below for your project.
-  See CHECKLIST.md for items that need review.
--->
-
 ## Is your feature request related to a problem?
 
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]

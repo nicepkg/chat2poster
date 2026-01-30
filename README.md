@@ -2,370 +2,203 @@
 
 <img src="website/public/icon.svg" width="120" height="120" />
 
-# AI Vibe Coding Starter
+# chat2poster
 
-### **From Idea to Production in One Conversation**
+### **Turn AI chats into share-worthy posters.**
 
+[![GitHub stars](https://img.shields.io/github/stars/nicepkg/chat2poster?style=social)](https://github.com/nicepkg/chat2poster)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/nicepkg/chat2poster/pulls)
 
 [简体中文](./README_cn.md) | English
 
-<img src="https://img.shields.io/badge/Claude_Code-Ready-blueviolet?style=for-the-badge&logo=anthropic" />
-<img src="https://img.shields.io/badge/Codex-Ready-green?style=for-the-badge&logo=openai" />
-<img src="https://img.shields.io/badge/Cursor-Ready-blue?style=for-the-badge" />
-<img src="https://img.shields.io/badge/OpenCode-Ready-orange?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Chrome-Extension-blue?style=for-the-badge&logo=googlechrome" />
+<img src="https://img.shields.io/badge/Next.js-Web_App-black?style=for-the-badge&logo=next.js" />
 
 ---
 
-**The ultimate lazy developer's dream: Tell AI your idea, get a production-ready website.**
+**Export ChatGPT, Claude, Gemini conversations as beautiful PNG images.**
 
-One template. One conversation. Zero manual setup.
+One click. Beautiful themes. Smart pagination for long chats.
 
-[Get Started](#-quick-start) · [Features](#-features) · [How It Works](#-how-it-works)
+[Get Started](#-quick-start) · [Features](#-features) · [Documentation](https://chat2poster.xiaominglab.com)
 
 </div>
 
 ---
 
-## ✨ What is This?
+## Why chat2poster?
 
-**AI Vibe Coding Starter** is a hyper-modern template designed for the AI-first development era.
-
-> **"I have an idea for a project..."**
+> **Sharing AI conversations shouldn't be this hard.**
 >
-> That's all you need to say. AI handles the rest.
+> Screenshots look ugly. Long chats don't fit. Code blocks lose formatting. chat2poster solves all of this.
 
-This isn't just another starter template. It's a **complete automation system** that lets AI coding assistants (Claude Code, Codex, OpenCode, Cursor) take you from concept to deployed website with:
+### The Problem We Solve
 
-- Zero configuration headaches
-- Zero deployment struggles
-- Zero Stack Overflow copy-pasting
-- **Pure vibe coding**
+| Without chat2poster | With chat2poster |
+|:--------------------------|:-----------------------|
+| Ugly screenshots with inconsistent styles | Beautiful posters with unified themes |
+| Long conversations can't fit in one image | Smart auto-pagination, zip export |
+| Code blocks lose syntax highlighting | Shiki-powered perfect code rendering |
+| Manual cropping for different platforms | 1x/2x/3x export for any use case |
 
-### 🎯 The Core Magic: PRD-Driven Automation
-
-Traditional starters make you manually update dozens of files. **Not this one.**
+### Key Benefits
 
 ```
-docs/config.md    →  Your project settings (name, domain, colors...)
-docs/prd.md       →  Your product requirements
+Beautiful Themes  → Dark, light, and custom styles
+Smart Pagination  → Auto-split long chats into pages
+One-Click Export  → PNG at 1x/2x/3x DPI
+Multi-Platform    → ChatGPT, Claude, Gemini support
 ```
-
-AI reads these files and **automatically**:
-
-- Replaces `[project-name]`, `[repo-name]`, `[github-username]` everywhere
-- Updates `site-info.ts`, `package.json`, `LICENSE`, workflows...
-- Generates README, GitHub templates, landing page content
-- Creates proper conventional commits
-- Deploys to Cloudflare Pages
-
-**You write the PRD. AI does the grunt work.**
-
-### 📊 Complete Workflow
-
-```mermaid
-flowchart LR
-    subgraph INPUT [" "]
-        A["📝 Clone + Config"]
-    end
-
-    subgraph AI ["🤖 AI Automation"]
-        B["Phase 1<br/>Core Config"] --> C["Phase 2<br/>Visual Assets"]
-        C --> D["Phase 3<br/>Documentation"]
-        D --> E["Phase 4<br/>Verify & Commit"]
-    end
-
-    subgraph OUTPUT [" "]
-        F["🚀 Deploy"]
-    end
-
-    A --> B
-    E --> F
-
-    style INPUT fill:#e1f5fe
-    style AI fill:#f3e5f5
-    style OUTPUT fill:#e8f5e9
-```
-
-<details>
-<summary>📋 Detailed Workflow (click to expand)</summary>
-
-| Phase       | What AI Does                                                                                                                |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------- |
-| **Setup**   | Clone template → Create `docs/config.md` & `docs/prd.md` → Tell AI "Start setup"                                            |
-| **Phase 1** | Replace placeholders in `site-info.ts` → Update `package.json`, `LICENSE`, workflows → Configure theme → `pnpm typecheck` ✓ |
-| **Phase 2** | Customize landing page → Update logo & favicon → Visual review ✓                                                            |
-| **Phase 3** | Delete template READMEs → Generate project README → Create GitHub templates → No placeholders left ✓                        |
-| **Phase 4** | `pnpm lint && typecheck` → Run `validate-setup.sh` → Conventional commit ✓                                                  |
-| **Deploy**  | `git push` → GitHub Actions CI → Cloudflare Pages → Site Live! ✅                                                           |
-
-</details>
 
 ---
 
-## 🎯 The Problem We Solve
+## Who Is This For?
 
-| 😫 Traditional Starters                            | 🎉 AI Vibe Coding Starter                              |
-| :------------------------------------------------- | :----------------------------------------------------- |
-| Clone then manually edit N files with placeholders | Fill `config.md`, AI replaces all + generates files    |
-| Manually create GitHub Issues/PRs                  | `/fix-github-issue`, `/create-pr` - one command        |
-| Manually configure Cloudflare Pages deployment     | AI runs `wrangler` to create Pages, bind KV/R2/D1      |
-| Want to add MCP? Edit 4 config files manually      | `/mcp-manager add xxx` syncs all AI tools at once      |
-| Not AI Ready                                       | Claude Code / Codex / Cursor / OpenCode all supported  |
-| "How does this starter work?" Read docs for ages   | Tell AI your idea, it reads `CLAUDE.md` and guides you |
+<table>
+<tr>
+<td width="50%">
 
----
+**Content Creators**
+Share AI conversations on Twitter, WeChat, blogs with consistent beautiful formatting.
 
-## 🚀 Features
+**Developers**
+Export code discussions with perfect syntax highlighting preserved.
 
-### 🤖 AI-Native Architecture
+</td>
+<td width="50%">
 
-- **CLAUDE.md / AGENTS.md** - Comprehensive instructions for AI assistants
-- **CHECKLIST.md** - Progress tracking AI can update
-- **PRD-driven** - Write requirements, AI implements
-- **MCP configs** - Pre-configured for Claude Code, Codex, Cursor, OpenCode
+**Researchers**
+Document AI interactions for papers, reports, and presentations.
 
-### 🎮 Built-in AI Commands
+**Educators**
+Create teaching materials from AI conversation examples.
 
-Pre-configured slash commands for common workflows:
-
-| Command                     | Description                                       |
-| --------------------------- | ------------------------------------------------- |
-| `/create-pr`                | Create PR with Angular commit convention          |
-| `/fix-github-issue`         | Analyze and fix GitHub issues automatically       |
-| `/code-review`              | Review code for quality, security, best practices |
-| `/review-pr`                | Review pull requests with structured feedback     |
-| `/commit`                   | Create conventional commits                       |
-| `/add-changelog`            | Generate changelog entries                        |
-| `/prepare-release`          | Prepare version releases                          |
-| `/mcp-manager`              | Manage MCP configs across all 4 AI tools          |
-| `/nextjs-performance-audit` | Audit Next.js performance                         |
-
-### 🧩 Shared Skills
-
-Reusable AI capabilities (symlinked across tools):
-
-| Skill              | Description                                                |
-| ------------------ | ---------------------------------------------------------- |
-| `resource-scout`   | Search & discover MCP servers and skills from marketplaces |
-| `skill-creator`    | Guide for creating new custom skills                       |
-| `skill-downloader` | Download & install skills from GitHub or archives          |
-
-### ⚡ Production-Ready Stack
-
-| Technology   | Version | Purpose           |
-| ------------ | ------- | ----------------- |
-| Next.js      | 15      | React framework   |
-| React        | 19      | UI library        |
-| Nextra       | 4       | Documentation     |
-| Tailwind CSS | 4       | Styling           |
-| shadcn/ui    | Latest  | Component library |
-| TypeScript   | 5       | Type safety       |
-| pnpm         | 10+     | Package manager   |
-
-### 🔧 Engineering Excellence
-
-- **Husky + Commitlint** - Angular commit convention enforced
-- **ESLint + Prettier** - Code quality automated
-- **GitHub Actions** - CI/CD out of the box
-- **PR title validation** - Conventional commits for PRs too
-- **Cloudflare Pages** - Deploy on merge, preview on PR
-
-### 📁 Multi-Tool Compatibility
-
-**One codebase, all AI tools supported.**
-
-MCP configs (one per tool, synced content):
-
-```
-.mcp.json           → Claude Code
-.cursor/mcp.json    → Cursor
-.codex/config.toml  → Codex
-opencode.json       → OpenCode
-```
-
-Shared via symlinks:
-
-```
-AGENTS.md           → CLAUDE.md        # Universal AI instructions
-.cursor/skills/     → .claude/skills/  # Shared skills
-.codex/skills/      → .claude/skills/
-.opencode/skill/    → .claude/skills/
-```
-
-Write once in `.claude/`, all tools benefit.
+</td>
+</tr>
+</table>
 
 ---
 
-## 🎬 How It Works
+## Features
 
-### Step 1: Clone & Tell AI Your Idea
+| Feature | Description | Details |
+|:--------|:------------|:--------|
+| **Beautiful Themes** | Dark, light, and custom color schemes | Consistent aesthetics |
+| **Smart Pagination** | Auto-split when > 6000px, manual page breaks | Configurable max height |
+| **One-Click Export** | PNG export at 1x/2x/3x resolution | Multi-page zip for long chats |
+| **Multi-Platform** | ChatGPT, Claude, Gemini adapters | Share link & manual input fallback |
+| **Browser Extension** | Export directly from chat pages | Shadow DOM isolation |
+| **Web App** | Paste share links or create manually | No installation required |
+
+---
+
+## Quick Start
+
+### Browser Extension
+
+1. Install from Chrome Web Store (coming soon)
+2. Open any ChatGPT / Claude / Gemini conversation
+3. Click the chat2poster icon
+4. Select messages, choose theme, export!
+
+### Web App
+
+1. Visit [chat2poster.xiaominglab.com](https://chat2poster.xiaominglab.com)
+2. Paste a share link or create messages manually
+3. Customize theme and pagination
+4. Download your beautiful poster
+
+### Development
 
 ```bash
-git clone https://github.com/2214962083/vibe-coding-starter my-project
-cd my-project
-```
+# Clone the repository
+git clone https://github.com/nicepkg/chat2poster.git
+cd chat2poster
 
-Then open Claude Code (or Codex, or Cursor, or OpenCode) and say:
-
-> "I want to build a documentation site for my CLI tool called 'FastDeploy'.
-> It helps developers deploy apps faster. The domain will be fastdeploy.dev."
-
-### Step 2: AI Does Everything
-
-The AI will:
-
-1. Read `CLAUDE.md` for instructions
-2. Ask clarifying questions (colors, social links, etc.)
-3. Update `site-info.ts` with your config
-4. Customize the landing page
-5. Generate README from your PRD
-6. Create GitHub templates
-7. Run `pnpm typecheck && pnpm lint`
-8. Commit with proper conventional commits
-
-### Step 3: Deploy
-
-```bash
-# AI can do this too
-gh repo create my-project --public --push
-# Cloudflare Pages auto-deploys on push to main
-```
-
-**That's it. You're live.**
-
----
-
-## 📦 What's Included
-
-```
-├── CLAUDE.md                 # AI instruction manual (AGENTS.md symlinks here)
-├── CHECKLIST.md              # Setup progress tracker
-│
-├── .mcp.json                 # Claude Code MCP config
-├── .cursor/mcp.json          # Cursor MCP config
-├── .codex/config.toml        # Codex MCP config
-├── opencode.json             # OpenCode MCP config
-│
-├── .claude/
-│   ├── commands/             # Custom AI commands (/create-pr, /mcp-manager...)
-│   └── skills/               # Shared skills (source directory)
-│       ├── resource-scout/
-│       ├── skill-creator/
-│       └── skill-downloader/
-├── .cursor/skills/           # → symlink to .claude/skills/
-├── .codex/skills/            # → symlink to .claude/skills/
-├── .opencode/skill/          # → symlink to .claude/skills/
-│
-├── .github/
-│   ├── actions/              # Reusable composite actions
-│   ├── workflows/            # CI/CD pipelines (ci.yml, deploy-website.yml)
-│   └── *.example.*           # Issue/PR templates (copy & rename to use)
-│
-├── website/                  # Next.js 15 + Nextra 4 + shadcn/ui + Tailwind 4
-│   ├── src/
-│   │   ├── components/       # React components (landing page, shared)
-│   │   ├── lib/site-info.ts  # Central config (edit here, applies globally)
-│   │   └── styles/           # Global styles and theme colors
-│   ├── content/              # Nextra docs content (EN/ZH bilingual)
-│   └── public/               # Static assets (icon.svg, og-image...)
-│
-├── docs/
-│   ├── config.example.md     # Project config template
-│   └── prd.example.md        # PRD template
-│
-└── scripts/
-    └── validate-setup.sh     # Verify setup completeness
-```
-
----
-
-## ⚡ Quick Start
-
-### Prerequisites
-
-- Node.js 24+
-- pnpm 10+
-- GitHub CLI (`gh`)
-- Cloudflare CLI (`wrangler`)
-- An AI coding assistant (Claude Code, Codex, Cursor, or OpenCode)
-
-### 1. Use This Template
-
-```bash
-# Clone
-git clone https://github.com/2214962083/vibe-coding-starter my-awesome-project
-cd my-awesome-project
-
-# Install
+# Install dependencies
 pnpm install
-```
 
-### 2. Talk to AI
-
-Open your AI coding tool and say:
-
-> "Help me set up this template for my project. Here's my idea: [describe your project]"
-
-The AI will guide you through everything.
-
-### 3. Verify Setup
-
-```bash
-./scripts/validate-setup.sh
-```
-
-### 4. Ship It
-
-```bash
-pnpm dev:website  # Preview locally
-gh repo create    # Create GitHub repo
-git push          # Deploy to Cloudflare
+# Start development server
+pnpm dev:website
 ```
 
 ---
 
-## 🧠 For AI Assistants
+## Configuration
 
-If you're an AI reading this: **check `CLAUDE.md`** for detailed instructions.
+### Theme Options
 
-Key files:
+- **Corner Radius**: 0-32px
+- **Padding**: 16-64px
+- **Shadow**: None / Light / Medium / Strong
+- **Background**: Solid colors or gradients
+- **macOS Title Bar**: Toggle on/off
 
-- `CLAUDE.md` - Your complete guide
-- `CHECKLIST.md` - Track your progress
-- `docs/config.md` - User's pre-filled config (if exists)
-- `docs/prd.md` - User's requirements (if exists)
+### Pagination Settings
+
+- **Max Page Height**: 2000-10000px (default: 4096px)
+- **Auto Pagination**: Smart split at message boundaries
+- **Manual Page Breaks**: Insert between any messages
 
 ---
 
-## 🤝 Contributing
+## Star History
 
-This is a template, so contributions that improve the AI experience are especially welcome!
+<a href="https://star-history.com/#nicepkg/chat2poster&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=nicepkg/chat2poster&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=nicepkg/chat2poster&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=nicepkg/chat2poster&type=Date" />
+ </picture>
+</a>
 
-- Improve `CLAUDE.md` instructions
-- Add more AI commands in `.claude/commands/`
-- Enhance MCP configurations
-- Better automation scripts
+---
+
+## Contributing
+
+Contributions are welcome! Here's how you can help:
+
+- Star this repo - It helps others discover this project
+- Report bugs - Open an issue if something isn't working
+- Suggest features - What would make this better for you?
+- Submit PRs - Improve code, docs, or add features
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
+### Contributors
+
+<a href="https://github.com/nicepkg/chat2poster/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=nicepkg/chat2poster" />
+</a>
+
 ---
 
-## 📄 License
+## Credits & Acknowledgments
 
-MIT © [Jinming Yang](https://github.com/2214962083)
+Built with:
+- [Next.js](https://nextjs.org/) - React framework
+- [WXT](https://wxt.dev/) - Browser extension framework
+- [Shiki](https://shiki.style/) - Syntax highlighting
+- [SnapDOM](https://github.com/nicepkg/snapdom) - DOM to image export
+- [shadcn/ui](https://ui.shadcn.com/) - UI components
+
+---
+
+## License
+
+MIT © [nicepkg](https://github.com/nicepkg)
 
 ---
 
 <div align="center">
 
-**Stop configuring. Start shipping.**
+**If this project helped you, please consider giving it a star**
 
-The future of development is conversational. This template is your on-ramp.
+<a href="https://github.com/nicepkg/chat2poster">
+  <img src="https://img.shields.io/github/stars/nicepkg/chat2poster?style=for-the-badge&logo=github&color=yellow" alt="GitHub stars" />
+</a>
 
-<br />
-
-_Built for the lazy. Engineered for the ambitious._
+Made with love by [nicepkg](https://github.com/nicepkg)
 
 </div>

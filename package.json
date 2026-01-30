@@ -1,12 +1,12 @@
 {
-  "name": "[repo-name]",
+  "name": "chat2poster",
   "version": "1.0.1",
   "private": true,
   "type": "module",
-  "description": "[project-name] - [slogan]",
+  "description": "chat2poster - Turn AI chats into share-worthy posters.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/[github-username]/[repo-name].git"
+    "url": "https://github.com/nicepkg/chat2poster.git"
   },
   "license": "MIT",
   "scripts": {

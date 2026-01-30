@@ -6,12 +6,6 @@ labels: bug
 assignees: ""
 ---
 
-<!--
-  ⚠️ TEMPLATE NOTICE - DELETE THIS BLOCK AFTER CUSTOMIZATION
-  This is a starter template. Customize the sections below for your project.
-  See CHECKLIST.md for items that need review.
--->
-
 ## Describe the Bug
 
 A clear and concise description of what the bug is.
@@ -35,7 +29,7 @@ If applicable, add screenshots to help explain your problem.
 
 - OS: [e.g., macOS 14.0, Windows 11, Ubuntu 22.04]
 - Browser: [e.g., Chrome 120, Safari 17]
-- Version: [e.g., 1.0.0]
+- Extension Version: [e.g., 1.0.0]
 
 ## Additional Context
 
