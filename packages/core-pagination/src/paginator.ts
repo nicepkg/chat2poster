@@ -64,7 +64,7 @@ function getSelectedMessages(
 function applyManualBreaks(
   messages: Message[],
   pageBreaks: PageBreak[],
-  config: PaginationConfig
+  _config: PaginationConfig
 ): string[][] {
   if (messages.length === 0) {
     return [];

@@ -2,8 +2,6 @@
  * Multi-page export with progress tracking
  */
 
-import type { ExportScale } from "@chat2poster/core-schema";
-import { createAppError } from "@chat2poster/core-schema";
 import { exportToPng, type ExportOptions, type ExportResult } from "./exporter";
 
 /**

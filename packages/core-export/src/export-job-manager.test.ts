@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { ExportJobManager, createExportJobManager } from "./export-job-manager";
+import { createExportJobManager } from "./export-job-manager";
 
 // Use a valid UUID for testing
 const TEST_CONVERSATION_ID = "00000000-0000-0000-0000-000000000001";

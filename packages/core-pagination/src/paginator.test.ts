@@ -5,7 +5,6 @@ import {
   suggestPageBreaks,
   getPageHeights,
   getEstimatedTotalHeight,
-  DEFAULT_PAGINATION_CONFIG,
 } from "./paginator";
 import type { Message, Selection } from "@chat2poster/core-schema";
 

@@ -38,13 +38,52 @@ export function Logo({
         />
 
         {/* Chat lines */}
-        <rect x="56" y="72" width="88" height="12" rx="6" fill="white" opacity="0.9" />
-        <rect x="56" y="100" width="64" height="12" rx="6" fill="white" opacity="0.7" />
-        <rect x="56" y="128" width="80" height="12" rx="6" fill="white" opacity="0.5" />
+        <rect
+          x="56"
+          y="72"
+          width="88"
+          height="12"
+          rx="6"
+          fill="white"
+          opacity="0.9"
+        />
+        <rect
+          x="56"
+          y="100"
+          width="64"
+          height="12"
+          rx="6"
+          fill="white"
+          opacity="0.7"
+        />
+        <rect
+          x="56"
+          y="128"
+          width="80"
+          height="12"
+          rx="6"
+          fill="white"
+          opacity="0.5"
+        />
 
         {/* Image frame at bottom right */}
-        <rect x="152" y="168" width="80" height="64" rx="8" fill="url(#logo-gradient)" />
-        <rect x="160" y="176" width="64" height="48" rx="4" fill="white" opacity="0.9" />
+        <rect
+          x="152"
+          y="168"
+          width="80"
+          height="64"
+          rx="8"
+          fill="url(#logo-gradient)"
+        />
+        <rect
+          x="160"
+          y="176"
+          width="64"
+          height="48"
+          rx="4"
+          fill="white"
+          opacity="0.9"
+        />
       </svg>
       <span className="font-bold text-xl tracking-tight hidden sm:inline-block">
         {siteConfig.name}
