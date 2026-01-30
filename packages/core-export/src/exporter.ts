@@ -1,0 +1,273 @@
+/**
+ * Core export engine using SnapDOM
+ */
+
+import { createAppError, type ExportScale, type AppError } from "@chat2poster/core-schema";
+import { waitForResources } from "./resource-loader";
+
+/**
+ * Export options
+ */
+export interface ExportOptions {
+  /** Scale factor for the output (1x, 2x, 3x) */
+  scale: ExportScale;
+  /** Output format */
+  format: "png" | "jpeg";
+  /** JPEG quality (0-1), only used for JPEG format */
+  quality?: number;
+  /** Wait for fonts to load */
+  waitForFonts?: boolean;
+  /** Wait for images to load */
+  waitForImages?: boolean;
+  /** Font loading timeout in ms */
+  fontTimeout?: number;
+  /** Image loading timeout in ms */
+  imageTimeout?: number;
+  /** Background color (defaults to transparent for PNG) */
+  backgroundColor?: string;
+}
+
+/**
+ * Default export options
+ */
+export const DEFAULT_EXPORT_OPTIONS: ExportOptions = {
+  scale: 2,
+  format: "png",
+  quality: 0.92,
+  waitForFonts: true,
+  waitForImages: true,
+  fontTimeout: 5000,
+  imageTimeout: 10000,
+};
+
+/**
+ * Export result
+ */
+export interface ExportResult {
+  /** The exported image as a Blob */
+  blob: Blob;
+  /** The exported image as a data URL */
+  dataUrl: string;
+  /** Width of the exported image in pixels */
+  width: number;
+  /** Height of the exported image in pixels */
+  height: number;
+  /** Metadata about the export */
+  meta: {
+    scale: ExportScale;
+    format: string;
+    exportedAt: string;
+    resourceStatus: {
+      fontsReady: boolean;
+      imagesLoaded: number;
+      imagesFailed: number;
+    };
+  };
+}
+
+/**
+ * Get SnapDOM module
+ */
+async function getSnapDOM(): Promise<typeof import("@zumer/snapdom")> {
+  try {
+    return await import("@zumer/snapdom");
+  } catch {
+    throw createAppError(
+      "E-EXPORT-002",
+      "SnapDOM library not available. Ensure @zumer/snapdom is installed."
+    );
+  }
+}
+
+/**
+ * Convert an element to a canvas using SnapDOM
+ */
+async function elementToCanvas(
+  element: HTMLElement,
+  scale: number,
+  backgroundColor?: string
+): Promise<HTMLCanvasElement> {
+  const { snapdom } = await getSnapDOM();
+
+  // Capture the element and convert to canvas
+  const result = await snapdom(element, {
+    scale,
+    backgroundColor,
+  });
+
+  return result.toCanvas();
+}
+
+/**
+ * Convert canvas to blob
+ */
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  format: "png" | "jpeg",
+  quality?: number
+): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const mimeType = format === "jpeg" ? "image/jpeg" : "image/png";
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Failed to create blob from canvas"));
+        }
+      },
+      mimeType,
+      quality
+    );
+  });
+}
+
+/**
+ * Convert canvas to data URL
+ */
+function canvasToDataUrl(
+  canvas: HTMLCanvasElement,
+  format: "png" | "jpeg",
+  quality?: number
+): string {
+  const mimeType = format === "jpeg" ? "image/jpeg" : "image/png";
+  return canvas.toDataURL(mimeType, quality);
+}
+
+/**
+ * Export a single element to PNG
+ */
+export async function exportToPng(
+  element: HTMLElement,
+  options: Partial<ExportOptions> = {}
+): Promise<ExportResult> {
+  const opts: ExportOptions = {
+    ...DEFAULT_EXPORT_OPTIONS,
+    ...options,
+    format: "png",
+  };
+
+  return exportElement(element, opts);
+}
+
+/**
+ * Export a single element to JPEG
+ */
+export async function exportToJpeg(
+  element: HTMLElement,
+  options: Partial<ExportOptions> = {}
+): Promise<ExportResult> {
+  const opts: ExportOptions = {
+    ...DEFAULT_EXPORT_OPTIONS,
+    ...options,
+    format: "jpeg",
+  };
+
+  return exportElement(element, opts);
+}
+
+/**
+ * Core export function
+ */
+export async function exportElement(
+  element: HTMLElement,
+  options: ExportOptions
+): Promise<ExportResult> {
+  // Wait for resources if requested
+  let resourceStatus = {
+    fontsReady: true,
+    imagesLoaded: 0,
+    imagesFailed: 0,
+  };
+
+  if (options.waitForFonts || options.waitForImages) {
+    resourceStatus = await waitForResources(element, {
+      fontTimeout: options.fontTimeout,
+      imageTimeout: options.imageTimeout,
+    });
+
+    // Check for critical failures
+    if (!resourceStatus.fontsReady) {
+      throw createAppError("E-EXPORT-003", "Fonts failed to load within timeout");
+    }
+
+    if (resourceStatus.imagesFailed > 0) {
+      // Log warning but don't fail - images might be optional
+      console.warn(
+        `${resourceStatus.imagesFailed} image(s) failed to load, proceeding with export`
+      );
+    }
+  }
+
+  // Export using SnapDOM
+  let canvas: HTMLCanvasElement;
+  try {
+    canvas = await elementToCanvas(element, options.scale, options.backgroundColor);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : "Unknown error";
+    throw createAppError("E-EXPORT-002", `SnapDOM render failed: ${detail}`);
+  }
+
+  // Convert to output format
+  const blob = await canvasToBlob(canvas, options.format, options.quality);
+  const dataUrl = canvasToDataUrl(canvas, options.format, options.quality);
+
+  return {
+    blob,
+    dataUrl,
+    width: canvas.width,
+    height: canvas.height,
+    meta: {
+      scale: options.scale,
+      format: options.format,
+      exportedAt: new Date().toISOString(),
+      resourceStatus,
+    },
+  };
+}
+
+/**
+ * Check if canvas size is within browser limits
+ * Different browsers have different maximum canvas sizes
+ */
+export function isCanvasSizeValid(width: number, height: number): boolean {
+  // Common browser limits:
+  // Chrome/Firefox: ~32767 x 32767 or ~268 million pixels
+  // Safari: ~16384 x 16384
+  const MAX_DIMENSION = 16384; // Conservative limit for Safari
+  const MAX_PIXELS = 268435456; // ~268 million pixels
+
+  if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+    return false;
+  }
+
+  if (width * height > MAX_PIXELS) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Validate export parameters before attempting export
+ */
+export function validateExportParams(
+  element: HTMLElement,
+  options: ExportOptions
+): { valid: boolean; error?: AppError } {
+  const rect = element.getBoundingClientRect();
+  const scaledWidth = rect.width * options.scale;
+  const scaledHeight = rect.height * options.scale;
+
+  if (!isCanvasSizeValid(scaledWidth, scaledHeight)) {
+    return {
+      valid: false,
+      error: createAppError(
+        "E-EXPORT-007",
+        `Canvas size ${scaledWidth}x${scaledHeight} exceeds browser limits`
+      ),
+    };
+  }
+
+  return { valid: true };
+}
