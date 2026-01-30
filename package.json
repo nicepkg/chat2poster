@@ -14,12 +14,15 @@
     "build:website": "pnpm --filter website build",
     "start:website": "pnpm --filter website start",
     "start:static-website": "pnpm --filter website start:static",
+    "build:packages": "pnpm --filter './packages/*' build",
+    "dev:packages": "pnpm --filter './packages/*' dev",
     "test": "pnpm -r run test",
+    "test:watch": "pnpm -r run test:watch",
     "test:coverage": "pnpm -r run test:coverage",
     "lint": "pnpm -r run lint",
     "lint:fix": "pnpm -r run lint:fix",
     "typecheck": "pnpm -r run typecheck",
-    "clean": "rm -rf node_modules website/node_modules website/.next",
+    "clean": "rm -rf node_modules packages/*/node_modules packages/*/dist apps/*/node_modules apps/*/.next website/node_modules website/.next",
     "prepare": "husky"
   },
   "engines": {

@@ -1,6 +1,8 @@
 {
   "files": [],
   "references": [
+    { "path": "./packages/core-schema" },
+    { "path": "./packages/shared-utils" },
     { "path": "./website" }
   ]
 }

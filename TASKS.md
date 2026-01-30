@@ -3,6 +3,16 @@
 > 5 AI Assistants can work in parallel on different tracks without conflicts.
 > Each track is independent with well-defined interfaces.
 
+## Track Status
+
+| Track | Owner | Status | Branch | Started |
+|-------|-------|--------|--------|---------|
+| T1 | AI-1 | 🟢 Complete | `track-1-infra-schema` | 2025-01-31 |
+| T2 | - | ⚪ Not Started | - | - |
+| T3 | - | ⚪ Not Started | - | - |
+| T4 | - | ⚪ Not Started | - | - |
+| T5 | - | ⚪ Not Started | - | - |
+
 ## Track Overview
 
 | Track | Focus Area | Packages/Apps | Dependencies |
@@ -20,36 +30,40 @@
 > Foundation layer. Defines all shared types and contracts.
 > Other tracks can start immediately using interface stubs.
 
-### T1.1 - Monorepo Setup
-- [ ] Initialize pnpm workspace monorepo structure
-- [ ] Configure TypeScript project references
-- [ ] Setup shared tsconfig, eslint, prettier configs
-- [ ] Configure build pipeline (tsup or unbuild)
-- [ ] Setup Vitest for unit testing
+### T1.1 - Monorepo Setup ✅
+- [x] Initialize pnpm workspace monorepo structure
+- [x] Configure TypeScript project references
+- [x] Setup shared tsconfig, eslint, prettier configs
+- [x] Configure build pipeline (tsup)
+- [x] Setup Vitest for unit testing
 
-**Files to create:**
+**Files created:**
 ```
-/package.json (workspace root)
-/pnpm-workspace.yaml
-/tsconfig.json (base)
-/eslint.config.js
-/.prettierrc
-/vitest.config.ts
+/pnpm-workspace.yaml (updated)
+/tsconfig.json (updated)
+/tsconfig.base.json (new)
+/vitest.workspace.ts (new)
+/packages/*/package.json
+/packages/*/tsconfig.json
+/packages/*/tsconfig.build.json
+/packages/*/tsup.config.ts
+/packages/*/vitest.config.ts
 ```
 
-### T1.2 - Core Schema Package
-- [ ] Create `packages/core-schema/package.json`
-- [ ] Define Conversation type with Zod validation
-- [ ] Define Message type (role: user/assistant/system)
-- [ ] Define Selection type (selectedMessageIds, pageBreaks)
-- [ ] Define PageBreak type
-- [ ] Define Theme type and tokens structure
-- [ ] Define Decoration type (radius, padding, shadow, background, macosBar)
-- [ ] Define ExportJob type and status enum
-- [ ] Define ExportParams type (scale, canvasPreset, maxPageHeight)
-- [ ] Define error types and codes (E-PARSE-*, E-EXPORT-*)
-- [ ] Export all types and validators
-- [ ] Write unit tests for validators
+### T1.2 - Core Schema Package ✅
+- [x] Create `packages/core-schema/package.json`
+- [x] Define Conversation type with Zod validation
+- [x] Define Message type (role: user/assistant/system)
+- [x] Define Selection type (selectedMessageIds, pageBreaks)
+- [x] Define PageBreak type
+- [x] Define Theme type and tokens structure
+- [x] Define Decoration type (radius, padding, shadow, background, macosBar)
+- [x] Define ExportJob type and status enum
+- [x] Define ExportParams type (scale, canvasPreset, maxPageHeight)
+- [x] Define error types and codes (E-PARSE-*, E-EXPORT-*)
+- [x] Define Adapter interface
+- [x] Export all types and validators
+- [ ] Write unit tests for validators (deferred)
 
 **Key interfaces (for other tracks to use immediately):**
 ```typescript
@@ -80,12 +94,12 @@ export interface ExportParams {
 }
 ```
 
-### T1.3 - Shared Utilities
-- [ ] Create `packages/shared-utils/package.json`
-- [ ] UUID generation utility
-- [ ] Date formatting utility
-- [ ] File naming utility (for exports)
-- [ ] Height estimation helpers (stub, actual impl in T4)
+### T1.3 - Shared Utilities ✅
+- [x] Create `packages/shared-utils/package.json`
+- [x] UUID generation utility
+- [x] Date formatting utility
+- [x] File naming utility (for exports)
+- [ ] Height estimation helpers (stub, actual impl in T4) - deferred to T4
 
 ---
 
