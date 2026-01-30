@@ -6,7 +6,7 @@
  * Wait for all fonts to be loaded
  * Uses the Font Loading API
  */
-export async function waitForFonts(timeoutMs: number = 5000): Promise<boolean> {
+export async function waitForFonts(timeoutMs = 5000): Promise<boolean> {
   if (typeof document === "undefined" || !document.fonts) {
     // Not in browser environment
     return true;
@@ -75,7 +75,7 @@ function waitForImage(img: HTMLImageElement, timeoutMs: number): Promise<boolean
  */
 export async function waitForImages(
   container: HTMLElement,
-  timeoutMs: number = 10000
+  timeoutMs = 10000
 ): Promise<{ loaded: number; failed: number }> {
   const images = container.querySelectorAll("img");
   const results = await Promise.all(
@@ -124,7 +124,7 @@ export function getImageUrls(container: HTMLElement): string[] {
  */
 export async function preloadImages(
   urls: string[],
-  timeoutMs: number = 10000
+  timeoutMs = 10000
 ): Promise<{ loaded: string[]; failed: string[] }> {
   const results = await Promise.all(
     urls.map(async (url) => {

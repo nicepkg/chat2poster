@@ -63,6 +63,7 @@ export const MessageItem = memo(function MessageItem({
       code: ({ className, children, ...props }) => {
         const match = /language-(\w+)/.exec(className || "");
         const language = match ? match[1] : "";
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         const codeString = String(children).replace(/\n$/, "");
 
         // Check if it's a code block (has newlines) or inline code

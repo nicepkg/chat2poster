@@ -1,8 +1,15 @@
 {
   "files": [],
   "references": [
+    { "path": "./packages/core-adapters" },
+    { "path": "./packages/core-export" },
+    { "path": "./packages/core-pagination" },
+    { "path": "./packages/core-renderer" },
     { "path": "./packages/core-schema" },
     { "path": "./packages/shared-utils" },
+    { "path": "./packages/themes" },
+    { "path": "./apps/extension-wxt" },
+    { "path": "./apps/web-nextjs" },
     { "path": "./website" }
   ]
 }

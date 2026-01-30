@@ -102,7 +102,7 @@ export const ConversationView = memo(function ConversationView({
     <div style={containerStyle} className="c2p-conversation">
       <ConversationHeader title={title} subtitle={subtitle} />
 
-      {displayMessages.map((message, index) => {
+      {displayMessages.map((message) => {
         const pageBreak = pageBreakMap.get(message.id);
         const pageNumber = pageNumberMap.get(message.id) ?? 0;
 

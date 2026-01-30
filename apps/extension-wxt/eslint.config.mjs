@@ -1,43 +1,31 @@
-import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
-import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { defineConfig, globalIgnores } from "eslint/config";
 
 const configDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(
-  globalIgnores(["dist/**", "node_modules/**", "*.config.*"]),
-
+  globalIgnores(["dist/**", ".output/**", ".wxt/**", "node_modules/**"]),
   {
-    files: ["src/**/*.ts"],
+    files: ["**/*.{ts,tsx}"],
     extends: [
       ...tseslint.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
     ],
     languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.browser,
-      },
       parserOptions: {
         projectService: true,
         tsconfigRootDir: configDir,
       },
     },
     rules: {
-      "@typescript-eslint/only-throw-error": "off",
-      "@typescript-eslint/prefer-nullish-coalescing": "off",
+      "@typescript-eslint/no-misused-promises": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
-      "@typescript-eslint/no-explicit-any": "warn",
     },
   }
 );

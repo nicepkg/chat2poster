@@ -61,8 +61,8 @@ function padPageNumber(index: number, total: number): string {
 export function generatePageFilename(
   index: number,
   totalPages: number,
-  baseName: string = "page",
-  extension: string = "png"
+  baseName = "page",
+  extension = "png"
 ): string {
   const paddedNumber = padPageNumber(index, totalPages);
   return `${baseName}_${paddedNumber}.${extension}`;
@@ -228,7 +228,7 @@ export function downloadZip(zipResult: ZipResult, filename: string): void {
  */
 export function downloadImage(
   blob: Blob,
-  filename: string = "export.png"
+  filename = "export.png"
 ): void {
   triggerDownload(blob, filename);
 }

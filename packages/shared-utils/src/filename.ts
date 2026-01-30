@@ -45,7 +45,7 @@ export function generateExportFilename(
 /**
  * Generate a filename for ZIP archive
  */
-export function generateZipFilename(prefix: string = "chat2poster"): string {
+export function generateZipFilename(prefix = "chat2poster"): string {
   return generateExportFilename({ prefix, extension: "zip" });
 }
 

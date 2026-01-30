@@ -50,8 +50,8 @@ export type ExportJobEventListener<T extends ExportJobEventType> = (
 export class ExportJobManager {
   private job: ExportJob;
   private abortController: AbortController | null = null;
-  private listeners: Map<ExportJobEventType, Set<ExportJobEventListener<ExportJobEventType>>> =
-    new Map();
+  private listeners =
+    new Map<ExportJobEventType, Set<ExportJobEventListener<ExportJobEventType>>>();
 
   constructor(conversationId: string, params?: Partial<ExportParams>) {
     // Only include params if provided, otherwise let createExportJob use defaults
@@ -195,7 +195,7 @@ export class ExportJobManager {
   /**
    * Mark job as failed
    */
-  fail(error: Error, code: string = "E-EXPORT-002"): void {
+  fail(error: Error, code = "E-EXPORT-002"): void {
     const previousStatus = this.job.status;
 
     this.job = {

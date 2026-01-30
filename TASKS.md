@@ -398,73 +398,111 @@ packages/core-export/src/export-job-manager.test.ts
 > Application layer. User-facing interfaces.
 > Can work immediately using mock data and T1 interfaces.
 
-### T5.1 - Extension Setup
-- [ ] Create `apps/extension-wxt/package.json`
-- [ ] Configure WXT for Chrome/Firefox/Edge
-- [ ] Setup Shadow DOM injection
-- [ ] Configure content script for ChatGPT/Claude/Gemini pages
-- [ ] Setup extension icons and manifest
+### T5.1 - Extension Setup ✅
+- [x] Create `apps/extension-wxt/package.json`
+- [x] Configure WXT for Chrome/Firefox/Edge
+- [x] Setup Shadow DOM injection
+- [x] Configure content script for ChatGPT/Claude/Gemini pages
+- [x] Setup extension icons and manifest
 
-### T5.2 - Extension Entry Point
-- [ ] Create floating action button on AI chat pages
-- [ ] Create side panel trigger
-- [ ] Implement content script activation logic
-- [ ] Handle multiple conversation detection
+**Files created:**
+```
+apps/extension-wxt/package.json
+apps/extension-wxt/tsconfig.json
+apps/extension-wxt/wxt.config.ts
+apps/extension-wxt/tailwind.config.ts
+apps/extension-wxt/postcss.config.cjs
+apps/extension-wxt/eslint.config.mjs
+apps/extension-wxt/src/entrypoints/content.tsx
+apps/extension-wxt/src/entrypoints/styles/globals.css
+apps/extension-wxt/src/components/App.tsx
+apps/extension-wxt/src/components/FloatingButton.tsx
+apps/extension-wxt/src/components/EditorPanel.tsx
+apps/extension-wxt/public/icon-*.svg
+```
 
-### T5.3 - Editor UI Components
-- [ ] Create `EditorPanel` main container
-- [ ] Create `MessageList` with checkboxes
-  - [ ] Message preview (truncated)
-  - [ ] Select/deselect functionality
-  - [ ] "Insert page break here" button
-  - [ ] Page break line display
-- [ ] Create `SelectionControls` (Select All / Deselect All)
-- [ ] Create `ThemeSelector` dropdown/grid
-- [ ] Create `DecorationControls` form
-  - [ ] Border radius slider
-  - [ ] Padding slider
-  - [ ] Shadow level selector
-  - [ ] Background picker
-  - [ ] macOS bar toggle
-- [ ] Create `ExportControls`
-  - [ ] Scale selector (1x/2x/3x)
-  - [ ] Max page height input
-  - [ ] Auto pagination toggle
-  - [ ] Export button with status
+### T5.2 - Extension Entry Point ✅
+- [x] Create floating action button on AI chat pages
+- [x] Create side panel trigger
+- [x] Implement content script activation logic
+- [ ] Handle multiple conversation detection (deferred to integration)
 
-### T5.4 - Extension State Management
-- [ ] Setup EditorContext (selection, theme, decoration)
-- [ ] Setup RuntimeContext (loading, error, exportJob)
-- [ ] Implement state persistence (localStorage for preferences)
-- [ ] Wire up adapter parsing on panel open
+### T5.3 - Editor UI Components ✅
+- [x] Create `EditorPanel` main container
+- [x] Create `MessageList` with checkboxes
+  - [x] Message preview (truncated)
+  - [x] Select/deselect functionality
+  - [x] "Insert page break here" button
+  - [x] Page break line display
+- [x] Create `SelectionControls` (Select All / Deselect All)
+- [x] Create `ThemeSelector` dropdown/grid
+- [x] Create `DecorationControls` form
+  - [x] Border radius slider
+  - [x] Padding slider
+  - [x] Shadow level selector
+  - [x] Background picker
+  - [x] macOS bar toggle
+- [x] Create `ExportControls`
+  - [x] Scale selector (1x/2x/3x)
+  - [x] Max page height input
+  - [x] Auto pagination toggle
+  - [x] Export button with status
 
-### T5.5 - Web App Setup
-- [ ] Create `apps/web-nextjs/package.json`
-- [ ] Setup Next.js with App Router
-- [ ] Configure Tailwind + shadcn/ui
-- [ ] Create basic layout and navigation
-- [ ] Setup API routes structure
+**Files created:**
+```
+apps/extension-wxt/src/contexts/EditorContext.tsx
+```
 
-### T5.6 - Web Import Page
-- [ ] Create `/` or `/import` page
-- [ ] Share link input field
-- [ ] Parse button with loading state
-- [ ] Error display with fallback options
-- [ ] Links to Manual Builder and Paste Import
+### T5.4 - Extension State Management ✅
+- [x] Setup EditorContext (selection, theme, decoration)
+- [x] Setup RuntimeContext (loading, error, exportJob)
+- [x] Implement state persistence (localStorage for preferences)
+- [x] Wire up adapter parsing on panel open (mock data, ready for integration)
 
-### T5.7 - Web Manual Builder
-- [ ] Create `/manual` page
-- [ ] Message list form (add/remove/reorder)
-- [ ] Role selector (defaults to alternating)
-- [ ] Markdown input per message
-- [ ] Live preview (optional)
-- [ ] Continue to Editor button
+### T5.5 - Web App Setup ✅
+- [x] Create `apps/web-nextjs/package.json`
+- [x] Setup Next.js with App Router
+- [x] Configure Tailwind + PostCSS
+- [x] Create basic layout and navigation
+- [ ] Setup API routes structure (deferred)
 
-### T5.8 - Web Editor Page
-- [ ] Create `/editor` page
-- [ ] Reuse Editor UI components from extension
-- [ ] Responsive layout (narrow/wide)
-- [ ] Back to Import link
+**Files created:**
+```
+apps/web-nextjs/package.json
+apps/web-nextjs/tsconfig.json
+apps/web-nextjs/next.config.mjs
+apps/web-nextjs/postcss.config.cjs
+apps/web-nextjs/eslint.config.mjs
+apps/web-nextjs/src/app/layout.tsx
+apps/web-nextjs/src/app/globals.css
+apps/web-nextjs/src/app/page.tsx
+apps/web-nextjs/src/app/manual/page.tsx
+apps/web-nextjs/src/app/paste/page.tsx
+apps/web-nextjs/src/app/editor/page.tsx
+```
+
+### T5.6 - Web Import Page ✅
+- [x] Create `/` or `/import` page
+- [x] Share link input field
+- [x] Parse button with loading state
+- [x] Error display with fallback options
+- [x] Links to Manual Builder and Paste Import
+
+### T5.7 - Web Manual Builder ✅
+- [x] Create `/manual` page
+- [x] Message list form (add/remove/reorder)
+- [x] Role selector (defaults to alternating)
+- [x] Markdown input per message
+- [ ] Live preview (optional, deferred)
+- [x] Continue to Editor button
+
+### T5.8 - Web Editor Page ✅
+- [x] Create `/editor` page
+- [x] Message selection & page breaks
+- [x] Theme/decoration controls
+- [x] Export controls
+- [x] Responsive layout (narrow/wide)
+- [x] Back to Import link
 
 ### T5.9 - API Routes (Web)
 - [ ] Create `/api/parse-share-link` route

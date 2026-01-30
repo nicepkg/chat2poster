@@ -1,20 +1,28 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
 import globals from "globals";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const configDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(
   globalIgnores(["dist/**", "node_modules/**", "*.config.*"]),
 
   {
     files: ["src/**/*.ts"],
-    extends: [...tseslint.configs.recommended],
+    extends: [
+      ...tseslint.configs.recommended,
+      ...tseslint.configs.recommendedTypeChecked,
+      ...tseslint.configs.stylisticTypeChecked,
+    ],
     languageOptions: {
       globals: {
         ...globals.node,
       },
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: configDir,
       },
     },
     rules: {
