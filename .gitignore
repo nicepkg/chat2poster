@@ -128,3 +128,14 @@ logs/
 .vscode-test-web
 **/.vitepress/cache
 **/.vitepress/.temp
+**.tmp.md
+
+# ====================
+# AI Memory System
+# ====================
+# Session memories (per-session, not tracked)
+memories/????-??-??-*.md
+
+# Keep long-term memory tracked
+!memories/long-term-memory.md
+!memories/.gitkeep

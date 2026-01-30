@@ -1,537 +1,367 @@
-# AI Vibe Coding Starter
+# Chat2Poster
 
-A modern, AI-friendly starter template for building documentation websites with Next.js + Nextra.
-
----
-
-## For AI Assistants
-
-> **IMPORTANT**: Read this entire document before making any changes.
-
-### Overview
-
-This is a starter template. Your job is to:
-1. Collect configuration from the user
-2. Replace placeholders throughout the project
-3. Customize content based on PRD
-4. Track progress using `CHECKLIST.md`
+> Turn AI chats into share-worthy posters.
+> 把 AI 聊天变成能直接发的海报图。
 
 ---
 
-### ⛔ DO NOT List
+## 🎯 Project Overview
 
-**NEVER do the following without explicit user approval:**
+**Chat2Poster** converts AI chat sessions (ChatGPT / Claude / Gemini) into beautiful, export-ready PNG images.
 
-| Category | Do NOT |
-|----------|--------|
-| **Dependencies** | Add new npm packages or change versions |
-| **UI Components** | Modify files in `website/src/components/ui/` (shadcn/ui managed) |
-| **Core Framework** | Change Next.js config, Tailwind config, or TypeScript config |
-| **Delete Files** | Delete any file except those listed in Step 8 (Cleanup) |
-| **Hardcode Values** | Write literal values instead of using `site-info.ts` |
-| **Skip Questions** | Start modifying files before collecting ALL required variables |
-| **Ignore Errors** | Continue if `pnpm typecheck` or `pnpm lint` fails |
-| **Batch Changes** | Make multiple unrelated changes without updating CHECKLIST.md |
+### Core Features (MVP)
+- Parse conversations from ChatGPT/Claude/Gemini pages
+- Select messages to export (all or specific)
+- Apply themes & decorations (radius, shadow, background, macOS bar)
+- Auto/manual pagination for long conversations
+- Export as PNG (1x/2x/3x) or ZIP for multi-page
 
-**If you're unsure, ASK the user first.**
+### Dual Platform
+- **Browser Extension:** WXT + Shadow DOM, works on AI chat pages
+- **Web App:** Next.js, supports share links + manual input
 
 ---
 
-### 🤖 Automation & CLI Tools
+## 👤 Owner & Preferences
 
-**User Preference**: The user prefers automation and minimal manual steps. Execute tasks directly instead of providing instructions.
+| Key | Value |
+|-----|-------|
+| **Name** | Jinming Yang |
+| **GitHub** | `2214962083` (personal), `nicepkg` (org) |
+| **Domain** | `chat2poster.xiaominglab.com` |
 
-#### Default CLI Tools
+### Communication Rules
+- **Respond in Chinese** (Jinming prefers it)
+- **Code/docs in English**
+- **Be concise** - No bullshit, no unnecessary verbosity
 
-| Task | Tool | Example |
-|------|------|---------|
-| **GitHub operations** | `gh` CLI | `gh pr create`, `gh issue list`, `gh repo clone` |
-| **Cloudflare operations** | `wrangler` CLI | `wrangler pages deploy`, `wrangler d1`, `wrangler kv` |
-| **Package management** | `pnpm` | `pnpm install`, `pnpm add`, `pnpm run` |
+### Automation Rules
+- **DO automatically:** lint, typecheck, commits, PRs, deploys
+- **ASK before:** force push, delete branches, production deploys
 
-#### Automation Rules
+### Available CLI Tools
+| Tool | Usage |
+|------|-------|
+| `gh` | GitHub operations |
+| `wrangler` | Cloudflare deployment |
+| `pnpm` | Package management |
 
-1. **DO automatically**:
-   - Run lint/typecheck after code changes
-   - Create branches, commits, PRs
-   - Deploy to preview environments
-   - Install dependencies when needed
+---
 
-2. **ASK before** (dangerous operations):
-   - `git push --force` or `git reset --hard`
-   - Deleting branches, repos, or production resources
-   - Publishing to npm/registries
-   - Deploying to production
-   - Modifying billing-related resources
-   - Any irreversible destructive action
+## 🏗️ Architecture
 
-#### Examples
+### Monorepo Structure
 
+```
+chat2poster/
+├── packages/
+│   ├── core-schema/       # Types + Zod validators
+│   ├── core-adapters/     # Parsing adapters (ChatGPT/Claude/Gemini)
+│   ├── core-renderer/     # React components for rendering
+│   ├── core-pagination/   # Height estimation + page splitting
+│   ├── core-export/       # SnapDOM export + ZIP packaging
+│   └── themes/            # Preset themes (light/dark/custom)
+├── apps/
+│   ├── extension-wxt/     # Browser extension
+│   └── web-nextjs/        # Website
+├── docs/                  # PRD, architecture, specs
+├── memories/              # Session & long-term memory
+└── TASKS.md               # Task board for parallel AI work
+```
+
+### Key Principles
+- **DRY:** Core logic implemented once, shared across platforms
+- **Adapters:** Plugin-style, new adapters don't modify existing code
+- **Privacy:** Never persist user conversations to database
+- **Fallback:** SnapDOM primary, SVG fallback for export
+
+---
+
+## 📚 Documentation
+
+| Doc | Purpose |
+|-----|---------|
+| `docs/prd.md` | Product requirements, user stories, business rules |
+| `docs/architecture.md` | Technical architecture, directory structure |
+| `docs/data-model.md` | TypeScript types, entity relationships |
+| `docs/ui-spec.md` | UI components, states, responsive rules |
+| `docs/flows.md` | User flows, state machines, error handling |
+| `docs/acceptance.md` | Test cases (Given/When/Then) |
+| `docs/config.md` | Project configuration values |
+
+**Read these before making significant changes.**
+
+---
+
+## 🧠 Memory System
+
+### Three-Tier Architecture
+
+```
+┌─────────────────────────────────────────────┐
+│  Tier 1: CLAUDE.md (this file)              │
+│  - Always loaded automatically              │
+│  - Project identity & commands              │
+└─────────────────────────────────────────────┘
+                    │
+┌─────────────────────────────────────────────┐
+│  Tier 2: Long-Term Memory                   │
+│  - memories/long-term-memory.md             │
+│  - Architecture decisions, user prefs       │
+│  - AI can READ/WRITE autonomously           │
+└─────────────────────────────────────────────┘
+                    │
+┌─────────────────────────────────────────────┐
+│  Tier 3: Session Memories                   │
+│  - memories/YYYY-MM-DD-NNN-*.md             │
+│  - Per-session context & decisions          │
+│  - Explicit save/load via commands          │
+└─────────────────────────────────────────────┘
+```
+
+### Memory Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/remember` | Save current session to memory file |
+| `/remember "title"` | Save with custom title |
+| `/recall` | Load most recent session |
+| `/recall last 3` | Load last 3 sessions |
+| `/recall "keyword"` | Search by keyword |
+| `/recall --list` | List all available memories |
+| `/recall --long-term` | Load long-term memory |
+
+### When to Update Long-Term Memory
+- New architecture decision made
+- User preference discovered
+- PRD/doc conflict found
+- Important gotcha encountered
+
+---
+
+## 🤖 Multi-AI Collaboration (Track System)
+
+This project supports **5 AI assistants working in parallel**.
+
+### Track Overview
+
+| Track | Focus | Packages | Owner |
+|-------|-------|----------|-------|
+| **T1** | Infrastructure & Schema | `core-schema`, `shared-utils` | AI-1 |
+| **T2** | Adapters | `core-adapters` | AI-2 |
+| **T3** | Renderer | `core-renderer`, `themes` | AI-3 |
+| **T4** | Pagination & Export | `core-pagination`, `core-export` | AI-4 |
+| **T5** | Apps & UI | `extension-wxt`, `web-nextjs` | AI-5 |
+
+### Track Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/claim-track T1` | Claim a track to work on |
+| `/do-track T2` | Execute tasks in your track |
+| `/track-status` | View all tracks progress |
+| `/sync-interfaces` | Get latest T1 interfaces |
+| `/handoff T1` | Complete track & handoff |
+| `/resolve-conflict` | Resolve cross-track conflicts |
+| `/milestone-check M1` | Check milestone progress |
+
+### Milestones
+
+| Milestone | Description |
+|-----------|-------------|
+| **M1** | Extension MVP - ChatGPT parsing + single PNG export |
+| **M2** | Selection & Decoration - Full theme controls |
+| **M3** | Pagination - Auto/manual page breaks + ZIP |
+| **M4** | Web App - Share link + manual builder |
+
+### Collaboration Rules
+1. **One AI per track** - No cross-track file modifications
+2. **Interfaces first** - T1 publishes types, others use them
+3. **Mock dependencies** - Use stubs if waiting for other tracks
+4. **Update TASKS.md** - Keep status accurate for coordination
+
+---
+
+## ⚡ All Commands
+
+### Task Management
+| Command | Description |
+|---------|-------------|
+| `/claim-track` | Claim a track (T1-T5) |
+| `/do-track` | Execute track tasks |
+| `/track-status` | View progress |
+| `/sync-interfaces` | Sync T1 interfaces |
+| `/handoff` | Complete & handoff track |
+| `/resolve-conflict` | Resolve conflicts |
+| `/milestone-check` | Check milestone status |
+
+### Memory
+| Command | Description |
+|---------|-------------|
+| `/remember` | Save session to memory |
+| `/recall` | Load previous sessions |
+
+### Development
+| Command | Description |
+|---------|-------------|
+| `/commit` | Commit with Angular convention |
+| `/create-pr` | Create pull request |
+| `/review-pr` | Review a pull request |
+| `/code-review` | Review code changes |
+| `/fix-github-issue` | Fix a GitHub issue |
+
+---
+
+## 🔧 Development Workflow
+
+### Setup
 ```bash
-# GitHub: Create PR (DO automatically)
-gh pr create --title "feat: add feature" --body "Description"
+pnpm install
+```
 
-# GitHub: Delete branch (ASK first)
-# ⚠️ "Are you sure you want to delete branch 'feature-x'?"
-gh branch delete feature-x
+### Common Tasks
+```bash
+pnpm dev:extension    # Run extension in dev mode
+pnpm dev:web          # Run web app in dev mode
+pnpm build            # Build all packages
+pnpm test             # Run tests
+pnpm lint             # Lint code
+pnpm typecheck        # Type check
+```
 
-# Cloudflare: Deploy preview (DO automatically)
-wrangler pages deploy ./out --project-name=my-project
-
-# Cloudflare: Delete production resource (ASK first)
-# ⚠️ "Are you sure you want to delete KV namespace 'production-data'?"
-wrangler kv:namespace delete --namespace-id=xxx
+### Commit Convention
+Angular convention enforced by commitlint:
+```
+feat(core-schema): add Message type
+fix(adapters): handle ChatGPT DOM change
+docs: update architecture diagram
 ```
 
 ---
 
-### 🔑 GitHub Actions Token Naming
+## 🚨 Critical Rules
 
-When creating GitHub Actions workflows that require secrets, use these **standard token names**:
+### DO
+- ✅ Read relevant docs before making changes
+- ✅ Run lint/typecheck after code changes
+- ✅ Update TASKS.md when completing tasks
+- ✅ Update long-term memory for important decisions
+- ✅ Use interfaces from `core-schema`
+- ✅ Write tests for new functionality
 
-| Purpose | Secret Name | Description |
-|---------|-------------|-------------|
-| **NPM Publish** | `NPM_TOKEN` | Token for publishing packages to npm registry |
-| **VSCode Marketplace** | `VSCE_TOKEN` | Token for publishing VSCode extensions to official marketplace |
-| **OpenVSX** | `OVSX_TOKEN` | Token for publishing VSCode extensions to OpenVSX registry |
-| **GitHub API** | `GITHUB_TOKEN` | Built-in, no need to create (auto-provided) |
-
-**Why these names?**
-- Users typically configure these names in their local environment and GitHub organization secrets
-- Using consistent names avoids confusion and reduces setup friction
-- These are de-facto standards in the ecosystem
-
-**Example workflow snippet:**
-```yaml
-- name: Publish to npm
-  run: npm publish
-  env:
-    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-- name: Publish to VSCode Marketplace
-  run: vsce publish
-  env:
-    VSCE_PAT: ${{ secrets.VSCE_TOKEN }}
-
-- name: Publish to OpenVSX
-  run: ovsx publish
-  env:
-    OVSX_PAT: ${{ secrets.OVSX_TOKEN }}
-```
+### DON'T
+- ❌ Modify files outside your track (multi-AI mode)
+- ❌ Store user conversations to database
+- ❌ Skip lint/typecheck errors
+- ❌ Make breaking interface changes without coordination
+- ❌ Force push or delete branches without asking
+- ❌ Add dependencies without justification
 
 ---
 
-### 🚨 Error Handling
+## 📊 Key Data Types
 
-#### When TypeScript/Lint Errors Occur
-
-```
-1. STOP immediately
-2. Read the full error message
-3. Identify the file and line number
-4. Check if error is from YOUR changes or pre-existing
-5. If your change caused it → fix it before continuing
-6. If pre-existing → inform user and ask how to proceed
-7. Run verification again after fix
-```
-
-#### When Placeholder Replacement Fails
-
-```
-1. Check if you're using the correct placeholder (e.g., [repo-name] not [project-name])
-2. Verify the file hasn't been modified unexpectedly
-3. Use exact string matching, don't rely on regex
-4. If placeholder not found → inform user, might be already replaced
-```
-
-#### When User Provides Incomplete Info
-
-```
-1. List exactly which variables are missing
-2. Provide example values for each
-3. Wait for user response before proceeding
-4. Never assume or generate fake values
-```
-
-#### Recovery Checkpoints
-
-If something goes wrong, you can recover:
-- **Phase 1 incomplete**: Re-run from `site-info.ts`
-- **Phase 2 incomplete**: Visual assets are independent, fix individually
-- **Phase 3 incomplete**: README files can be regenerated from examples
-- **Phase 4 incomplete**: Run `scripts/validate-setup.sh` to check status
-
-### Step 1: Check Existing Documentation
-
-Before asking questions, check these files:
-
-| File | Purpose |
-|------|---------|
-| `docs/config.md` | Pre-filled configuration values |
-| `docs/prd.md` | Product requirements and content |
-| `CHECKLIST.md` | Track what's done and what's pending |
-
-If `docs/config.md` or `docs/prd.md` don't exist, ask the user for the information below.
-
-### Step 2: Gather Required Information
-
-**IMPORTANT**: Ask the user for ALL missing values before making changes. Provide recommended options but always allow custom input.
-
-#### Basic Info (Required)
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `[project-name]` | Display name (can have spaces) | "AI Workflow", "My Project" |
-| `[repo-name]` | Repository name (no spaces, lowercase) | "ai-workflow", "my-project" |
-| `[project-slogan]` | Short tagline (English) | "Build faster with AI" |
-| `[project-slogan-zh]` | Short tagline (Chinese) | "用 AI 更快构建" |
-| `[project-domain]` | Domain without https:// | "myproject.com" |
-| `[github-username]` | GitHub username or org | "nicepkg", "vercel" |
-
-#### Author Info (Optional - empty string to skip)
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `[author-name]` | Display name | "John Doe" |
-| `[author-website]` | Personal website with https:// | "https://johndoe.com" |
-| `[support-email]` | Contact email | "support@example.com" |
-
-#### Social Links (Optional - empty string to hide)
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `[twitter-handle]` | Twitter/X username (no @) | "johndoe" |
-| `[bilibili-uid]` | Bilibili user ID | "12345678" |
-| `[douyin-uid]` | Douyin user ID | "MS4wLjABAAAAxx" |
-| `[douyin-nickname]` | Douyin display name | "小明" |
-
-#### Theme Colors (Required)
-
-Ask user to pick a primary color:
-
-| Color | oklch Value | Vibe |
-|-------|-------------|------|
-| **Purple** (default) | `oklch(0.55 0.25 290)` | Creative, modern |
-| **Blue** | `oklch(0.55 0.2 260)` | Trust, professional |
-| **Green** | `oklch(0.6 0.2 145)` | Growth, nature |
-| **Orange** | `oklch(0.65 0.2 50)` | Energy, warmth |
-| **Pink** | `oklch(0.65 0.25 0)` | Playful, bold |
-| **Custom** | User provides hex → convert | - |
-
----
-
-### 📝 Concrete Examples
-
-#### Example: Filling in site-info.ts
-
-**Before:**
 ```typescript
-export const siteConfig = {
-  name: "[project-name]",
-  description: "[project-slogan]",
-  url: "https://[project-domain]",
-};
+// Message
+interface Message {
+  id: string
+  role: 'user' | 'assistant' | 'system'
+  contentMarkdown: string
+  order: number
+}
 
-export const githubConfig = {
-  username: "[github-username]",
-  repo: "[repo-name]",
-};
-```
+// Conversation
+interface Conversation {
+  id: string
+  sourceType: 'extension-current' | 'web-share-link' | 'web-manual' | 'web-paste'
+  messages: Message[]
+}
 
-**After (for a project called "AI Workflow"):**
-```typescript
-export const siteConfig = {
-  name: "AI Workflow",
-  description: "Build faster with AI-powered automation",
-  url: "https://ai-workflow.dev",
-};
+// Selection
+interface Selection {
+  selectedMessageIds: string[]
+  pageBreaks: PageBreak[]
+}
 
-export const githubConfig = {
-  username: "nicepkg",
-  repo: "ai-workflow",
-};
-```
-
-#### Example: Updating Theme Colors in globals.css
-
-**Before:**
-```css
-:root {
-  --primary: oklch(0.55 0.25 290);  /* Purple */
+// Export
+interface ExportParams {
+  scale: 1 | 2 | 3
+  maxPageHeightPx: number  // default 4096
+  canvasWidthPx: number
 }
 ```
 
-**After (choosing Blue theme):**
-```css
-:root {
-  --primary: oklch(0.55 0.2 260);  /* Blue - professional */
-}
+See `docs/data-model.md` for complete type definitions.
+
+---
+
+## 🐛 Known Gotchas
+
+1. **ChatGPT DOM changes** - Structure changes frequently, adapters need fallback selectors
+2. **Font loading** - Always await `document.fonts.ready` before export
+3. **Shadow DOM styling** - Must inject Tailwind into shadow root
+4. **Large conversations** - Use virtual scrolling for performance
+
+---
+
+## 🎯 Quick Start for AI
+
+### Starting New Work
+```
+1. /recall --long-term          # Check persistent knowledge
+2. /recall last 2               # Get recent context
+3. /track-status                # See what's happening
+4. /claim-track T{N}            # Claim your track
+5. /do-track T{N}               # Start working
 ```
 
-#### Example: Replacing in README.md
-
-**Before:**
-```markdown
-# [project-name]
-
-[![GitHub stars](https://img.shields.io/github/stars/[github-username]/[repo-name])]
+### Ending Session
+```
+1. Update TASKS.md with progress
+2. /remember "what you did"     # Save session memory
+3. Update long-term memory if needed
+4. /handoff T{N}                # If track complete
 ```
 
-**After:**
-```markdown
-# AI Workflow
-
-[![GitHub stars](https://img.shields.io/github/stars/nicepkg/ai-workflow)]
+### When Stuck
 ```
-
-#### Example: Empty Optional Values
-
-If user skips Twitter handle:
-```typescript
-// In site-info.ts
-export const socialLinks = {
-  twitter: "", // Empty = link won't show in footer
-  bilibili: "12345678",
-};
+1. Check docs/ for requirements
+2. /recall "keyword"            # Search past decisions
+3. Check memories/long-term-memory.md
+4. Ask user for clarification
 ```
 
 ---
 
-### Step 3: Modify Configuration Files
+## 📁 File Ownership (Multi-AI Mode)
 
-After collecting all values, modify in this order:
+```
+AI-1 (T1):
+  packages/core-schema/**
+  packages/shared-utils/**
+  Root config files
 
-#### 3.1 Core Configuration
+AI-2 (T2):
+  packages/core-adapters/**
 
-| File | Changes |
-|------|---------|
-| `website/src/lib/site-info.ts` | Replace ALL `[placeholder]` values |
-| `website/src/styles/globals.css` | Update `--primary` and `--secondary` in `:root` and `.dark` |
-| `package.json` | Replace `[repo-name]`, `[project-name]`, `[github-username]` |
-| `LICENSE` | Replace `[github-username]` |
-| `.github/workflows/deploy-website.yml` | Replace `[repo-name]`, `[project-domain]` |
-| `.github/ISSUE_TEMPLATE/config.example.yml` | Copy to `config.yml`, replace URLs |
+AI-3 (T3):
+  packages/core-renderer/**
+  packages/themes/**
 
-#### 3.2 Content Files
+AI-4 (T4):
+  packages/core-pagination/**
+  packages/core-export/**
 
-| File | Changes |
-|------|---------|
-| `website/content/en/index.mdx` | Update frontmatter title |
-| `website/content/zh/index.mdx` | Update frontmatter title |
-
-#### 3.3 Documentation Files
-
-**IMPORTANT**: The current `README.md` and `README_cn.md` are template introduction files.
-When user starts their project, you MUST:
-
-1. **Delete** the existing `README.md` and `README_cn.md` (they introduce the template, not the user's project)
-2. **Copy** from `.example.md` files and customize for the user's project
-
-| File | Action |
-|------|--------|
-| `README.md` | **DELETE** (template intro) |
-| `README_cn.md` | **DELETE** (template intro) |
-| `README.example.md` | Copy to `README.md`, replace placeholders, write project description |
-| `README_cn.example.md` | Copy to `README_cn.md`, Chinese version |
-| `CONTRIBUTING.md` | Replace placeholders, customize guidelines |
-| `.github/ISSUE_TEMPLATE/*.example.*` | Copy to non-example names, customize |
-| `.github/PULL_REQUEST_TEMPLATE.example.md` | Copy to `PULL_REQUEST_TEMPLATE.md`, customize |
-
-### Step 4: Customize Landing Page
-
-Edit `website/src/components/home/landing-page.tsx`:
-
-| Section | What to Edit |
-|---------|--------------|
-| Hero | `t.hero` translations, demo command |
-| Problem Cards | `problems` array (role, pain, gain) |
-| Workflow Cards | `workflows` array (icon, title, desc, link, color) |
-| CTA | `t.cta` translations |
-
-### Step 5: Visual Assets
-
-| File | Action |
-|------|--------|
-| `website/public/icon.svg` | Replace with project favicon |
-| `website/src/components/shared/logo.tsx` | Customize SVG or use image |
-| `website/src/components/home/hero-3d.tsx` | Customize colors or remove |
-
-### Step 6: Update Checklist
-
-After each change, update `CHECKLIST.md`:
-- Mark completed items with `[x]`
-- Add notes about blockers or decisions
-- Update "Last Updated" date
-
-### Step 7: Verification
-
-```bash
-pnpm typecheck    # Must pass
-pnpm lint         # Must pass
-pnpm dev:website  # Preview the site
+AI-5 (T5):
+  apps/extension-wxt/**
+  apps/web-nextjs/**
 ```
 
-### Step 8: Cleanup
-
-When project is fully set up:
-- Delete `docs/config.example.md`
-- Delete `docs/prd.example.md`
-- Delete `README.example.md`
-- Delete `README_cn.example.md`
-- Delete `.github/ISSUE_TEMPLATE/*.example.*`
-- Delete `.github/PULL_REQUEST_TEMPLATE.example.md`
-- Delete `CHECKLIST.md`
-- Remove `⚠️ TEMPLATE NOTICE` blocks from all files
+**Shared (coordinate changes):**
+- TASKS.md
+- memories/long-term-memory.md
+- docs/*.md
 
 ---
 
-## Example AI Interaction
-
-When user says "help me set up this template":
-
-```
-I'll help you customize this starter template. First, let me check if you have
-any existing configuration...
-
-[Check docs/config.md and docs/prd.md]
-
-I need some information to set up your project:
-
-**Required Info:**
-1. Project name (display name, can have spaces)?
-   Examples: "AI Workflow", "Code Helper", "My SaaS"
-
-2. Repository name (no spaces, lowercase)?
-   Examples: "ai-workflow", "code-helper", "my-saas"
-
-3. Project slogan?
-   Examples: "Build faster with AI", "Your coding companion"
-
-4. Domain name (without https://)?
-   Examples: "myproject.com", "docs.myproject.com"
-
-5. GitHub username or organization?
-   Examples: "nicepkg", "your-username"
-
-6. Primary brand color?
-   □ Purple (creative/modern) - recommended
-   □ Blue (professional/trust)
-   □ Green (growth/nature)
-   □ Orange (energy/warmth)
-   □ Pink (playful/bold)
-   □ Custom (provide hex code)
-
-**Optional (press Enter to skip):**
-7. Author name?
-8. Author website?
-9. Support email?
-10. Twitter handle?
-11. Bilibili UID?
-```
-
----
-
-## Project Structure
-
-```
-├── CLAUDE.md                      # ⭐ This file - AI instructions
-├── CHECKLIST.md                   # ⭐ Setup progress tracker
-├── docs/
-│   ├── config.md                  # User's configuration (create from example)
-│   ├── config.example.md          # Configuration template
-│   ├── prd.md                     # User's PRD (create from example)
-│   └── prd.example.md             # PRD template
-├── .github/
-│   ├── actions/
-│   │   └── setup-node-pnpm/       # Reusable composite action
-│   │       └── action.yml
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.example.md        # Template → copy to bug_report.md
-│   │   ├── feature_request.example.md   # Template → copy to feature_request.md
-│   │   ├── feedback.example.md          # Template → copy to feedback.md
-│   │   └── config.example.yml           # Template → copy to config.yml
-│   ├── PULL_REQUEST_TEMPLATE.example.md # Template → copy to PULL_REQUEST_TEMPLATE.md
-│   └── workflows/
-│       ├── ci.yml                 # Lint & TypeCheck
-│       ├── pr-title.yml           # PR title validation (Angular convention)
-│       └── deploy-website.yml     # Cloudflare Pages deployment
-├── website/
-│   ├── content/                   # MDX content (en/zh)
-│   ├── public/                    # Static assets
-│   │   └── icon.svg               # Favicon
-│   └── src/
-│       ├── app/                   # Next.js app router
-│       ├── components/
-│       │   ├── home/              # Landing page components
-│       │   │   ├── hero-3d.tsx
-│       │   │   └── landing-page.tsx
-│       │   ├── shared/
-│       │   │   ├── logo.tsx
-│       │   │   └── site-footer.tsx
-│       │   └── ui/                # shadcn/ui components
-│       ├── lib/
-│       │   └── site-info.ts       # ⭐ Main configuration
-│       └── styles/
-│           └── globals.css        # ⭐ Theme colors
-├── README.example.md              # README template → copy to README.md
-├── README_cn.example.md           # Chinese README template → copy to README_cn.md
-├── CONTRIBUTING.md                # Contribution guide (customize)
-├── LICENSE
-└── package.json
-```
-
-## Tech Stack
-
-- **Framework**: Next.js 15 + React 19
-- **Documentation**: Nextra 4
-- **Styling**: Tailwind CSS 4 + shadcn/ui
-- **Animation**: Framer Motion + React Three Fiber
-- **Language**: TypeScript 5
-- **Package Manager**: pnpm
-- **Git Hooks**: Husky + Commitlint (Angular convention)
-
-## Commit Convention
-
-All commits must follow [Angular Commit Convention](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit):
-
-```
-<type>(<scope>): <subject>
-```
-
-**Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
-
-**Examples**:
-```bash
-feat(website): add dark mode toggle
-fix: resolve hydration mismatch
-docs: update installation guide
-chore(deps): update dependencies
-```
-
-**Enforcement**:
-- Commits validated by commitlint via husky hook
-- PR titles validated by GitHub Action
-
-## Files with Placeholders
-
-Quick reference for files containing `[placeholder]` values:
-
-```
-website/src/lib/site-info.ts       # Main config
-website/src/styles/globals.css     # Theme colors (comment only)
-website/content/en/index.mdx       # Frontmatter
-website/content/zh/index.mdx       # Frontmatter
-package.json                       # Package info
-LICENSE                            # Copyright
-.github/workflows/deploy-website.yml
-CONTRIBUTING.md
-
-# Templates (copy and customize):
-README.example.md                           → README.md
-README_cn.example.md                        → README_cn.md
-.github/ISSUE_TEMPLATE/bug_report.example.md      → bug_report.md
-.github/ISSUE_TEMPLATE/feature_request.example.md → feature_request.md
-.github/ISSUE_TEMPLATE/config.example.yml         → config.yml
-.github/ISSUE_TEMPLATE/feedback.example.md        → feedback.md
-.github/PULL_REQUEST_TEMPLATE.example.md          → PULL_REQUEST_TEMPLATE.md
-```
+*Last updated: 2024-01-31*

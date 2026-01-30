@@ -1,0 +1,3 @@
+# Keep this directory in git
+# Session memories (YYYY-MM-DD-NNN-*.md) are gitignored
+# Only long-term-memory.md is tracked
