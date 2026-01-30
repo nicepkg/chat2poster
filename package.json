@@ -10,8 +10,13 @@
   },
   "license": "MIT",
   "scripts": {
+    "dev:extension": "pnpm --filter @chat2poster/extension dev",
+    "dev:web": "pnpm --filter @chat2poster/web dev",
     "dev:website": "pnpm --filter website dev",
+    "build:extension": "pnpm --filter @chat2poster/extension build",
+    "build:web": "pnpm --filter @chat2poster/web build",
     "build:website": "pnpm --filter website build",
+    "start:web": "pnpm --filter @chat2poster/web start",
     "start:website": "pnpm --filter website start",
     "start:static-website": "pnpm --filter website start:static",
     "build:packages": "pnpm --filter './packages/*' build",

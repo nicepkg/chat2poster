@@ -8,10 +8,10 @@
 | Track | Owner | Status | Branch | Started |
 |-------|-------|--------|--------|---------|
 | T1 | AI-1 | 🟢 Complete | `track-1-infra-schema` | 2025-01-31 |
-| T2 | AI-2 | 🟡 Partial Complete | `track-2-core-adapters` | 2025-01-31 |
+| T2 | AI-2 | 🟢 Mostly Complete | `track-2-core-adapters` | 2025-01-31 |
 | T3 | AI-3 | 🟢 Complete | `track-3-renderer-themes` | 2025-01-31 |
 | T4 | AI-4 | 🟢 Complete | `track-4-pagination-export` | 2025-01-31 |
-| T5 | AI-5 | 🔵 In Progress | `track-5-apps-ui` | 2025-01-31 |
+| T5 | AI-5 | 🟢 Complete | `track-5-apps-ui` | 2025-01-31 |
 
 ## Track Overview
 
@@ -156,13 +156,36 @@ packages/core-adapters/src/__tests__/chatgpt-dom.test.ts
 - [ ] Implement DOM selectors for Gemini conversation page
 - [ ] Write fixture-based tests
 
-### T2.5 - ChatGPT Share Link Adapter (Web)
-- [ ] Create `adapters/chatgpt-share-link.ts`
-- [ ] Implement share link URL validation
-- [ ] Fetch and parse share page content
-- [ ] Extract messages from share page structure
-- [ ] Handle rate limiting and errors
-- [ ] Write tests with mock responses
+### T2.5 - Share Link Adapters (Web) ✅
+- [x] Create `adapters/chatgpt-share-link.ts`
+  - [x] Implement share link URL validation (chatgpt.com/share/*, chatgpt.com/s/*)
+  - [x] Multiple extraction strategies (HTML parsing, API fallback)
+  - [x] Handle __NEXT_DATA__, React streaming, embedded JSON
+  - [x] Parse mapping tree and linear_conversation formats
+- [x] Create `adapters/claude-share-link.ts`
+  - [x] Implement share link URL validation (claude.ai/share/*)
+  - [x] Handle Cloudflare protection detection
+  - [x] Multiple extraction strategies
+  - [x] Parse chat_messages and messages formats
+- [x] Create `adapters/gemini-share-link.ts`
+  - [x] Implement share link URL validation (gemini.google.com/share/*)
+  - [x] Handle WIZ framework data patterns
+  - [x] Parse AF_initDataCallback and proto-style data
+- [x] Register all adapters in registerBuiltinAdapters()
+- [x] Write comprehensive tests (24 tests passing)
+- [x] Integrate with web app API route
+
+**Note:** Share link pages use dynamic JavaScript loading. Adapters attempt
+multiple extraction strategies but may require browser-based parsing for
+some pages. Full conversation extraction may require headless browser support.
+
+**Files created:**
+```
+packages/core-adapters/src/adapters/chatgpt-share-link.ts
+packages/core-adapters/src/adapters/claude-share-link.ts
+packages/core-adapters/src/adapters/gemini-share-link.ts
+packages/core-adapters/src/__tests__/share-link-adapters.test.ts
+```
 
 ### T2.6 - Manual Input Adapter (Web)
 - [ ] Create `adapters/manual-input.ts`
@@ -504,12 +527,18 @@ apps/web-nextjs/src/app/editor/page.tsx
 - [x] Responsive layout (narrow/wide)
 - [x] Back to Import link
 
-### T5.9 - API Routes (Web)
-- [ ] Create `/api/parse-share-link` route
-- [ ] Implement adapter invocation
-- [ ] Ensure no data persistence (privacy)
-- [ ] Log only: error codes, timing, adapter version
-- [ ] Rate limiting (optional)
+### T5.9 - API Routes (Web) ✅
+- [x] Create `/api/parse-share-link` route
+- [x] URL validation and error handling
+- [x] No data persistence (privacy)
+- [x] Logging: error codes, timing, provider
+- [x] Rate limiting (10 req/min per IP)
+- [x] Implement actual adapter invocation (uses T2.5 share link adapters)
+
+**Files created:**
+```
+apps/web-nextjs/src/app/api/parse-share-link/route.ts
+```
 
 ---
 

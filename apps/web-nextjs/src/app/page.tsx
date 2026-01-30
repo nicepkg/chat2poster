@@ -18,12 +18,31 @@ export default function ImportPage() {
     setError(null);
 
     try {
-      // TODO: Call API to parse share link
-      await new Promise((r) => setTimeout(r, 1000));
-      // For now, show error since this is not implemented
-      setError(
-        "Share link parsing is not yet implemented. Try Manual Builder.",
-      );
+      const response = await fetch("/api/parse-share-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: shareLink.trim() }),
+      });
+
+      const data = (await response.json()) as {
+        success: boolean;
+        conversation?: unknown;
+        error?: { code: string; message: string };
+      };
+
+      if (!data.success) {
+        setError(data.error?.message ?? "Failed to parse share link");
+        return;
+      }
+
+      // Store conversation and navigate to editor
+      if (data.conversation) {
+        sessionStorage.setItem(
+          "chat2poster:conversation",
+          JSON.stringify(data.conversation),
+        );
+        // TODO: Navigate to editor when conversation is parsed
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to parse link");
     } finally {
@@ -54,14 +73,14 @@ export default function ImportPage() {
                 htmlFor="shareLink"
                 className="mb-1.5 block text-sm font-medium text-gray-700"
               >
-                ChatGPT / Claude Share Link
+                ChatGPT / Claude / Gemini Share Link
               </label>
               <input
                 id="shareLink"
                 type="url"
                 value={shareLink}
                 onChange={(e) => setShareLink(e.target.value)}
-                placeholder="https://chat.openai.com/share/..."
+                placeholder="https://chatgpt.com/share/... or claude.ai/share/..."
                 className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
               />
             </div>

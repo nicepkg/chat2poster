@@ -11,9 +11,13 @@
  *   registerAdapter,
  *   parseWithAdapters,
  *   chatGPTDOMAdapter,
+ *   registerBuiltinAdapters,
  * } from '@chat2poster/core-adapters';
  *
- * // Register adapters
+ * // Register all built-in adapters
+ * registerBuiltinAdapters();
+ *
+ * // Or register individual adapters
  * registerAdapter(chatGPTDOMAdapter);
  *
  * // Parse input
@@ -26,8 +30,16 @@
  */
 
 // Internal imports for registerBuiltinAdapters
-import { registerAdapter as _registerAdapter, getAdapter as _getAdapter } from "./registry";
-import { chatGPTDOMAdapter as _chatGPTDOMAdapter } from "./adapters";
+import {
+  registerAdapter as _registerAdapter,
+  getAdapter as _getAdapter,
+} from "./registry";
+import {
+  chatGPTDOMAdapter as _chatGPTDOMAdapter,
+  chatGPTShareLinkAdapter as _chatGPTShareLinkAdapter,
+  claudeShareLinkAdapter as _claudeShareLinkAdapter,
+  geminiShareLinkAdapter as _geminiShareLinkAdapter,
+} from "./adapters";
 
 // Registry functions
 export {
@@ -52,7 +64,18 @@ export {
 export type { AdapterConfig, ConversationOptions, RawMessage } from "./base";
 
 // Adapter implementations
-export { ChatGPTDOMAdapter, chatGPTDOMAdapter } from "./adapters";
+export {
+  // DOM adapters
+  ChatGPTDOMAdapter,
+  chatGPTDOMAdapter,
+  // Share link adapters
+  ChatGPTShareLinkAdapter,
+  chatGPTShareLinkAdapter,
+  ClaudeShareLinkAdapter,
+  claudeShareLinkAdapter,
+  GeminiShareLinkAdapter,
+  geminiShareLinkAdapter,
+} from "./adapters";
 
 /**
  * Register all built-in adapters with the registry
@@ -68,9 +91,22 @@ export { ChatGPTDOMAdapter, chatGPTDOMAdapter } from "./adapters";
  * ```
  */
 export function registerBuiltinAdapters(): void {
-  // Register only if not already registered
+  // DOM adapters
   if (!_getAdapter(_chatGPTDOMAdapter.id)) {
     _registerAdapter(_chatGPTDOMAdapter);
+  }
+
+  // Share link adapters
+  if (!_getAdapter(_chatGPTShareLinkAdapter.id)) {
+    _registerAdapter(_chatGPTShareLinkAdapter);
+  }
+
+  if (!_getAdapter(_claudeShareLinkAdapter.id)) {
+    _registerAdapter(_claudeShareLinkAdapter);
+  }
+
+  if (!_getAdapter(_geminiShareLinkAdapter.id)) {
+    _registerAdapter(_geminiShareLinkAdapter);
   }
 
   // Future adapters will be registered here:
