@@ -9,7 +9,7 @@
 |-------|-------|--------|--------|---------|
 | T1 | AI-1 | 🟢 Complete | `track-1-infra-schema` | 2025-01-31 |
 | T2 | AI-2 | 🟡 Partial Complete | `track-2-core-adapters` | 2025-01-31 |
-| T3 | AI-3 | 🟡 Partial Complete | `track-3-renderer-themes` | 2025-01-31 |
+| T3 | AI-3 | 🟢 Complete | `track-3-renderer-themes` | 2025-01-31 |
 | T4 | AI-4 | 🟢 Complete | `track-4-pagination-export` | 2025-01-31 |
 | T5 | AI-5 | 🔵 In Progress | `track-5-apps-ui` | 2025-01-31 |
 
@@ -244,31 +244,52 @@ packages/core-renderer/src/components/MessageAvatar.tsx
 packages/core-renderer/src/components/CodeBlock.tsx
 ```
 
-### T3.4 - Conversation Components
-- [ ] Create `ConversationView` component
-  - [ ] Accept messages, theme, decoration, selection props
-  - [ ] Render selected messages in order
-  - [ ] Handle page break indicators
-  - [ ] Implement virtual scrolling for long lists (optional)
-- [ ] Create `ConversationHeader` component (optional title)
+### T3.4 - Conversation Components ✅
+- [x] Create `ConversationView` component
+  - [x] Accept messages, theme, decoration, selection props
+  - [x] Render selected messages in order
+  - [x] Handle page break indicators
+  - [ ] Implement virtual scrolling for long lists (optional, deferred)
+- [x] Create `ConversationHeader` component (optional title)
+- [x] Create `PageBreakIndicator` component
 
-### T3.5 - Decoration Components
-- [ ] Create `DecorationFrame` component
-  - [ ] Apply border radius
-  - [ ] Apply padding
-  - [ ] Apply shadow (multiple levels)
-  - [ ] Apply background (solid/gradient)
-  - [ ] Render macOS traffic light bar
-- [ ] Create `MacOSBar` component
-- [ ] Create `CanvasContainer` component (wrapper for export)
+**Files created:**
+```
+packages/core-renderer/src/components/ConversationView.tsx
+packages/core-renderer/src/components/ConversationHeader.tsx
+packages/core-renderer/src/components/PageBreakIndicator.tsx
+```
 
-### T3.6 - Preview Components
-- [ ] Create `PreviewPanel` component
-  - [ ] Combine DecorationFrame + ConversationView
-  - [ ] Handle zoom/scale for preview
-  - [ ] Show height estimation
-  - [ ] Show pagination warning when > 6000px
-- [ ] Create `PageIndicator` component
+### T3.5 - Decoration Components ✅
+- [x] Create `DecorationFrame` component
+  - [x] Apply border radius
+  - [x] Apply padding
+  - [x] Apply shadow (multiple levels)
+  - [x] Apply background (solid/gradient/image)
+  - [x] Render macOS traffic light bar
+- [x] Create `MacOSBar` component
+- [x] Create `CanvasContainer` component (wrapper for export)
+
+**Files created:**
+```
+packages/core-renderer/src/components/DecorationFrame.tsx
+packages/core-renderer/src/components/MacOSBar.tsx
+packages/core-renderer/src/components/CanvasContainer.tsx
+```
+
+### T3.6 - Preview Components ✅
+- [x] Create `PreviewPanel` component
+  - [x] Combine DecorationFrame + ConversationView
+  - [x] Handle zoom/scale for preview
+  - [x] Show height estimation
+  - [x] Show pagination warning when > 6000px
+- [x] Create `PageIndicator` component
+
+**Files created:**
+```
+packages/core-renderer/src/components/PreviewPanel.tsx
+packages/core-renderer/src/components/PageIndicator.tsx
+```
 
 ---
 

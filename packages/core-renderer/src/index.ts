@@ -4,7 +4,7 @@
  * React components for rendering chat conversations as exportable images.
  */
 
-// Components
+// Message components
 export {
   MessageItem,
   type MessageItemProps,
@@ -12,6 +12,34 @@ export {
   type MessageAvatarProps,
   CodeBlock,
   type CodeBlockProps,
+} from "./components";
+
+// Conversation components
+export {
+  ConversationView,
+  type ConversationViewProps,
+  ConversationHeader,
+  type ConversationHeaderProps,
+  PageBreakIndicator,
+  type PageBreakIndicatorProps,
+} from "./components";
+
+// Decoration components
+export {
+  DecorationFrame,
+  type DecorationFrameProps,
+  MacOSBar,
+  type MacOSBarProps,
+  CanvasContainer,
+  type CanvasContainerProps,
+} from "./components";
+
+// Preview components
+export {
+  PreviewPanel,
+  type PreviewPanelProps,
+  PageIndicator,
+  type PageIndicatorProps,
 } from "./components";
 
 // Utils
@@ -23,7 +51,10 @@ export type {
   MessageRole,
   Conversation,
   Selection,
+  PageBreak,
+  Decoration,
 } from "@chat2poster/core-schema";
 
 // Re-export theme types
-export type { Theme, Decoration } from "@chat2poster/themes";
+export type { Theme } from "@chat2poster/themes";
+export { applyThemeToElement, themeToCSSString, cssVar } from "@chat2poster/themes";
