@@ -9,9 +9,9 @@
 |-------|-------|--------|--------|---------|
 | T1 | AI-1 | 🟢 Complete | `track-1-infra-schema` | 2025-01-31 |
 | T2 | AI-2 | 🟡 Partial Complete | `track-2-core-adapters` | 2025-01-31 |
-| T3 | - | ⚪ Not Started | - | - |
+| T3 | AI-3 | 🟡 Partial Complete | `track-3-renderer-themes` | 2025-01-31 |
 | T4 | AI-4 | 🟢 Complete | `track-4-pagination-export` | 2025-01-31 |
-| T5 | - | ⚪ Not Started | - | - |
+| T5 | AI-5 | 🔵 In Progress | `track-5-apps-ui` | 2025-01-31 |
 
 ## Track Overview
 
@@ -182,32 +182,67 @@ packages/core-adapters/src/__tests__/chatgpt-dom.test.ts
 > Rendering layer. React components for displaying conversations.
 > Can work immediately using T1 interfaces as stubs.
 
-### T3.1 - Theme System
-- [ ] Create `packages/themes/package.json`
-- [ ] Define theme token structure (colors, fonts, spacing)
-- [ ] Create Light theme preset
-- [ ] Create Dark theme preset
+### T3.1 - Theme System ✅
+- [x] Create `packages/themes/package.json`
+- [x] Define theme token structure (colors, fonts, spacing)
+- [x] Create Light theme preset
+- [x] Create Dark theme preset
 - [ ] Create 2-3 additional presets (optional)
-- [ ] Implement theme CSS variable injection
-- [ ] Export theme utilities
+- [x] Implement theme CSS variable injection
+- [x] Export theme utilities
 
-### T3.2 - Core Renderer Setup
-- [ ] Create `packages/core-renderer/package.json`
-- [ ] Setup React with TypeScript
-- [ ] Configure react-markdown with remark/rehype plugins
-- [ ] Configure Shiki for code highlighting
-- [ ] Setup CSS-in-JS or Tailwind (scoped styles)
+**Files created:**
+```
+packages/themes/package.json
+packages/themes/tsconfig.json
+packages/themes/tsconfig.build.json
+packages/themes/tsup.config.ts
+packages/themes/vitest.config.ts
+packages/themes/src/index.ts
+packages/themes/src/registry.ts
+packages/themes/src/css-variables.ts
+packages/themes/src/presets/index.ts
+packages/themes/src/presets/light.ts
+packages/themes/src/presets/dark.ts
+```
 
-### T3.3 - Message Components
-- [ ] Create `MessageItem` component
-  - [ ] Handle user/assistant/system role styling
-  - [ ] Render markdown content
-  - [ ] Render code blocks with Shiki highlighting
-  - [ ] Handle inline code
-  - [ ] Handle images (with loading state)
-  - [ ] Implement React.memo for performance
-- [ ] Create `MessageAvatar` component
-- [ ] Create `CodeBlock` component with copy button
+### T3.2 - Core Renderer Setup ✅
+- [x] Create `packages/core-renderer/package.json`
+- [x] Setup React with TypeScript
+- [x] Configure react-markdown with remark/rehype plugins
+- [x] Configure Shiki for code highlighting
+- [x] Setup CSS-in-JS (inline styles + CSS variables for Shadow DOM compatibility)
+
+**Files created:**
+```
+packages/core-renderer/package.json
+packages/core-renderer/tsconfig.json
+packages/core-renderer/tsconfig.build.json
+packages/core-renderer/tsup.config.ts
+packages/core-renderer/vitest.config.ts
+packages/core-renderer/src/index.ts
+packages/core-renderer/src/utils/index.ts
+packages/core-renderer/src/utils/shiki.ts
+```
+
+### T3.3 - Message Components ✅
+- [x] Create `MessageItem` component
+  - [x] Handle user/assistant/system role styling
+  - [x] Render markdown content
+  - [x] Render code blocks with Shiki highlighting
+  - [x] Handle inline code
+  - [x] Handle images (with loading state)
+  - [x] Implement React.memo for performance
+- [x] Create `MessageAvatar` component
+- [x] Create `CodeBlock` component with copy button
+
+**Files created:**
+```
+packages/core-renderer/src/components/index.ts
+packages/core-renderer/src/components/MessageItem.tsx
+packages/core-renderer/src/components/MessageAvatar.tsx
+packages/core-renderer/src/components/CodeBlock.tsx
+```
 
 ### T3.4 - Conversation Components
 - [ ] Create `ConversationView` component
