@@ -42,6 +42,14 @@ export {
   type PageIndicatorProps,
 } from "./components";
 
+// Markdown components
+export {
+  MarkdownRenderer,
+  type MarkdownRendererProps,
+  MermaidBlock,
+  type MermaidBlockProps,
+} from "./components";
+
 // Utils
 export { initHighlighter, getHighlighter, highlightCode } from "./utils";
 

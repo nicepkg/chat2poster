@@ -1,5 +1,7 @@
 "use client";
 
+import { MarkdownRenderer } from "@chat2poster/core-renderer";
+import "@chat2poster/core-renderer/styles.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
@@ -60,21 +62,51 @@ export default function EditorPage() {
 
   // Load messages from sessionStorage
   useEffect(() => {
-    const stored = sessionStorage.getItem("chat2poster:manual-messages");
-    if (stored) {
+    // Try conversation from share link first
+    const conversationData = sessionStorage.getItem("chat2poster:conversation");
+    if (conversationData) {
       try {
-        const parsed = JSON.parse(stored) as Message[];
+        const conversation = JSON.parse(conversationData) as {
+          messages: Array<{
+            id: string;
+            role: "user" | "assistant";
+            contentMarkdown: string;
+          }>;
+        };
+        const msgs: Message[] = conversation.messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.contentMarkdown,
+        }));
+        setMessages(msgs);
+        setSelection({
+          selectedIds: msgs.map((m) => m.id),
+          pageBreaks: [],
+        });
+        return;
+      } catch {
+        // Continue to try other storage
+      }
+    }
+
+    // Try manual messages
+    const manualData = sessionStorage.getItem("chat2poster:manual-messages");
+    if (manualData) {
+      try {
+        const parsed = JSON.parse(manualData) as Message[];
         setMessages(parsed);
         setSelection({
           selectedIds: parsed.map((m) => m.id),
           pageBreaks: [],
         });
+        return;
       } catch {
-        router.push("/");
+        // Fall through to redirect
       }
-    } else {
-      router.push("/");
     }
+
+    // No valid data found
+    router.push("/");
   }, [router]);
 
   const toggleMessage = useCallback((id: string) => {
@@ -452,15 +484,13 @@ export default function EditorPage() {
                       className={`rounded-lg p-3 ${
                         msg.role === "user"
                           ? "bg-blue-50 text-blue-900"
-                          : "bg-green-50 text-green-900"
+                          : "bg-gray-50 text-gray-900"
                       }`}
                     >
-                      <div className="mb-1 text-xs font-medium opacity-60">
+                      <div className="mb-2 text-xs font-medium opacity-60">
                         {msg.role}
                       </div>
-                      <div className="whitespace-pre-wrap text-sm">
-                        {msg.content}
-                      </div>
+                      <MarkdownRenderer content={msg.content} />
                     </div>
                   ))}
               </div>

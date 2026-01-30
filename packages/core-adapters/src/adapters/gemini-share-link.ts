@@ -81,8 +81,8 @@ export class GeminiShareLinkAdapter extends BaseShareLinkAdapter {
     }
 
     throw createAppError(
-      "E-PARSE-003",
-      `Failed to extract messages from Gemini share link. Gemini uses dynamic loading that requires browser execution. ${lastError?.message || ""}`
+      "E-PARSE-005",
+      `Gemini share pages load content dynamically via JavaScript. Server-side extraction found no messages. ${lastError?.message || "Try using the browser extension instead."}`
     );
   }
 

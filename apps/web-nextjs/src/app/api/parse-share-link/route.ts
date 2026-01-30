@@ -168,17 +168,40 @@ export async function POST(
         success: true,
         conversation: result.conversation,
       });
-    } catch (parseError) {
+    } catch (parseError: unknown) {
       const duration = Date.now() - startTime;
-      const errorMessage =
-        parseError instanceof Error ? parseError.message : "Unknown error";
-      const errorCode =
-        parseError && typeof parseError === "object" && "code" in parseError
-          ? String(parseError.code)
-          : "E-PARSE-FAILED";
+
+      // Handle different error types
+      let errorMessage: string;
+      let errorCode: string;
+
+      if (parseError instanceof Error) {
+        // Standard Error instance
+        errorMessage = parseError.message;
+        errorCode = "E-PARSE-FAILED";
+      } else if (
+        parseError &&
+        typeof parseError === "object" &&
+        "code" in parseError &&
+        "message" in parseError
+      ) {
+        // AppError object from core-schema
+        const appError = parseError as {
+          code: string;
+          message: string;
+          detail?: string;
+        };
+        errorCode = appError.code;
+        errorMessage = appError.detail || appError.message;
+      } else {
+        errorMessage =
+          "Failed to parse share link. The page may require browser authentication.";
+        errorCode = "E-PARSE-FAILED";
+      }
 
       console.error(
         `[parse-share-link] Parse error after ${duration}ms:`,
+        errorCode,
         errorMessage,
       );
 
@@ -187,9 +210,7 @@ export async function POST(
           success: false,
           error: {
             code: errorCode,
-            message:
-              errorMessage ||
-              "Failed to parse share link. The page may require browser authentication.",
+            message: errorMessage,
           },
         },
         { status: 422 },

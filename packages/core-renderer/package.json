@@ -14,7 +14,10 @@
     },
     "./styles.css": "./dist/styles.css"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -27,6 +30,8 @@
   "dependencies": {
     "@chat2poster/core-schema": "workspace:*",
     "@chat2poster/themes": "workspace:*",
+    "html-react-parser": "^5.2.14",
+    "mermaid": "^11.12.2",
     "react": "^19.1.0",
     "react-markdown": "^10.1.0",
     "rehype-raw": "^7.0.0",

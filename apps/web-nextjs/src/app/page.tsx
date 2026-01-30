@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function ImportPage() {
+  const router = useRouter();
   const [shareLink, setShareLink] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +43,7 @@ export default function ImportPage() {
           "chat2poster:conversation",
           JSON.stringify(data.conversation),
         );
-        // TODO: Navigate to editor when conversation is parsed
+        router.push("/editor");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to parse link");

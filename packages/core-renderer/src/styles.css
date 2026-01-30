@@ -1,0 +1,421 @@
+/**
+ * @chat2poster/core-renderer styles
+ * Pure CSS styles for markdown rendering (no Tailwind)
+ */
+
+/* ============================================================================
+   Base Markdown Container
+   ============================================================================ */
+
+.c2p-markdown {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #1f2937;
+  word-wrap: break-word;
+}
+
+/* ============================================================================
+   Headings
+   ============================================================================ */
+
+.c2p-heading {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.c2p-h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.3em;
+}
+
+.c2p-h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.3em;
+}
+
+.c2p-h3 {
+  font-size: 1.25em;
+}
+
+.c2p-h4 {
+  font-size: 1em;
+}
+
+.c2p-h5 {
+  font-size: 0.875em;
+}
+
+.c2p-h6 {
+  font-size: 0.85em;
+  color: #6b7280;
+}
+
+.c2p-markdown > .c2p-heading:first-child {
+  margin-top: 0;
+}
+
+/* ============================================================================
+   Paragraphs
+   ============================================================================ */
+
+.c2p-paragraph {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.c2p-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================================
+   Links
+   ============================================================================ */
+
+.c2p-link {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.c2p-link:hover {
+  color: #1d4ed8;
+}
+
+/* ============================================================================
+   Lists
+   ============================================================================ */
+
+.c2p-list {
+  margin-top: 0;
+  margin-bottom: 16px;
+  padding-left: 2em;
+}
+
+.c2p-ul {
+  list-style-type: disc;
+}
+
+.c2p-ol {
+  list-style-type: decimal;
+}
+
+.c2p-list-item {
+  margin-bottom: 4px;
+}
+
+.c2p-list-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Nested lists */
+.c2p-list .c2p-list {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+/* ============================================================================
+   Blockquotes
+   ============================================================================ */
+
+.c2p-blockquote {
+  margin: 0 0 16px 0;
+  padding: 12px 20px;
+  border-left: 4px solid #d1d5db;
+  background-color: #f9fafb;
+  color: #4b5563;
+  font-style: italic;
+  border-radius: 0 4px 4px 0;
+}
+
+.c2p-blockquote > .c2p-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================================
+   Inline Code
+   ============================================================================ */
+
+.c2p-inline-code {
+  padding: 2px 6px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  font-size: 0.875em;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  color: #db2777;
+}
+
+/* ============================================================================
+   Code Blocks
+   ============================================================================ */
+
+.c2p-code-block {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 16px 0;
+  background-color: #1f2937;
+}
+
+.c2p-code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #374151;
+  border-bottom: 1px solid #4b5563;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.c2p-code-block-language {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  text-transform: lowercase;
+}
+
+.c2p-code-block-copy {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.c2p-code-block-copy:hover {
+  background-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.c2p-code-block-content {
+  padding: 16px;
+  margin: 0;
+  overflow-x: auto;
+}
+
+/* Shiki generated pre/code styles */
+.c2p-code-block-content pre {
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+}
+
+.c2p-code-block-content code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Fallback code block style */
+.c2p-code-block-fallback {
+  background-color: #1f2937;
+  color: #e5e7eb;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.c2p-code-block-fallback code {
+  color: inherit;
+  background: transparent;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* ============================================================================
+   Mermaid Diagrams
+   ============================================================================ */
+
+.c2p-mermaid-block {
+  margin: 16px 0;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  overflow: auto;
+  text-align: center;
+}
+
+.c2p-mermaid-block svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.c2p-mermaid-error {
+  text-align: left;
+}
+
+.c2p-mermaid-loading {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* ============================================================================
+   Tables
+   ============================================================================ */
+
+.c2p-table-wrapper {
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.c2p-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+.c2p-thead {
+  background-color: #f9fafb;
+}
+
+.c2p-th {
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+  font-weight: 600;
+}
+
+.c2p-td {
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.c2p-tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+/* ============================================================================
+   Horizontal Rule
+   ============================================================================ */
+
+.c2p-hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 24px 0;
+}
+
+/* ============================================================================
+   Images
+   ============================================================================ */
+
+.c2p-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+/* ============================================================================
+   Text Formatting
+   ============================================================================ */
+
+.c2p-strong {
+  font-weight: 600;
+}
+
+.c2p-em {
+  font-style: italic;
+}
+
+.c2p-del {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+
+/* ============================================================================
+   Dark Theme Support
+   ============================================================================ */
+
+.c2p-markdown.c2p-dark {
+  color: #e5e7eb;
+}
+
+.c2p-dark .c2p-h1,
+.c2p-dark .c2p-h2 {
+  border-bottom-color: #374151;
+}
+
+.c2p-dark .c2p-h6 {
+  color: #9ca3af;
+}
+
+.c2p-dark .c2p-link {
+  color: #60a5fa;
+}
+
+.c2p-dark .c2p-link:hover {
+  color: #93c5fd;
+}
+
+.c2p-dark .c2p-blockquote {
+  border-left-color: #4b5563;
+  background-color: #1f2937;
+  color: #9ca3af;
+}
+
+.c2p-dark .c2p-inline-code {
+  background-color: #374151;
+  color: #f472b6;
+}
+
+.c2p-dark .c2p-thead {
+  background-color: #1f2937;
+}
+
+.c2p-dark .c2p-th,
+.c2p-dark .c2p-td {
+  border-color: #374151;
+}
+
+.c2p-dark .c2p-tr:nth-child(even) {
+  background-color: #1f2937;
+}
+
+.c2p-dark .c2p-hr {
+  border-top-color: #374151;
+}
+
+.c2p-dark .c2p-del {
+  color: #9ca3af;
+}
+
+.c2p-dark .c2p-mermaid-block {
+  background-color: #1f2937;
+}
+
+/* ============================================================================
+   Task Lists (GFM)
+   ============================================================================ */
+
+.c2p-list-item input[type="checkbox"] {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* ============================================================================
+   Print Styles
+   ============================================================================ */
+
+@media print {
+  .c2p-code-block-copy {
+    display: none;
+  }
+
+  .c2p-code-block {
+    break-inside: avoid;
+  }
+
+  .c2p-mermaid-block {
+    break-inside: avoid;
+  }
+}

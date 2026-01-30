@@ -16,3 +16,7 @@ export { CanvasContainer, type CanvasContainerProps } from "./CanvasContainer";
 // Preview components
 export { PreviewPanel, type PreviewPanelProps } from "./PreviewPanel";
 export { PageIndicator, type PageIndicatorProps } from "./PageIndicator";
+
+// Markdown components
+export { MarkdownRenderer, type MarkdownRendererProps } from "./MarkdownRenderer";
+export { MermaidBlock, type MermaidBlockProps } from "./MermaidBlock";

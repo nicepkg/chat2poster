@@ -106,8 +106,8 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
     }
 
     throw createAppError(
-      "E-PARSE-003",
-      `Failed to extract messages from ChatGPT share link. ${lastError?.message || "No messages found."}`
+      "E-PARSE-005",
+      `ChatGPT share pages load content dynamically via JavaScript. Server-side extraction found no messages. ${lastError?.message || "Try using the browser extension instead."}`
     );
   }
 
@@ -163,14 +163,25 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
       }
     }
 
-    // Strategy 2: Look for React streaming data
-    const streamChunks = html.match(
-      /window\.__reactRouterContext\.streamController\.enqueue\("([^"]+)"\)/g
-    );
-    if (streamChunks && streamChunks.length > 0) {
-      // React RSC streaming - data may be encoded in chunks
-      // This requires more complex parsing of RSC protocol
-      // For now, we'll fall back to other strategies
+    // Strategy 2: Look for React Router streaming data
+    // Pattern: .enqueue("..."); where content is JavaScript string literal
+    const enqueueChunks = this.extractEnqueueChunks(html);
+
+    for (const chunk of enqueueChunks) {
+      try {
+        // Decode JavaScript string literal escapes
+        // The raw string has: \" for quotes, \\n for newlines, \\\\ for backslash
+        const decoded = this.decodeJsStringLiteral(chunk);
+
+        // Parse as JSON array
+        const data = JSON.parse(decoded) as unknown[];
+        const messages = this.parseRscStreamData(data);
+        if (messages.length > 0) {
+          return messages;
+        }
+      } catch {
+        // Continue to next chunk or strategy
+      }
     }
 
     // Strategy 3: Parse embedded JSON in script tags
@@ -364,6 +375,205 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
       return content.text;
     }
     return "";
+  }
+
+  /**
+   * Extract content from .enqueue("...") calls in HTML
+   * Pattern: .enqueue("JSON string with escapes")
+   */
+  private extractEnqueueChunks(html: string): string[] {
+    const chunks: string[] = [];
+
+    // Match .enqueue("...") patterns with proper escape handling
+    const regex = /\.enqueue\("((?:[^"\\]|\\.)*)"\)/g;
+    let match;
+
+    while ((match = regex.exec(html)) !== null) {
+      if (match[1] && match[1].length > 100) {
+        // Only consider substantial chunks
+        chunks.push(match[1]);
+      }
+    }
+
+    return chunks;
+  }
+
+  /**
+   * Decode JavaScript string literal escapes
+   * Uses Function to properly evaluate JS string escapes like \" and \\n
+   */
+  private decodeJsStringLiteral(str: string): string {
+    try {
+      // Use Function to evaluate the JavaScript string literal properly
+      // This handles all escape sequences correctly
+      return new Function('return "' + str + '"')() as string;
+    } catch {
+      // Fallback to manual decoding if Function fails
+      return str
+        .replace(/\\"/g, '"')
+        .replace(/\\n/g, "\n")
+        .replace(/\\r/g, "\r")
+        .replace(/\\t/g, "\t")
+        .replace(/\\\\/g, "\\");
+    }
+  }
+
+  /**
+   * Parse React Server Components streaming data format
+   * Handles two formats:
+   * 1. /s/t_ format: Simple post with "text" field and role/parts
+   * 2. /share/ format: Full conversation with "mapping" structure
+   */
+  private parseRscStreamData(data: unknown[]): RawMessage[] {
+    const messages: RawMessage[] = [];
+
+    // Check if this is the /share/ format (has "mapping" and "serverResponse")
+    const hasMapping = data.some((x) => x === "mapping");
+    const hasServerResponse = data.some((x) => x === "serverResponse");
+
+    if (hasMapping && hasServerResponse) {
+      // Strategy for /share/ format: Extract from mapping structure
+      return this.parseShareFormatData(data);
+    }
+
+    // Strategy for /s/t_ format (simple post)
+    // Strategy 1: Find user message from "text" field near "post" context
+    for (let i = 0; i < data.length - 1; i++) {
+      if (data[i] === "text" && typeof data[i + 1] === "string") {
+        const text = data[i + 1] as string;
+        if (text.length > 3) {
+          const contextStart = Math.max(0, i - 15);
+          const context = data.slice(contextStart, i);
+          const hasPostContext = context.some(
+            (x) => x === "post" || x === "attachments" || x === "posted_at"
+          );
+          if (hasPostContext) {
+            messages.push({ role: "user", content: text });
+            break;
+          }
+        }
+      }
+    }
+
+    // Strategy 2: Find assistant messages via role/parts pattern
+    for (let i = 0; i < data.length - 1; i++) {
+      if (data[i] === "role") {
+        const roleValue = data[i + 1];
+        if (roleValue === "user" || roleValue === "assistant") {
+          for (let j = i + 2; j < Math.min(i + 40, data.length - 1); j++) {
+            if (data[j] === "parts") {
+              const partsRef = data[j + 1];
+              if (
+                Array.isArray(partsRef) &&
+                partsRef.length === 1 &&
+                typeof partsRef[0] === "number"
+              ) {
+                const contentIdx = partsRef[0];
+                if (contentIdx < data.length) {
+                  const content = data[contentIdx];
+                  if (typeof content === "string" && content.trim()) {
+                    const exists = messages.some((m) => m.content === content);
+                    if (!exists) {
+                      messages.push({ role: roleValue, content });
+                    }
+                  }
+                }
+              } else if (Array.isArray(partsRef) && partsRef.length > 0) {
+                const content = partsRef
+                  .filter((p): p is string => typeof p === "string")
+                  .join("\n");
+                if (content.trim()) {
+                  const exists = messages.some((m) => m.content === content);
+                  if (!exists) {
+                    messages.push({ role: roleValue, content });
+                  }
+                }
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    return messages;
+  }
+
+  /**
+   * Parse /share/ format data with mapping structure
+   * This format contains the full conversation tree with complex references
+   *
+   * Note: ChatGPT RSC data often only has one "user" and one "assistant" marker
+   * for the entire conversation, so we extract the title as user message
+   * and find all substantial assistant responses.
+   */
+  private parseShareFormatData(data: unknown[]): RawMessage[] {
+    const messages: RawMessage[] = [];
+
+    // Find title (this will be the user's question)
+    let title = "";
+    for (let i = 0; i < data.length - 1; i++) {
+      if (data[i] === "title" && typeof data[i + 1] === "string") {
+        title = data[i + 1] as string;
+        break;
+      }
+    }
+
+    // Add title as user message
+    if (title) {
+      messages.push({ role: "user", content: title });
+    }
+
+    // Find the "assistant" role position
+    let assistantIdx = -1;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i] === "assistant") {
+        assistantIdx = i;
+        break;
+      }
+    }
+
+    // Collect all substantial content strings after the assistant marker
+    // These are the assistant's responses in the conversation
+    if (assistantIdx > 0) {
+      for (let i = assistantIdx; i < data.length; i++) {
+        const item = data[i];
+
+        // Look for array references pointing to content
+        if (Array.isArray(item) && item.length === 1) {
+          const ref = item[0];
+          if (typeof ref === "number" && ref < data.length) {
+            const content = data[ref];
+
+            if (
+              typeof content === "string" &&
+              content.length > 100 &&
+              !content.startsWith("http") &&
+              !content.match(/^[a-f0-9-]{36}$/) &&
+              !content.includes("custom instructions") &&
+              !content.includes("no longer available")
+            ) {
+              // Skip ChatGPT's internal thinking/reasoning
+              if (
+                content.match(
+                  /^(I'm |It seems|I'll |The files|However|Sparse|If that|I need)/i
+                )
+              ) {
+                continue;
+              }
+
+              // Avoid duplicates
+              const exists = messages.some((m) => m.content === content);
+              if (!exists) {
+                messages.push({ role: "assistant", content });
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return messages;
   }
 }
 

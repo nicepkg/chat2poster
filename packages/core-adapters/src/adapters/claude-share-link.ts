@@ -86,8 +86,8 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
     }
 
     throw createAppError(
-      "E-PARSE-003",
-      `Failed to extract messages from Claude share link. Claude share pages require browser authentication. ${lastError?.message || ""}`
+      "E-PARSE-005",
+      `Claude share pages are protected by Cloudflare and require browser authentication. Server-side extraction is not possible. ${lastError?.message || "Try using the browser extension instead."}`
     );
   }
 
