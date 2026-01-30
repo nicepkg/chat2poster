@@ -1,0 +1,210 @@
+/**
+ * Base Adapter Utilities
+ *
+ * Common utilities and base implementations for adapters.
+ */
+
+import type {
+  Adapter,
+  AdapterInput,
+  Conversation,
+  Message,
+  Provider,
+  SourceType,
+} from "@chat2poster/core-schema";
+import { createConversation, createMessage } from "@chat2poster/core-schema";
+
+/**
+ * Configuration for creating an adapter
+ */
+export interface AdapterConfig {
+  id: string;
+  version: string;
+  name: string;
+}
+
+/**
+ * Options for creating a conversation
+ */
+export interface ConversationOptions {
+  sourceType: SourceType;
+  provider: Provider;
+  adapterId: string;
+  adapterVersion: string;
+  shareUrl?: string;
+}
+
+/**
+ * Raw message data before transformation
+ */
+export interface RawMessage {
+  role: "user" | "assistant" | "system";
+  content: string;
+}
+
+/**
+ * Generate a UUID v4
+ */
+export function generateId(): string {
+  // Use crypto.randomUUID if available
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  // Fallback implementation
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+/**
+ * Convert raw messages to Message schema
+ */
+export function buildMessages(rawMessages: RawMessage[]): Message[] {
+  return rawMessages.map((raw, index) =>
+    createMessage({
+      id: generateId(),
+      role: raw.role,
+      contentMarkdown: raw.content,
+      order: index,
+      contentMeta: {
+        containsCodeBlock: raw.content.includes("```"),
+        containsImage:
+          raw.content.includes("![") || raw.content.includes("<img"),
+      },
+    })
+  );
+}
+
+/**
+ * Build a conversation from raw messages
+ */
+export function buildConversation(
+  rawMessages: RawMessage[],
+  options: ConversationOptions
+): Conversation {
+  const messages = buildMessages(rawMessages);
+  const now = new Date().toISOString();
+
+  return createConversation({
+    id: generateId(),
+    sourceType: options.sourceType,
+    messages,
+    sourceMeta: {
+      provider: options.provider,
+      shareUrl: options.shareUrl,
+      parsedAt: now,
+      adapterId: options.adapterId,
+      adapterVersion: options.adapterVersion,
+    },
+  });
+}
+
+/**
+ * Abstract base for DOM-based adapters
+ */
+export abstract class BaseDOMAdapter implements Adapter {
+  abstract readonly id: string;
+  abstract readonly version: string;
+  abstract readonly name: string;
+
+  /**
+   * URL patterns this adapter handles
+   */
+  abstract readonly urlPatterns: RegExp[];
+
+  /**
+   * Provider name for this adapter
+   */
+  abstract readonly provider: Provider;
+
+  /**
+   * Check if this adapter can handle the given input
+   */
+  canHandle(input: AdapterInput): boolean {
+    if (input.type !== "dom") {
+      return false;
+    }
+
+    return this.urlPatterns.some((pattern) => pattern.test(input.url));
+  }
+
+  /**
+   * Parse the input into a Conversation
+   */
+  async parse(input: AdapterInput): Promise<Conversation> {
+    if (input.type !== "dom") {
+      throw new Error(`${this.name} only handles DOM input`);
+    }
+
+    const rawMessages = this.extractMessages(input.document);
+    return buildConversation(rawMessages, {
+      sourceType: "extension-current",
+      provider: this.provider,
+      adapterId: this.id,
+      adapterVersion: this.version,
+    });
+  }
+
+  /**
+   * Extract messages from the document
+   * Subclasses must implement this
+   */
+  abstract extractMessages(document: Document): RawMessage[];
+}
+
+/**
+ * Abstract base for share-link adapters
+ */
+export abstract class BaseShareLinkAdapter implements Adapter {
+  abstract readonly id: string;
+  abstract readonly version: string;
+  abstract readonly name: string;
+
+  /**
+   * URL patterns this adapter handles
+   */
+  abstract readonly urlPatterns: RegExp[];
+
+  /**
+   * Provider name for this adapter
+   */
+  abstract readonly provider: Provider;
+
+  /**
+   * Check if this adapter can handle the given input
+   */
+  canHandle(input: AdapterInput): boolean {
+    if (input.type !== "share-link") {
+      return false;
+    }
+
+    return this.urlPatterns.some((pattern) => pattern.test(input.url));
+  }
+
+  /**
+   * Parse the input into a Conversation
+   */
+  async parse(input: AdapterInput): Promise<Conversation> {
+    if (input.type !== "share-link") {
+      throw new Error(`${this.name} only handles share-link input`);
+    }
+
+    const rawMessages = await this.fetchAndExtract(input.url);
+    return buildConversation(rawMessages, {
+      sourceType: "web-share-link",
+      provider: this.provider,
+      adapterId: this.id,
+      adapterVersion: this.version,
+      shareUrl: input.url,
+    });
+  }
+
+  /**
+   * Fetch share link and extract messages
+   * Subclasses must implement this
+   */
+  abstract fetchAndExtract(url: string): Promise<RawMessage[]>;
+}

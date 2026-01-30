@@ -8,7 +8,7 @@
 | Track | Owner | Status | Branch | Started |
 |-------|-------|--------|--------|---------|
 | T1 | AI-1 | 🟢 Complete | `track-1-infra-schema` | 2025-01-31 |
-| T2 | - | ⚪ Not Started | - | - |
+| T2 | AI-2 | 🟡 Partial Complete | `track-2-core-adapters` | 2025-01-31 |
 | T3 | - | ⚪ Not Started | - | - |
 | T4 | AI-4 | 🟢 Complete | `track-4-pagination-export` | 2025-01-31 |
 | T5 | - | ⚪ Not Started | - | - |
@@ -108,30 +108,42 @@ export interface ExportParams {
 > Parsing layer. Converts various inputs to Conversation schema.
 > Can work immediately using T1 interfaces as stubs.
 
-### T2.1 - Adapter Infrastructure
-- [ ] Create `packages/core-adapters/package.json`
-- [ ] Define Adapter interface:
-  ```typescript
-  interface Adapter {
-    id: string
-    version: string
-    canHandle(input: AdapterInput): boolean
-    parse(input: AdapterInput): Promise<Conversation>
-  }
-  ```
-- [ ] Implement adapter registry (registerAdapter, getAdapters)
-- [ ] Implement parseWithAdapters() function
-- [ ] Define input types: DOMInput, ShareLinkInput, ManualInput, PasteTextInput
-- [ ] Write registry tests
+### T2.1 - Adapter Infrastructure ✅
+- [x] Create `packages/core-adapters/package.json`
+- [x] Define Adapter interface (using core-schema's Adapter interface)
+- [x] Implement adapter registry (registerAdapter, getAdapters, unregisterAdapter)
+- [x] Implement parseWithAdapters() function
+- [x] Input types defined in core-schema: DOMInput, ShareLinkInput, ManualInput, PasteTextInput
+- [x] Write registry tests (14 tests passing)
 
-### T2.2 - ChatGPT DOM Adapter (Extension)
-- [ ] Create `adapters/chatgpt-dom.ts`
-- [ ] Implement DOM selectors for ChatGPT conversation page
-- [ ] Extract messages from DOM structure
-- [ ] Handle code blocks, images, markdown content
-- [ ] Implement canHandle() for ChatGPT page detection
-- [ ] Write fixture-based tests (mock DOM)
-- [ ] Document known DOM structure patterns
+**Files created:**
+```
+packages/core-adapters/package.json
+packages/core-adapters/tsconfig.json
+packages/core-adapters/tsconfig.build.json
+packages/core-adapters/tsup.config.ts
+packages/core-adapters/vitest.config.ts
+packages/core-adapters/src/index.ts
+packages/core-adapters/src/registry.ts
+packages/core-adapters/src/base.ts
+packages/core-adapters/src/adapters/index.ts
+packages/core-adapters/src/__tests__/registry.test.ts
+```
+
+### T2.2 - ChatGPT DOM Adapter (Extension) ✅
+- [x] Create `adapters/chatgpt-dom.ts`
+- [x] Implement DOM selectors for ChatGPT conversation page
+- [x] Extract messages from DOM structure
+- [x] Handle code blocks, images, markdown content (HTML to Markdown conversion)
+- [x] Implement canHandle() for ChatGPT page detection
+- [x] Write fixture-based tests (mock DOM with jsdom, 15 tests passing)
+- [x] Document known DOM structure patterns (in code comments)
+
+**Files created:**
+```
+packages/core-adapters/src/adapters/chatgpt-dom.ts
+packages/core-adapters/src/__tests__/chatgpt-dom.test.ts
+```
 
 ### T2.3 - Claude DOM Adapter (Extension)
 - [ ] Create `adapters/claude-dom.ts`
