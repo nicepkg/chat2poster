@@ -1,0 +1,47 @@
+{
+  "name": "@chat2poster/core-renderer",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "React components for rendering chat conversations",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "echo 'No lint config for packages yet'",
+    "lint:fix": "echo 'No lint config for packages yet'",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@chat2poster/core-schema": "workspace:*",
+    "@chat2poster/themes": "workspace:*",
+    "react": "^19.1.0",
+    "react-markdown": "^10.1.0",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1",
+    "shiki": "^3.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "@types/react": "^19.1.8",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "typescript": ">=5.0.0"
+  }
+}

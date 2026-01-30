@@ -10,7 +10,7 @@
 | T1 | AI-1 | 🟢 Complete | `track-1-infra-schema` | 2025-01-31 |
 | T2 | - | ⚪ Not Started | - | - |
 | T3 | - | ⚪ Not Started | - | - |
-| T4 | - | ⚪ Not Started | - | - |
+| T4 | AI-4 | 🟢 Complete | `track-4-pagination-export` | 2025-01-31 |
 | T5 | - | ⚪ Not Started | - | - |
 
 ## Track Overview
@@ -230,55 +230,98 @@ export interface ExportParams {
 > Export layer. Handles splitting and image generation.
 > Can work immediately using T1 interfaces as stubs.
 
-### T4.1 - Pagination Logic
-- [ ] Create `packages/core-pagination/package.json`
-- [ ] Implement height estimation for messages
-  - [ ] Estimate based on character count
-  - [ ] Account for code blocks
-  - [ ] Account for images
-- [ ] Implement manual pagination (respect PageBreaks)
-- [ ] Implement auto pagination algorithm
-  - [ ] Greedy bin-packing approach
-  - [ ] Respect maxPageHeightPx constraint
-  - [ ] Generate PageBreaks at optimal positions
-- [ ] Implement page generation: `(selection, params) => messageIds[][]`
-- [ ] Ensure deterministic output (same input = same pages)
-- [ ] Write comprehensive unit tests
+### T4.1 - Pagination Logic ✅
+- [x] Create `packages/core-pagination/package.json`
+- [x] Implement height estimation for messages
+  - [x] Estimate based on character count
+  - [x] Account for code blocks
+  - [x] Account for images
+- [x] Implement manual pagination (respect PageBreaks)
+- [x] Implement auto pagination algorithm
+  - [x] Greedy bin-packing approach
+  - [x] Respect maxPageHeightPx constraint
+  - [x] Generate PageBreaks at optimal positions
+- [x] Implement page generation: `(selection, params) => messageIds[][]`
+- [x] Ensure deterministic output (same input = same pages)
+- [x] Write comprehensive unit tests (31 tests)
 
-### T4.2 - Export Engine Setup
-- [ ] Create `packages/core-export/package.json`
-- [ ] Setup @zumer/snapdom integration
-- [ ] Implement font loading wait (`document.fonts.ready`)
-- [ ] Implement image loading check
-- [ ] Define export options interface
+**Files created:**
+```
+packages/core-pagination/package.json
+packages/core-pagination/tsconfig.json
+packages/core-pagination/tsconfig.build.json
+packages/core-pagination/tsup.config.ts
+packages/core-pagination/vitest.config.ts
+packages/core-pagination/src/index.ts
+packages/core-pagination/src/height-estimation.ts
+packages/core-pagination/src/paginator.ts
+packages/core-pagination/src/height-estimation.test.ts
+packages/core-pagination/src/paginator.test.ts
+```
 
-### T4.3 - Single Page Export
-- [ ] Implement `exportToPng(element, options)` function
-- [ ] Apply scale factor (1x/2x/3x)
-- [ ] Handle SnapDOM errors
-- [ ] Implement SVG fallback path
-- [ ] Return Blob or data URL
+### T4.2 - Export Engine Setup ✅
+- [x] Create `packages/core-export/package.json`
+- [x] Setup @zumer/snapdom integration
+- [x] Implement font loading wait (`document.fonts.ready`)
+- [x] Implement image loading check
+- [x] Define export options interface
 
-### T4.4 - Multi-Page Export
-- [ ] Implement `exportPages(pages, options)` function
-- [ ] Iterate through pages and export each
-- [ ] Track progress for UI feedback
-- [ ] Handle partial failures
+**Files created:**
+```
+packages/core-export/package.json
+packages/core-export/tsconfig.json
+packages/core-export/tsconfig.build.json
+packages/core-export/tsup.config.ts
+packages/core-export/vitest.config.ts
+packages/core-export/src/index.ts
+packages/core-export/src/resource-loader.ts
+packages/core-export/src/exporter.ts
+```
 
-### T4.5 - ZIP Packaging
-- [ ] Integrate fflate or jszip
-- [ ] Implement `packageAsZip(blobs, options)` function
-- [ ] File naming: `001.png`, `002.png`, etc.
-- [ ] Optional: Include metadata.json
-- [ ] Trigger browser download
+### T4.3 - Single Page Export ✅
+- [x] Implement `exportToPng(element, options)` function
+- [x] Apply scale factor (1x/2x/3x)
+- [x] Handle SnapDOM errors
+- [ ] Implement SVG fallback path (deferred - SnapDOM handles fallback internally)
+- [x] Return Blob or data URL
 
-### T4.6 - Export Job Manager
-- [ ] Implement ExportJob state machine
-  - [ ] draft → rendering → success/failed
-- [ ] Track job progress
-- [ ] Handle cancellation
-- [ ] Preserve state on failure (for retry)
-- [ ] Emit events for UI updates
+### T4.4 - Multi-Page Export ✅
+- [x] Implement `exportPages(pages, options)` function
+- [x] Iterate through pages and export each
+- [x] Track progress for UI feedback
+- [x] Handle partial failures
+
+**Files created:**
+```
+packages/core-export/src/multi-page-exporter.ts
+```
+
+### T4.5 - ZIP Packaging ✅
+- [x] Integrate fflate
+- [x] Implement `packageAsZip(blobs, options)` function
+- [x] File naming: `page_001.png`, `page_002.png`, etc.
+- [x] Include metadata.json
+- [x] Trigger browser download
+
+**Files created:**
+```
+packages/core-export/src/zip-packager.ts
+packages/core-export/src/zip-packager.test.ts
+```
+
+### T4.6 - Export Job Manager ✅
+- [x] Implement ExportJob state machine
+  - [x] draft → rendering → success/failed
+- [x] Track job progress
+- [x] Handle cancellation
+- [x] Preserve state on failure (for retry)
+- [x] Emit events for UI updates (38 tests)
+
+**Files created:**
+```
+packages/core-export/src/export-job-manager.ts
+packages/core-export/src/export-job-manager.test.ts
+```
 
 ---
 
