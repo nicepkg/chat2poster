@@ -1,7 +1,7 @@
 import "./styles/globals.css";
 
 import { createRoot } from "react-dom/client";
-import App from "@/components/App";
+import App from "~/components/App";
 
 export default defineContentScript({
   matches: [

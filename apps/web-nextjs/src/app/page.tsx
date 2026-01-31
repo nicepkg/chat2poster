@@ -16,6 +16,29 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+    },
+  },
+};
+
 export default function ImportPage() {
   const router = useRouter();
   const [shareLink, setShareLink] = useState("");
@@ -166,51 +189,68 @@ export default function ImportPage() {
             </div>
 
             {/* Alternative Options */}
-            <div className="grid grid-cols-2 gap-3">
-              <Link href="/manual" className="group block">
-                <motion.div
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={cn(
-                    "flex flex-col items-center rounded-xl border-2 border-transparent p-4 text-center",
-                    "bg-muted/50 transition-all duration-200",
-                    "hover:border-primary/20 hover:bg-primary/5 hover:shadow-sm",
-                  )}
-                >
-                  <div className="bg-background mb-3 rounded-lg p-2.5 shadow-sm transition-transform group-hover:scale-110">
-                    <PenLine className="text-primary h-5 w-5" />
-                  </div>
-                  <span className="text-foreground text-sm font-medium">
-                    Manual Builder
-                  </span>
-                  <span className="text-muted-foreground mt-0.5 text-xs">
-                    Create from scratch
-                  </span>
-                </motion.div>
-              </Link>
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-2 gap-3"
+            >
+              <motion.div variants={itemVariants}>
+                <Link href="/manual" className="group block">
+                  <motion.div
+                    whileHover={{
+                      y: -3,
+                      boxShadow:
+                        "0 10px 20px oklch(0.619 0.202 268.7 / 0.08), 0 4px 8px oklch(0.2 0.02 260 / 0.04)",
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    className={cn(
+                      "flex flex-col items-center rounded-xl border-2 border-transparent p-4 text-center",
+                      "bg-muted/50 transition-all duration-300",
+                      "hover:border-primary/30 hover:bg-gradient-to-br hover:from-primary/5 hover:to-transparent",
+                    )}
+                  >
+                    <div className="bg-background mb-3 rounded-lg p-2.5 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-primary/10">
+                      <PenLine className="text-primary h-5 w-5" />
+                    </div>
+                    <span className="text-foreground text-sm font-medium">
+                      Manual Builder
+                    </span>
+                    <span className="text-muted-foreground mt-0.5 text-xs">
+                      Create from scratch
+                    </span>
+                  </motion.div>
+                </Link>
+              </motion.div>
 
-              <Link href="/paste" className="group block">
-                <motion.div
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={cn(
-                    "flex flex-col items-center rounded-xl border-2 border-transparent p-4 text-center",
-                    "bg-muted/50 transition-all duration-200",
-                    "hover:border-primary/20 hover:bg-primary/5 hover:shadow-sm",
-                  )}
-                >
-                  <div className="bg-background mb-3 rounded-lg p-2.5 shadow-sm transition-transform group-hover:scale-110">
-                    <ClipboardPaste className="text-primary h-5 w-5" />
-                  </div>
-                  <span className="text-foreground text-sm font-medium">
-                    Paste Text
-                  </span>
-                  <span className="text-muted-foreground mt-0.5 text-xs">
-                    Import from clipboard
-                  </span>
-                </motion.div>
-              </Link>
-            </div>
+              <motion.div variants={itemVariants}>
+                <Link href="/paste" className="group block">
+                  <motion.div
+                    whileHover={{
+                      y: -3,
+                      boxShadow:
+                        "0 10px 20px oklch(0.619 0.202 268.7 / 0.08), 0 4px 8px oklch(0.2 0.02 260 / 0.04)",
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    className={cn(
+                      "flex flex-col items-center rounded-xl border-2 border-transparent p-4 text-center",
+                      "bg-muted/50 transition-all duration-300",
+                      "hover:border-primary/30 hover:bg-gradient-to-br hover:from-primary/5 hover:to-transparent",
+                    )}
+                  >
+                    <div className="bg-background mb-3 rounded-lg p-2.5 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-primary/10">
+                      <ClipboardPaste className="text-primary h-5 w-5" />
+                    </div>
+                    <span className="text-foreground text-sm font-medium">
+                      Paste Text
+                    </span>
+                    <span className="text-muted-foreground mt-0.5 text-xs">
+                      Import from clipboard
+                    </span>
+                  </motion.div>
+                </Link>
+              </motion.div>
+            </motion.div>
           </CardContent>
         </Card>
 

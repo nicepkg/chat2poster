@@ -7,3 +7,7 @@ export * from "./BackgroundPicker";
 export * from "./MacOSBar";
 export * from "./MessageBubble";
 export * from "./PreviewCanvas";
+export * from "./EditorTabs";
+export * from "./EditorHeader";
+export * from "./EditorPreview";
+export * from "./ExportButton";

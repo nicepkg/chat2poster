@@ -13,7 +13,10 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -25,15 +28,15 @@
   },
   "dependencies": {
     "@chat2poster/core-schema": "workspace:*",
-    "zod": "^3.25.42"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/jsdom": "^21.1.7",
-    "@types/node": "^24.0.10",
-    "jsdom": "^26.1.0",
-    "tsup": "^8.5.0",
+    "@types/jsdom": "^27.0.0",
+    "@types/node": "^25.1.0",
+    "jsdom": "^27.4.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "typescript": ">=5.0.0"

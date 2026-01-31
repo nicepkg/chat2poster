@@ -17,10 +17,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const formatExamples = [
-  { prefix: "User:", desc: "User message" },
-  { prefix: "Assistant:", desc: "AI response" },
-  { prefix: "Human:", desc: "Alternative user format" },
-  { prefix: "AI:", desc: "Alternative AI format" },
+  { prefix: "User:", desc: "User message", template: "User: " },
+  { prefix: "Assistant:", desc: "AI response", template: "Assistant: " },
+  { prefix: "Human:", desc: "Alternative user", template: "Human: " },
+  { prefix: "AI:", desc: "Alternative AI", template: "AI: " },
 ];
 
 export default function PasteImportPage() {
@@ -28,6 +28,19 @@ export default function PasteImportPage() {
   const [pastedText, setPastedText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPasteEffect, setShowPasteEffect] = useState(false);
+
+  const insertFormat = (template: string) => {
+    setPastedText((prev) => {
+      const newValue = prev ? `${prev}\n\n${template}` : template;
+      return newValue;
+    });
+  };
+
+  const handlePaste = () => {
+    setShowPasteEffect(true);
+    setTimeout(() => setShowPasteEffect(false), 500);
+  };
 
   const handleParse = async () => {
     if (!pastedText.trim()) {
@@ -162,12 +175,29 @@ export default function PasteImportPage() {
             <CardContent className="p-6">
               {/* Textarea */}
               <div className="relative">
-                <Textarea
-                  value={pastedText}
-                  onChange={(e) => setPastedText(e.target.value)}
-                  placeholder={`User: Hello, can you help me?\n\nAssistant: Of course! What do you need help with?\n\nUser: I need to...\n\nAssistant: Sure, here's how...`}
-                  className="min-h-[280px] resize-none font-mono text-sm"
-                />
+                <motion.div
+                  animate={
+                    showPasteEffect
+                      ? {
+                          boxShadow: [
+                            "0 0 0 0 oklch(0.619 0.202 268.7 / 0)",
+                            "0 0 0 4px oklch(0.619 0.202 268.7 / 0.2)",
+                            "0 0 0 0 oklch(0.619 0.202 268.7 / 0)",
+                          ],
+                        }
+                      : {}
+                  }
+                  transition={{ duration: 0.5 }}
+                  className="rounded-lg"
+                >
+                  <Textarea
+                    value={pastedText}
+                    onChange={(e) => setPastedText(e.target.value)}
+                    onPaste={handlePaste}
+                    placeholder={`User: Hello, can you help me?\n\nAssistant: Of course! What do you need help with?\n\nUser: I need to...\n\nAssistant: Sure, here's how...`}
+                    className="min-h-[280px] resize-none font-mono text-sm transition-all duration-200 focus:ring-4 focus:ring-primary/10 focus:border-primary"
+                  />
+                </motion.div>
                 {/* Stats badge */}
                 <AnimatePresence>
                   {pastedText && (
@@ -185,7 +215,7 @@ export default function PasteImportPage() {
                 </AnimatePresence>
               </div>
 
-              {/* Format hints */}
+              {/* Format hints as clickable chips */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -195,24 +225,29 @@ export default function PasteImportPage() {
                 <div className="mb-3 flex items-center gap-2">
                   <Lightbulb className="text-primary h-4 w-4" />
                   <span className="text-foreground text-sm font-medium">
-                    Supported formats
+                    Quick insert format
                   </span>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-wrap gap-2">
                   {formatExamples.map((fmt) => (
-                    <div
+                    <motion.button
                       key={fmt.prefix}
-                      className="flex items-center gap-2 text-sm"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => insertFormat(fmt.template)}
+                      className="group flex items-center gap-1.5 rounded-lg border border-border/50 bg-background px-3 py-1.5 text-sm transition-all duration-200 hover:border-primary/30 hover:shadow-sm"
                     >
-                      <code className="bg-background text-primary rounded px-1.5 py-0.5 text-xs">
+                      <code className="text-primary font-medium">
                         {fmt.prefix}
                       </code>
-                      <span className="text-muted-foreground">{fmt.desc}</span>
-                    </div>
+                      <span className="text-muted-foreground text-xs">
+                        {fmt.desc}
+                      </span>
+                    </motion.button>
                   ))}
                 </div>
                 <p className="text-muted-foreground mt-3 text-xs">
-                  Plain text without markers will be treated as a single message
+                  Click to insert format, or paste text with markers directly
                 </p>
               </motion.div>
 

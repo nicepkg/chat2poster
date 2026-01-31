@@ -24,6 +24,16 @@ export {
   CSS_VARIABLE_PREFIX,
 } from "./css-variables";
 
+// Shadows
+export {
+  SHADOW_STYLES,
+  GLOW_STYLES,
+  getShadowStyle,
+  getGlowStyle,
+  type ShadowLevel as ShadowStyleLevel,
+  type GlowType,
+} from "./shadows";
+
 // Re-export schema types for convenience
 export type {
   Theme,

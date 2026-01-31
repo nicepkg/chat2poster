@@ -133,6 +133,11 @@ export default function ManualBuilderPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -100, transition: { duration: 0.2 } }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                whileDrag={{
+                  scale: 1.02,
+                  boxShadow: "0 10px 25px oklch(0.2 0.02 260 / 0.12)",
+                  cursor: "grabbing",
+                }}
               >
                 <Card
                   className={cn(
@@ -201,7 +206,7 @@ export default function ManualBuilderPage() {
                         updateMessage(message.id, "content", e.target.value)
                       }
                       placeholder={`Enter ${message.role} message (supports Markdown)...`}
-                      className="min-h-[100px] resize-none text-sm"
+                      className="min-h-[100px] resize-none text-sm transition-all duration-200 focus:ring-4 focus:ring-primary/10 focus:border-primary"
                     />
                     {/* Role indicator bar */}
                     <div

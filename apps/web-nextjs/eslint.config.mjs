@@ -1,7 +1,8 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { FlatCompat } from "@eslint/eslintrc";
 import { defineConfig, globalIgnores } from "eslint/config";
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 import prettier from "eslint-config-prettier/flat";
 import eslintPluginImport from "eslint-plugin-import";
 import eslintPluginPrettier from "eslint-plugin-prettier";
@@ -9,13 +10,14 @@ import tseslint from "typescript-eslint";
 
 const configDir = path.dirname(fileURLToPath(import.meta.url));
 
-const compat = new FlatCompat({
-  baseDirectory: configDir,
-});
+/** @typedef {import("eslint").Linter.Config} Config */
+/** @typedef {Config[]} ConfigArray */
 
-const nextConfigs = compat
-  .extends("next/core-web-vitals", "next/typescript")
-  .map((config) => {
+/**
+ * @param {ConfigArray} configs
+ */
+const withTsconfigRootDir = (configs) =>
+  configs.map((config) => {
     const languageOptions =
       config.languageOptions && typeof config.languageOptions === "object"
         ? config.languageOptions
@@ -39,8 +41,12 @@ const nextConfigs = compat
     };
   });
 
+const nextConfigs = withTsconfigRootDir(nextCoreWebVitals);
+const nextTypescriptConfigs = withTsconfigRootDir(nextTypescript);
+
 export default defineConfig(
   ...nextConfigs,
+  ...nextTypescriptConfigs,
   prettier,
   globalIgnores([
     ".next/**",
