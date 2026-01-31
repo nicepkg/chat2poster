@@ -83,8 +83,8 @@ REQUIRED_FILES=(
   "package.json"
   "LICENSE"
   "CONTRIBUTING.md"
-  "website/src/lib/site-info.ts"
-  "website/public/icon.svg"
+  "apps/web-nextjs/src/lib/site-info.ts"
+  "apps/web-nextjs/public/icon.svg"
   ".github/workflows/ci.yml"
   ".github/workflows/deploy-website.yml"
 )
@@ -181,7 +181,7 @@ echo ""
 echo "🔧 Running TypeScript check..."
 
 if command -v pnpm &> /dev/null; then
-  if pnpm --filter website typecheck 2>/dev/null; then
+  if pnpm --filter @chat2poster/web typecheck 2>/dev/null; then
     echo -e "${GREEN}✅ TypeScript check passed${NC}"
   else
     echo -e "${RED}❌ TypeScript check failed${NC}"

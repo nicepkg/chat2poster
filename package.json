@@ -12,13 +12,9 @@
   "scripts": {
     "dev:extension": "pnpm --filter @chat2poster/extension dev",
     "dev:web": "pnpm --filter @chat2poster/web dev",
-    "dev:website": "pnpm --filter website dev",
     "build:extension": "pnpm --filter @chat2poster/extension build",
     "build:web": "pnpm --filter @chat2poster/web build",
-    "build:website": "pnpm --filter website build",
     "start:web": "pnpm --filter @chat2poster/web start",
-    "start:website": "pnpm --filter website start",
-    "start:static-website": "pnpm --filter website start:static",
     "build:packages": "pnpm --filter './packages/*' build",
     "dev:packages": "pnpm --filter './packages/*' dev",
     "test": "pnpm -r run test",
@@ -27,7 +23,7 @@
     "lint": "pnpm -r run lint",
     "lint:fix": "pnpm -r run lint:fix",
     "typecheck": "pnpm -r run typecheck",
-    "clean": "rm -rf node_modules packages/*/node_modules packages/*/dist apps/*/node_modules apps/*/.next website/node_modules website/.next",
+    "clean": "rm -rf node_modules packages/*/node_modules packages/*/dist apps/*/node_modules apps/*/.next",
     "prepare": "husky"
   },
   "engines": {

@@ -20,7 +20,7 @@
 // - [douyin-nickname]: Your Douyin nickname (e.g., "小明")
 //
 // THEME COLORS:
-// Primary and secondary colors are defined in: website/src/styles/globals.css
+// Primary and secondary colors are defined in: apps/web-nextjs/src/styles/globals.css
 // Look for --primary and --secondary CSS variables in :root and .dark sections
 // Use oklch() format, e.g.: oklch(0.6 0.2 260) for purple
 // Recommended: Use https://oklch.com to pick colors
@@ -42,7 +42,7 @@ export const githubConfig = {
     return `https://github.com/${this.username}/${this.repo}`;
   },
   get docsBase() {
-    return `${this.url}/tree/main/website`;
+    return `${this.url}/tree/main/apps/web-nextjs`;
   },
   get issuesUrl() {
     return `${this.url}/issues/new?labels=feedback,documentation&template=feedback.md`;

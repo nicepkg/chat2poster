@@ -21,7 +21,7 @@
  * - revert:   Reverts a previous commit
  *
  * Examples:
- * - feat(website): add dark mode toggle
+ * - feat(web): add dark mode toggle
  * - fix(api): handle null response from server
  * - docs: update README with installation instructions
  * - chore: update dependencies

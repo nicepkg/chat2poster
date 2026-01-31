@@ -23,7 +23,15 @@
     "mdx"
   ],
   "eslint.workingDirectories": [
-    { "directory": "website", "changeProcessCWD": true }
+    { "directory": "apps/web-nextjs", "changeProcessCWD": true },
+    { "directory": "apps/extension-wxt", "changeProcessCWD": true },
+    { "directory": "packages/core-adapters", "changeProcessCWD": true },
+    { "directory": "packages/core-export", "changeProcessCWD": true },
+    { "directory": "packages/core-pagination", "changeProcessCWD": true },
+    { "directory": "packages/core-renderer", "changeProcessCWD": true },
+    { "directory": "packages/core-schema", "changeProcessCWD": true },
+    { "directory": "packages/shared-utils", "changeProcessCWD": true },
+    { "directory": "packages/themes", "changeProcessCWD": true }
   ],
   "eslint.probe": [
     "javascript",
@@ -68,7 +76,7 @@
     "**/__pycache__": true
   },
 
-  // JSON settings (use Prettier for root, ESLint for website)
+  // JSON settings (use Prettier for root, ESLint for web)
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

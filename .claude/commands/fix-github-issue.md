@@ -71,8 +71,8 @@ pnpm lint
 # Fix lint issues if any
 pnpm lint:fix
 
-# Preview the site (for website changes)
-pnpm dev:website
+# Preview the site (for web changes)
+pnpm dev:web
 ```
 
 ## Step 6: Commit with Angular Convention
@@ -105,7 +105,7 @@ Fixes #<issue-number>
 
 ```bash
 # Bug fix
-git commit -m "fix(website): resolve hydration mismatch on mobile
+git commit -m "fix(web): resolve hydration mismatch on mobile
 
 The issue was caused by SSR rendering different content than client.
 Added useEffect to handle client-only rendering.
@@ -113,7 +113,7 @@ Added useEffect to handle client-only rendering.
 Fixes #123"
 
 # Feature
-git commit -m "feat(website): add dark mode toggle
+git commit -m "feat(web): add dark mode toggle
 
 Implements dark mode using CSS variables and localStorage persistence.
 
@@ -144,7 +144,7 @@ If ready to submit:
 git push -u origin HEAD
 
 # Create PR (will use create-pr command conventions)
-gh pr create --title "fix(website): brief description" --body "Fixes #$ARGUMENTS" --base main
+gh pr create --title "fix(web): brief description" --body "Fixes #$ARGUMENTS" --base main
 ```
 
 ## Checklist Before Completing

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { generateStaticParamsFor, importPage } from "nextra/pages";
-import { useMDXComponents as getMDXComponents } from "../../../../mdx-components";
+import { useMDXComponents as getMDXComponents } from "../../../../../mdx-components";
 
 type PageProps = {
   params: Promise<{

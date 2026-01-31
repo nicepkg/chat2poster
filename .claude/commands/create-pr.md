@@ -54,15 +54,15 @@ Create a GitHub Pull Request following the project's Angular commit convention.
 
 ### Scopes (optional)
 
-- `website` - Changes to the website package
+- `web` - Changes to the web-nextjs package
 - `docs` - Documentation changes
 - `deps` - Dependency updates
 
 ### Examples
 
 ```
-feat(website): add dark mode toggle
-fix(website): resolve hydration mismatch on mobile
+feat(web): add dark mode toggle
+fix(web): resolve hydration mismatch on mobile
 docs: update README with installation steps
 chore(deps): update dependencies
 refactor: simplify authentication logic
@@ -81,7 +81,7 @@ refactor: simplify authentication logic
 
 ```bash
 gh pr create \
-  --title "feat(website): your descriptive title" \
+  --title "feat(web): your descriptive title" \
   --body "## Description
 
 Brief summary of changes.
@@ -103,7 +103,7 @@ Fixes #123
 ### Using HEREDOC for Complex Descriptions
 
 ```bash
-gh pr create --title "feat(website): add new feature" --body "$(cat <<'EOF'
+gh pr create --title "feat(web): add new feature" --body "$(cat <<'EOF'
 ## Description
 
 Brief summary of the changes and the motivation behind them.

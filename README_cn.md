@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="website/public/icon.svg" width="120" height="120" />
+<img src="apps/web-nextjs/public/icon.svg" width="120" height="120" />
 
 # chat2poster
 
@@ -120,7 +120,7 @@ cd chat2poster
 pnpm install
 
 # 启动开发服务器
-pnpm dev:website
+pnpm dev:web
 ```
 
 ---

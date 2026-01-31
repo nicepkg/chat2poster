@@ -52,13 +52,13 @@ type(scope): subject
 
 Common scopes in this project:
 
-- `website` - website folder changes
+- `web` - web-nextjs folder changes
 - `deps` - Dependencies
 
 ### Examples
 
 ```
-feat(website): add hotel card component
+feat(web): add hotel card component
 chore(deps): update React to v19
 docs: update README with new setup instructions
 style: format code with prettier

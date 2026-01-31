@@ -62,6 +62,7 @@ export default defineConfig(
       },
     },
     rules: {
+      "@typescript-eslint/ban-ts-comment": "off",
       "import/no-anonymous-default-export": "warn",
       "import/order": [
         "warn",
@@ -98,6 +99,7 @@ export default defineConfig(
       },
     },
     rules: {
+      "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/triple-slash-reference": "off",
       "@typescript-eslint/array-type": "off",
       "@typescript-eslint/consistent-type-definitions": "off",

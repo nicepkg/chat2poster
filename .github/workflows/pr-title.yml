@@ -5,7 +5,7 @@
 # This ensures consistent and meaningful PR titles for changelog generation.
 #
 # Format: <type>(<scope>): <subject>
-# Example: feat(website): add dark mode toggle
+# Example: feat(web): add dark mode toggle
 # =============================================================================
 
 name: PR Title
@@ -44,7 +44,8 @@ jobs:
           requireScope: false
           # Scopes allowed (empty = any scope allowed)
           scopes: |
-            website
+            web
+            extension
             docs
             deps
           # Ensure subject doesn't start with uppercase

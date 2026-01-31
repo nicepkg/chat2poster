@@ -30,8 +30,8 @@ Extract and understand:
 
 ### Valid Examples
 ```
-feat(website): add dark mode toggle
-fix(website): resolve hydration mismatch
+feat(web): add dark mode toggle
+fix(web): resolve hydration mismatch
 docs: update installation guide
 chore(deps): update dependencies
 ```
@@ -89,7 +89,7 @@ gh pr checkout $ARGUMENTS
 
 - [ ] **TypeScript**: `pnpm typecheck` passes
 - [ ] **Lint**: `pnpm lint` passes
-- [ ] **Builds**: `pnpm build:website` succeeds
+- [ ] **Builds**: `pnpm build:web` succeeds
 
 ## Step 5: Provide Feedback
 

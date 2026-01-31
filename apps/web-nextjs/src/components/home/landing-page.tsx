@@ -205,7 +205,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                 {t.hero.desc}
               </p>
               <div className="mb-16 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Link href={`/${lang}/docs/getting-started`}>
+                <Link href={`/docs/${lang}/getting-started`}>
                   <Button
                     size="lg"
                     className="shadow-primary/25 hover:shadow-primary/40 h-14 rounded-full px-8 text-lg font-semibold shadow-lg transition-shadow"
@@ -342,7 +342,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
           <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {workflows.map((wf, i) => (
               <Link
-                href={`/${lang}${wf.link}`}
+                href={`/docs/${lang}${wf.link.replace("/docs", "")}`}
                 key={i}
                 className="group block h-full"
               >
@@ -412,7 +412,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
           <p className="text-muted-foreground mx-auto mb-12 max-w-2xl text-xl leading-relaxed md:text-2xl">
             {t.cta.desc}
           </p>
-          <Link href={`/${lang}/docs/getting-started`}>
+          <Link href={`/docs/${lang}/getting-started`}>
             <Button
               size="lg"
               className="shadow-primary/30 hover:shadow-primary/50 h-16 rounded-full px-12 text-xl shadow-2xl transition-all hover:scale-105"

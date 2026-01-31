@@ -41,7 +41,7 @@ cd chat2poster
 pnpm install
 
 # Start development server
-pnpm dev:website
+pnpm dev:web
 
 # Run type check
 pnpm typecheck
@@ -76,15 +76,16 @@ We follow the [Angular Commit Convention](https://github.com/angular/angular/blo
 
 ### Scopes (optional)
 
-- `website` - Changes to the website package
+- `web` - Changes to the web-nextjs package
+- `extension` - Changes to the extension package
 - `docs` - Documentation changes
 - `deps` - Dependency updates
 
 ### Examples
 
 ```bash
-feat(website): add dark mode toggle
-fix(website): resolve hydration mismatch on mobile
+feat(web): add dark mode toggle
+fix(web): resolve hydration mismatch on mobile
 docs: update README with new installation steps
 chore(deps): update dependencies
 refactor: simplify authentication logic
