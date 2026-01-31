@@ -22,6 +22,7 @@ export default defineConfig(
   ...nextTypescriptConfigs,
   globalIgnores([
     ".next/**",
+    ".open-next/**",
     "out/**",
     "build/**",
     "next-env.d.ts",

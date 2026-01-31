@@ -19,5 +19,5 @@
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["node_modules", "dist", "build", ".next", ".turbo"]
+  "exclude": ["node_modules", "dist", "build", ".next", ".turbo", ".open-next"]
 }

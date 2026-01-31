@@ -62,6 +62,7 @@
   "search.exclude": {
     "**/node_modules": true,
     "**/.next": true,
+    "**/.open-next": true,
     "**/pnpm-lock.yaml": true,
     "**/__pycache__": true
   },
@@ -114,5 +115,6 @@
   "i18n-ally.sourceLanguage": "en",
   "i18n-ally.displayLanguage": "en",
   "i18n-ally.keepFulfilled": true,
-  "i18n-ally.sortKeys": true
+  "i18n-ally.sortKeys": true,
+  "cSpell.words": ["opennextjs"]
 }

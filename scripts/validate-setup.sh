@@ -46,6 +46,7 @@ FILES_TO_CHECK=$(find . -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.md"
   ! -path "./node_modules/*" \
   ! -path "./.git/*" \
   ! -path "./.next/*" \
+  ! -path "./.open-next/*" \
   ! -name "*.example.md" \
   ! -name "*.example.yml" \
   ! -name "*.example.yaml" \

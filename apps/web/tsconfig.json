@@ -12,11 +12,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "ES2022"
-    ],
+    "lib": ["dom", "dom.iterable", "ES2022"],
     "noEmit": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
@@ -30,15 +26,14 @@
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
-      "~/*": [
-        "./src/*"
-      ]
+      "~/*": ["./src/*"]
     }
   },
   "include": [
     "next-env.d.ts",
     "next.config.mjs",
     ".next/types/**/*.ts",
+    ".open-next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.js",
@@ -47,10 +42,5 @@
     "**/*.cjs",
     "**/*.d.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "build",
-    "out",
-    "eslint.config.mjs"
-  ]
+  "exclude": ["node_modules", "build", "out", "eslint.config.mjs"]
 }

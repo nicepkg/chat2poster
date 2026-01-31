@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
+import type { Metadata } from "next";
 import { generateStaticParamsFor, importPage } from "nextra/pages";
 import { useMDXComponents as getMDXComponents } from "../../../../../mdx-components";
 
@@ -10,6 +11,7 @@ type PageProps = {
 };
 
 const baseGenerateStaticParams = generateStaticParamsFor("mdxPath", "locale");
+
 function normalizeMdxPath(mdxPath?: string[] | string) {
   if (!mdxPath) return [];
   const segments = Array.isArray(mdxPath) ? mdxPath : [mdxPath];
@@ -28,7 +30,7 @@ export async function generateStaticParams() {
     }));
 }
 
-export async function generateMetadata(props: PageProps) {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
   const mdxPath = normalizeMdxPath(params.mdxPath);
   const { metadata } = await importPage(mdxPath, params.locale);
