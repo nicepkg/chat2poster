@@ -1,9 +1,9 @@
+import { SiteFooter } from "@chat2poster/shared-ui/components/layout";
 import Link from "next/link";
 import { Banner } from "nextra/components";
 import { getPageMap } from "nextra/page-map";
 import { Layout, LocaleSwitch, Navbar, ThemeSwitch } from "nextra-theme-docs";
 import { Logo } from "~/components/shared/logo";
-import { SiteFooter } from "~/components/shared/site-footer";
 import { githubConfig, bannerConfig } from "~/lib/site-info";
 
 type LayoutProps = {
@@ -53,7 +53,7 @@ export default async function DocsLayout({ children, params }: LayoutProps) {
           <ThemeSwitch className="x:ml-2" />
         </Navbar>
       }
-      footer={<SiteFooter lang={lang} />}
+      footer={<SiteFooter />}
       banner={
         <Banner storageKey={bannerConfig.storageKey}>
           <span>

@@ -12,6 +12,7 @@ export default defineConfig({
     "src/components/common/index.ts",
     "src/components/editor/index.ts",
     "src/components/renderer/index.ts",
+    "src/components/layout/index.ts",
     "src/contexts/index.ts",
     "src/hooks/index.ts",
     "src/lib/utils.ts",

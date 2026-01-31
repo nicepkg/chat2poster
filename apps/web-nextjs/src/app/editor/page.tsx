@@ -8,12 +8,19 @@ import {
   EditorPreview,
   ExportButton,
   useEditor,
+  useIsMobile,
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+  Button,
 } from "@chat2poster/shared-ui";
 import "@chat2poster/shared-ui/styles/renderer.css";
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Loader2, Settings2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 
 /**
  * Load conversation from sessionStorage
@@ -65,12 +72,42 @@ function loadConversationFromStorage() {
 }
 
 /**
+ * Mobile drawer for settings
+ */
+function MobileSettingsDrawer() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full shadow-lg lg:hidden"
+        >
+          <Settings2 className="h-6 w-6" />
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent className="max-h-[85vh]">
+        <DrawerHeader className="border-b">
+          <DrawerTitle>Settings</DrawerTitle>
+        </DrawerHeader>
+        <div className="flex-1 overflow-y-auto">
+          <EditorTabs defaultTab="messages" />
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
+/**
  * Inner editor content that uses EditorContext
  */
 function EditorContent() {
   const router = useRouter();
   const canvasRef = useRef<HTMLDivElement>(null);
   const { editor, dispatch } = useEditor();
+  const isMobile = useIsMobile();
 
   // Load conversation on mount
   useEffect(() => {
@@ -148,17 +185,19 @@ function EditorContent() {
       />
 
       <div className="mx-auto flex w-full max-w-7xl flex-1 gap-6 p-4 lg:p-6">
-        {/* Left Panel - Settings */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1 }}
-          className="w-80 shrink-0"
-        >
-          <Card className="bg-card/80 sticky top-24 h-[calc(100vh-140px)] overflow-hidden backdrop-blur-sm">
-            <EditorTabs defaultTab="messages" />
-          </Card>
-        </motion.div>
+        {/* Left Panel - Settings (Desktop only) */}
+        {!isMobile && (
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className="hidden w-80 shrink-0 lg:block"
+          >
+            <Card className="bg-card/80 sticky top-24 h-[calc(100vh-140px)] overflow-hidden backdrop-blur-sm">
+              <EditorTabs defaultTab="messages" />
+            </Card>
+          </motion.div>
+        )}
 
         {/* Right Panel - Preview */}
         <motion.div
@@ -170,6 +209,9 @@ function EditorContent() {
           <EditorPreview canvasRef={canvasRef} showCheckerboard />
         </motion.div>
       </div>
+
+      {/* Mobile Settings Drawer */}
+      {isMobile && <MobileSettingsDrawer />}
     </main>
   );
 }

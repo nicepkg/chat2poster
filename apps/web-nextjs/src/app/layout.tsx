@@ -3,6 +3,7 @@ import { Head } from "nextra/components";
 import "nextra-theme-docs/style.css";
 import "../styles/globals.css";
 import { siteConfig } from "~/lib/site-info";
+import { RootLayoutClient } from "./layout-client";
 
 export const metadata: Metadata = {
   title: {
@@ -41,7 +42,9 @@ export default function RootLayout({
       <Head>
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
       </Head>
-      <body className="min-h-screen bg-background antialiased">{children}</body>
+      <body className="min-h-screen bg-background antialiased">
+        <RootLayoutClient>{children}</RootLayoutClient>
+      </body>
     </html>
   );
 }

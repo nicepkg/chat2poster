@@ -1,0 +1,123 @@
+"use client";
+
+import { Github } from "lucide-react";
+import * as React from "react";
+import { Button } from "../ui/button";
+import { ThemeToggle } from "./ThemeToggle";
+import { MobileNav, type NavItem } from "./MobileNav";
+import { cn } from "../../utils";
+
+export interface SiteHeaderProps {
+  logo: React.ReactNode;
+  navItems?: NavItem[];
+  githubUrl?: string;
+  showThemeToggle?: boolean;
+  className?: string;
+  onNavigate?: (href: string) => void;
+}
+
+export function SiteHeader({
+  logo,
+  navItems = [],
+  githubUrl,
+  showThemeToggle = true,
+  className,
+  onNavigate,
+}: SiteHeaderProps) {
+  return (
+    <header
+      className={cn(
+        "sticky top-0 z-50",
+        "bg-background/80 backdrop-blur-lg",
+        "border-b border-border/50",
+        "transition-all duration-200",
+        className,
+      )}
+    >
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        {/* Left: Mobile nav + Logo */}
+        <div className="flex items-center gap-2">
+          <MobileNav
+            items={navItems}
+            logo={logo}
+            onNavigate={onNavigate}
+            footer={
+              <div className="flex items-center justify-between">
+                {showThemeToggle && <ThemeToggle />}
+                {githubUrl && (
+                  <a
+                    href={githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Github className="h-5 w-5" />
+                  </a>
+                )}
+              </div>
+            }
+          />
+          <a
+            href="/"
+            onClick={(e) => {
+              if (onNavigate) {
+                e.preventDefault();
+                onNavigate("/");
+              }
+            }}
+            className="flex items-center"
+          >
+            {logo}
+          </a>
+        </div>
+
+        {/* Center: Desktop navigation */}
+        <nav className="hidden md:flex items-center gap-1">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={(e) => {
+                if (!item.external && onNavigate) {
+                  e.preventDefault();
+                  onNavigate(item.href);
+                }
+              }}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+              className={cn(
+                "px-4 py-2 rounded-xl text-sm font-medium",
+                "text-muted-foreground hover:text-foreground",
+                "hover:bg-muted/80 transition-all duration-200",
+              )}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Right: Actions */}
+        <div className="hidden md:flex items-center gap-2">
+          {showThemeToggle && <ThemeToggle />}
+          {githubUrl && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-xl text-muted-foreground hover:text-foreground"
+              asChild
+            >
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View on GitHub"
+              >
+                <Github className="h-4 w-4" />
+              </a>
+            </Button>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}

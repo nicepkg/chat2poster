@@ -24,6 +24,10 @@
       "types": "./dist/components/editor/index.d.ts",
       "import": "./dist/components/editor/index.js"
     },
+    "./components/layout": {
+      "types": "./dist/components/layout/index.d.ts",
+      "import": "./dist/components/layout/index.js"
+    },
     "./contexts": {
       "types": "./dist/contexts/index.d.ts",
       "import": "./dist/contexts/index.js"

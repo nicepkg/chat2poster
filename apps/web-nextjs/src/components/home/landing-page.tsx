@@ -17,6 +17,7 @@ import {
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { githubConfig } from "~/lib/site-info";
+import { ExtensionSection } from "./extension-section";
 
 const Hero3D = dynamic(() => import("./hero-3d").then((mod) => mod.Hero3D), {
   ssr: false,
@@ -31,48 +32,48 @@ const workflows = [
     title: { en: "Beautiful Themes", zh: "精美主题" },
     desc: { en: "Dark, Light, Custom Styles", zh: "暗色、亮色、自定义样式" },
     link: "/docs/themes",
-    color: "text-purple-500",
-    bg: "bg-purple-500/10",
+    color: "text-primary",
+    bg: "bg-primary/10",
   },
   {
     icon: BarChart2,
     title: { en: "Smart Pagination", zh: "智能分页" },
     desc: { en: "Auto-split Long Chats", zh: "自动拆分超长对话" },
     link: "/docs/pagination",
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
+    color: "text-chart-1",
+    bg: "bg-chart-1/10",
   },
   {
     icon: Zap,
     title: { en: "One-Click Export", zh: "一键导出" },
     desc: { en: "PNG at 1x/2x/3x DPI", zh: "1x/2x/3x 倍率 PNG" },
     link: "/docs/export",
-    color: "text-green-500",
-    bg: "bg-green-500/10",
+    color: "text-chart-2",
+    bg: "bg-chart-2/10",
   },
   {
     icon: BookOpen,
     title: { en: "Multi-Platform", zh: "多平台支持" },
     desc: { en: "ChatGPT, Claude, Gemini", zh: "ChatGPT, Claude, Gemini" },
     link: "/docs/platforms",
-    color: "text-orange-500",
-    bg: "bg-orange-500/10",
+    color: "text-chart-3",
+    bg: "bg-chart-3/10",
   },
   {
     icon: Video,
     title: { en: "Browser Extension", zh: "浏览器扩展" },
     desc: { en: "Export from Any Chat", zh: "从任意对话页面导出" },
     link: "/docs/extension",
-    color: "text-red-500",
-    bg: "bg-red-500/10",
+    color: "text-destructive",
+    bg: "bg-destructive/10",
   },
   {
     icon: TrendingUp,
     title: { en: "Web App", zh: "网页版" },
     desc: { en: "Share Link & Manual Input", zh: "分享链接 & 手动输入" },
     link: "/docs/web-app",
-    color: "text-yellow-500",
-    bg: "bg-yellow-500/10",
+    color: "text-chart-4",
+    bg: "bg-chart-4/10",
   },
 ];
 
@@ -193,7 +194,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
               transition={{ duration: 0.5 }}
             >
               <h1 className="mb-8 text-5xl leading-tight font-extrabold tracking-tight md:text-7xl">
-                <span className="from-primary animate-gradient-x bg-gradient-to-r via-purple-500 to-blue-500 bg-clip-text text-transparent">
+                <span className="from-primary animate-gradient-x bg-gradient-to-r via-secondary to-chart-1 bg-clip-text text-transparent">
                   {t.hero.title}
                 </span>
               </h1>
@@ -398,6 +399,9 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
           </div>
         </div>
       </section>
+
+      {/* Extension Section */}
+      <ExtensionSection lang={lang} />
 
       {/* CTA */}
       <section className="relative overflow-hidden pt-24 pb-16 text-center">
