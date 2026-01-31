@@ -57,7 +57,7 @@ jobs:
         with:
           name: website-build
           path: |
-            ${{ env.WEBSITE_DIR }}/.open-next
+            ${{ env.WEBSITE_DIR }}/.open-next/
             ${{ env.WEBSITE_DIR }}/wrangler.jsonc
           retention-days: 1
 
