@@ -60,7 +60,8 @@ chat2poster/
 │   ├── core-renderer/     # React components for rendering
 │   ├── core-pagination/   # Height estimation + page splitting
 │   ├── core-export/       # SnapDOM export + ZIP packaging
-│   └── themes/            # Preset themes (light/dark/custom)
+│   ├── themes/            # Preset themes (light/dark/custom)
+│   └── shared-ui/         # Shared UI components (Radix/Shadcn)
 ├── apps/
 │   ├── extension-wxt/     # Browser extension
 │   └── web-nextjs/        # Website
@@ -151,7 +152,7 @@ This project supports **5 AI assistants working in parallel**.
 | **T2** | Adapters | `core-adapters` | AI-2 |
 | **T3** | Renderer | `core-renderer`, `themes` | AI-3 |
 | **T4** | Pagination & Export | `core-pagination`, `core-export` | AI-4 |
-| **T5** | Apps & UI | `extension-wxt`, `web-nextjs` | AI-5 |
+| **T5** | Apps & UI | `extension-wxt`, `web-nextjs`, `shared-ui` | AI-5 |
 
 ### Track Commands
 
@@ -355,6 +356,7 @@ AI-4 (T4):
 AI-5 (T5):
   apps/extension-wxt/**
   apps/web-nextjs/**
+  packages/shared-ui/**
 ```
 
 **Shared (coordinate changes):**
@@ -364,4 +366,4 @@ AI-5 (T5):
 
 ---
 
-*Last updated: 2024-01-31*
+*Last updated: 2026-01-31*

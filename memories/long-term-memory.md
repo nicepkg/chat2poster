@@ -37,6 +37,12 @@
 **Rationale:** Style isolation from host page (ChatGPT/Claude/Gemini)
 **Date:** 2024-01-31
 
+### AD-005: Shared UI Package
+**Decision:** Create @chat2poster/shared-ui for common components
+**Rationale:** Avoid code duplication between web-nextjs and extension-wxt
+**Structure:** 53 Radix/Shadcn UI components + EditorContext + editor components + utils + hooks
+**Date:** 2026-01-31
+
 ---
 
 ## 👤 User Preferences
@@ -109,6 +115,8 @@
 | Date | Session | Summary |
 |------|---------|---------|
 | 2024-01-31 | Initial Setup | Created TASKS.md, commands, memory system |
+| 2026-01-31 | Shared UI Package | Created @chat2poster/shared-ui, migrated 53 UI components |
+| 2026-01-31 | Docs Update | Updated CLAUDE.md, TASKS.md, architecture.md to reflect shared-ui |
 
 ---
 

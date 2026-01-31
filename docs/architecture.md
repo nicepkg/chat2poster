@@ -60,6 +60,8 @@ index.ts (Conversation/Message/Selection/Theme/ExportJob types + validators)
 (adapter interface + registry + shared utils)
 /themes
 (预设主题 tokens + defaults)
+/shared-ui
+(共享 UI 组件：Radix/Shadcn 基础组件、EditorContext、编辑器组件、通用组件、hooks)
 
 说明：
 

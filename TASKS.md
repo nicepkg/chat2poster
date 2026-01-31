@@ -21,7 +21,7 @@
 | **T2** | Adapters | `core-adapters` | T1 (interfaces only) |
 | **T3** | Renderer | `core-renderer`, `themes` | T1 (interfaces only) |
 | **T4** | Pagination & Export | `core-pagination`, `core-export` | T1 (interfaces only) |
-| **T5** | Apps & Integration | `extension-wxt`, `web-nextjs` | T1 (interfaces only) |
+| **T5** | Apps & Integration | `extension-wxt`, `web-nextjs`, `shared-ui` | T1 (interfaces only) |
 
 ---
 
@@ -603,6 +603,7 @@ AI-4 owns:
 AI-5 owns:
   /apps/extension-wxt/**
   /apps/web-nextjs/**
+  /packages/shared-ui/**
 ```
 
 ## Communication Protocol
