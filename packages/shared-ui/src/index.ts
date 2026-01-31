@@ -10,6 +10,5 @@ export * from "./contexts";
 // Hooks
 export * from "./hooks";
 
-// Utils
-export { cn, formatFileSize, generateExportFilename, sleep, truncate } from "./lib/utils";
+// Utils (all utilities consolidated in src/utils/)
 export * from "./utils";
