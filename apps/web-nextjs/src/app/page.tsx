@@ -1,5 +1,17 @@
 "use client";
 
+import { Button, Card, CardContent, Input, cn } from "@chat2poster/shared-ui";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowRight,
+  Link2,
+  PenLine,
+  ClipboardPaste,
+  Loader2,
+  AlertCircle,
+  Sparkles,
+  Shield,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -37,7 +49,6 @@ export default function ImportPage() {
         return;
       }
 
-      // Store conversation and navigate to editor
       if (data.conversation) {
         sessionStorage.setItem(
           "chat2poster:conversation",
@@ -53,128 +64,169 @@ export default function ImportPage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="w-full max-w-lg">
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-4">
+      {/* Background decorations */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="bg-primary/5 absolute -left-40 -top-40 h-80 w-80 rounded-full blur-[100px]" />
+        <div className="bg-secondary/5 absolute -bottom-40 -right-40 h-80 w-80 rounded-full blur-[100px]" />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 w-full max-w-lg"
+      >
         {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-900">Chat2Poster</h1>
-          <p className="mt-2 text-gray-600">
+        <div className="mb-10 text-center">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
+            className="bg-primary/10 text-primary mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium"
+          >
+            <Sparkles className="h-4 w-4" />
+            AI Chat to Poster
+          </motion.div>
+          <h1 className="from-foreground to-foreground/70 bg-gradient-to-b bg-clip-text text-4xl font-bold tracking-tight text-transparent">
+            Chat2Poster
+          </h1>
+          <p className="text-muted-foreground mt-3 text-lg">
             Turn AI chats into share-worthy posters
           </p>
         </div>
 
-        {/* Import Card */}
-        <div className="rounded-xl bg-white p-6 shadow-lg">
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">
-            Import from Share Link
-          </h2>
-
-          <div className="space-y-4">
-            <div>
-              <label
-                htmlFor="shareLink"
-                className="mb-1.5 block text-sm font-medium text-gray-700"
-              >
-                ChatGPT / Claude / Gemini Share Link
-              </label>
-              <input
-                id="shareLink"
-                type="url"
-                value={shareLink}
-                onChange={(e) => setShareLink(e.target.value)}
-                placeholder="https://chatgpt.com/share/... or claude.ai/share/..."
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
-              />
+        {/* Main Card */}
+        <Card className="border-border/50 bg-card/80 overflow-hidden backdrop-blur-xl">
+          <CardContent className="p-6">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="bg-primary/10 rounded-xl p-3">
+                <Link2 className="text-primary h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-foreground font-semibold">
+                  Import from Share Link
+                </h2>
+                <p className="text-muted-foreground text-sm">
+                  Paste your ChatGPT, Claude, or Gemini share link
+                </p>
+              </div>
             </div>
 
-            {error && (
-              <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
-                {error}
+            <div className="space-y-4">
+              <div className="relative">
+                <Input
+                  type="url"
+                  value={shareLink}
+                  onChange={(e) => setShareLink(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleParse()}
+                  placeholder="https://chatgpt.com/share/..."
+                  className="h-12 pr-4 pl-4 text-base"
+                />
               </div>
-            )}
 
-            <button
-              onClick={handleParse}
-              disabled={isLoading}
-              className="w-full rounded-lg bg-primary-500 px-4 py-2.5 font-medium text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  Parsing...
-                </span>
-              ) : (
-                "Parse & Continue"
-              )}
-            </button>
-          </div>
+              <AnimatePresence mode="wait">
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="bg-destructive/10 text-destructive flex items-center gap-2 rounded-lg p-3 text-sm"
+                  >
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    {error}
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-          {/* Divider */}
-          <div className="my-6 flex items-center">
-            <div className="h-px flex-1 bg-gray-200" />
-            <span className="px-4 text-sm text-gray-500">or</span>
-            <div className="h-px flex-1 bg-gray-200" />
-          </div>
-
-          {/* Alternative Options */}
-          <div className="grid grid-cols-2 gap-3">
-            <Link
-              href="/manual"
-              className="flex flex-col items-center rounded-lg border border-gray-200 p-4 text-center transition-colors hover:border-primary-300 hover:bg-primary-50"
-            >
-              <svg
-                className="mb-2 h-6 w-6 text-gray-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+              <Button
+                onClick={handleParse}
+                disabled={isLoading}
+                className="group h-12 w-full text-base font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
-              <span className="text-sm font-medium text-gray-700">
-                Manual Builder
-              </span>
-              <span className="mt-0.5 text-xs text-gray-500">
-                Create from scratch
-              </span>
-            </Link>
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Parsing...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    Parse & Continue
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                )}
+              </Button>
+            </div>
 
-            <Link
-              href="/paste"
-              className="flex flex-col items-center rounded-lg border border-gray-200 p-4 text-center transition-colors hover:border-primary-300 hover:bg-primary-50"
-            >
-              <svg
-                className="mb-2 h-6 w-6 text-gray-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
-              <span className="text-sm font-medium text-gray-700">
-                Paste Text
-              </span>
-              <span className="mt-0.5 text-xs text-gray-500">
-                Import from clipboard
-              </span>
-            </Link>
-          </div>
-        </div>
+            {/* Divider */}
+            <div className="my-6 flex items-center gap-4">
+              <div className="bg-border h-px flex-1" />
+              <span className="text-muted-foreground text-sm">or</span>
+              <div className="bg-border h-px flex-1" />
+            </div>
+
+            {/* Alternative Options */}
+            <div className="grid grid-cols-2 gap-3">
+              <Link href="/manual" className="group block">
+                <motion.div
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={cn(
+                    "flex flex-col items-center rounded-xl border-2 border-transparent p-4 text-center",
+                    "bg-muted/50 transition-all duration-200",
+                    "hover:border-primary/20 hover:bg-primary/5 hover:shadow-sm",
+                  )}
+                >
+                  <div className="bg-background mb-3 rounded-lg p-2.5 shadow-sm transition-transform group-hover:scale-110">
+                    <PenLine className="text-primary h-5 w-5" />
+                  </div>
+                  <span className="text-foreground text-sm font-medium">
+                    Manual Builder
+                  </span>
+                  <span className="text-muted-foreground mt-0.5 text-xs">
+                    Create from scratch
+                  </span>
+                </motion.div>
+              </Link>
+
+              <Link href="/paste" className="group block">
+                <motion.div
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={cn(
+                    "flex flex-col items-center rounded-xl border-2 border-transparent p-4 text-center",
+                    "bg-muted/50 transition-all duration-200",
+                    "hover:border-primary/20 hover:bg-primary/5 hover:shadow-sm",
+                  )}
+                >
+                  <div className="bg-background mb-3 rounded-lg p-2.5 shadow-sm transition-transform group-hover:scale-110">
+                    <ClipboardPaste className="text-primary h-5 w-5" />
+                  </div>
+                  <span className="text-foreground text-sm font-medium">
+                    Paste Text
+                  </span>
+                  <span className="text-muted-foreground mt-0.5 text-xs">
+                    Import from clipboard
+                  </span>
+                </motion.div>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Footer */}
-        <p className="mt-6 text-center text-xs text-gray-500">
-          Your conversations are processed locally. We never store your data.
-        </p>
-      </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="text-muted-foreground mt-6 flex items-center justify-center gap-2 text-center text-sm"
+        >
+          <Shield className="h-4 w-4" />
+          <span>
+            Your conversations are processed locally. We never store your data.
+          </span>
+        </motion.div>
+      </motion.div>
     </main>
   );
 }

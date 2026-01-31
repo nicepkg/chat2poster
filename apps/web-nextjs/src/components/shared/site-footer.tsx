@@ -1,10 +1,10 @@
 import {
-  cn,
   GitHubIcon,
   BilibiliIcon,
   DouyinIcon,
   XIcon,
-} from "@chat2poster/shared-ui";
+} from "@chat2poster/shared-ui/components/common";
+import { cn } from "@chat2poster/shared-ui/lib/utils";
 import Link from "next/link";
 import {
   siteConfig,
