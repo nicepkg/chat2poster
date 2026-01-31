@@ -821,6 +821,7 @@ chat2poster/
 ├── apps/
 │   ├── extension-wxt/     # Browser extension
 │   └── web-nextjs/        # Website
+├── configs/               # Shared configs (eslint, etc.)
 ├── docs/                  # PRD, architecture, specs
 ├── memories/              # Session & long-term memory
 └── TASKS.md               # Task board for parallel AI work

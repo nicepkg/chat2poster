@@ -35,29 +35,27 @@
 
 ## 2) 推荐目录结构（示例）
 
-/apps
-/extension-wxt
-/src
-/content-script
-/ui
-/adapters
-/background (可选)
-/web-nextjs
-/src
-/app (Next App Router)
-/server (解析接口/adapter 调用)
-/ui
-/packages
-/core-schema
-index.ts (Conversation/Message/Selection/Theme/ExportJob types + validators)
-/core-pagination
-(height estimation + manual breaks + auto pagination)
-/core-export
-(SnapDOM export, SVG fallback, zip packaging, file naming)
-/core-adapters
-(adapter interface + registry + shared utils)
-/shared-ui
-(共享 UI 组件：Radix/Shadcn 基础组件、EditorContext、编辑器组件、通用组件、hooks、渲染组件、主题系统)
+apps/
+  extension-wxt/
+    src/
+      entrypoints/ (content script + styles)
+      components/
+      background/
+      popup/
+      assets/
+  web-nextjs/
+    src/
+      app/ (Next App Router)
+      components/
+      styles/
+packages/
+  core-schema/        (Conversation/Message/Selection/Theme/ExportJob types + validators)
+  core-pagination/    (height estimation + manual breaks + auto pagination)
+  core-export/        (SnapDOM export, SVG fallback, zip packaging, file naming)
+  core-adapters/      (adapter interface + registry + share-link/DOM adapters)
+  shared-ui/          (Radix/Shadcn UI, EditorContext, editor, renderer, themes, utils)
+configs/
+  eslint/             (shared flat config helpers)
 
 说明：
 

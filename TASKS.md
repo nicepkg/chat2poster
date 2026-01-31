@@ -47,9 +47,9 @@
 /vitest.workspace.ts (new)
 /packages/*/package.json
 /packages/*/tsconfig.json
-/packages/*/tsconfig.build.json
 /packages/*/tsup.config.ts
 /packages/*/vitest.config.ts
+/configs/eslint/shared.mjs
 ```
 
 ### T1.2 - Core Schema Package ✅
@@ -97,7 +97,7 @@ export interface ExportParams {
 ```
 
 ### T1.3 - Shared Utilities ✅
-- [x] Create `packages/shared-utils/package.json`
+- [x] Move utilities into `packages/shared-ui/src/utils`
 - [x] UUID generation utility
 - [x] Date formatting utility
 - [x] File naming utility (for exports)
@@ -122,7 +122,6 @@ export interface ExportParams {
 ```
 packages/core-adapters/package.json
 packages/core-adapters/tsconfig.json
-packages/core-adapters/tsconfig.build.json
 packages/core-adapters/tsup.config.ts
 packages/core-adapters/vitest.config.ts
 packages/core-adapters/src/index.ts
@@ -210,8 +209,7 @@ packages/core-adapters/src/__tests__/share-link-adapters.test.ts
 > **Note:** `core-renderer` has been merged into `shared-ui/components/renderer` and `themes` has been merged into `shared-ui/themes` for better code reuse.
 
 ### T3.1 - Theme System ✅
-- [x] Create `packages/themes/package.json`
-- [x] Define theme token structure (colors, fonts, spacing)
+- [x] Define theme token structure (colors, fonts, spacing) in `shared-ui`
 - [x] Create Light theme preset
 - [x] Create Dark theme preset
 - [ ] Create 2-3 additional presets (optional)
@@ -220,36 +218,28 @@ packages/core-adapters/src/__tests__/share-link-adapters.test.ts
 
 **Files created:**
 ```
-packages/themes/package.json
-packages/themes/tsconfig.json
-packages/themes/tsconfig.build.json
-packages/themes/tsup.config.ts
-packages/themes/vitest.config.ts
-packages/themes/src/index.ts
-packages/themes/src/registry.ts
-packages/themes/src/css-variables.ts
-packages/themes/src/presets/index.ts
-packages/themes/src/presets/light.ts
-packages/themes/src/presets/dark.ts
+packages/shared-ui/src/themes/index.ts
+packages/shared-ui/src/themes/registry.ts
+packages/shared-ui/src/themes/css-variables.ts
+packages/shared-ui/src/themes/shadows.ts
+packages/shared-ui/src/themes/presets/index.ts
+packages/shared-ui/src/themes/presets/light.ts
+packages/shared-ui/src/themes/presets/dark.ts
 ```
 
 ### T3.2 - Core Renderer Setup ✅
-- [x] Create `packages/core-renderer/package.json`
-- [x] Setup React with TypeScript
+- [x] Setup renderer in `packages/shared-ui/src/components/renderer`
 - [x] Configure react-markdown with remark/rehype plugins
 - [x] Configure Shiki for code highlighting
-- [x] Setup CSS-in-JS (inline styles + CSS variables for Shadow DOM compatibility)
+- [x] Ensure Shadow DOM-compatible styling
 
 **Files created:**
 ```
-packages/core-renderer/package.json
-packages/core-renderer/tsconfig.json
-packages/core-renderer/tsconfig.build.json
-packages/core-renderer/tsup.config.ts
-packages/core-renderer/vitest.config.ts
-packages/core-renderer/src/index.ts
-packages/core-renderer/src/utils/index.ts
-packages/core-renderer/src/utils/shiki.ts
+packages/shared-ui/src/components/renderer/index.ts
+packages/shared-ui/src/components/renderer/ConversationView.tsx
+packages/shared-ui/src/components/renderer/MessageItem.tsx
+packages/shared-ui/src/components/renderer/CodeBlock.tsx
+packages/shared-ui/src/utils/shiki.ts
 ```
 
 ### T3.3 - Message Components ✅
@@ -265,10 +255,10 @@ packages/core-renderer/src/utils/shiki.ts
 
 **Files created:**
 ```
-packages/core-renderer/src/components/index.ts
-packages/core-renderer/src/components/MessageItem.tsx
-packages/core-renderer/src/components/MessageAvatar.tsx
-packages/core-renderer/src/components/CodeBlock.tsx
+packages/shared-ui/src/components/renderer/index.ts
+packages/shared-ui/src/components/renderer/MessageItem.tsx
+packages/shared-ui/src/components/renderer/MessageAvatar.tsx
+packages/shared-ui/src/components/renderer/CodeBlock.tsx
 ```
 
 ### T3.4 - Conversation Components ✅
@@ -282,9 +272,9 @@ packages/core-renderer/src/components/CodeBlock.tsx
 
 **Files created:**
 ```
-packages/core-renderer/src/components/ConversationView.tsx
-packages/core-renderer/src/components/ConversationHeader.tsx
-packages/core-renderer/src/components/PageBreakIndicator.tsx
+packages/shared-ui/src/components/renderer/ConversationView.tsx
+packages/shared-ui/src/components/renderer/ConversationHeader.tsx
+packages/shared-ui/src/components/renderer/PageBreakIndicator.tsx
 ```
 
 ### T3.5 - Decoration Components ✅
@@ -299,9 +289,9 @@ packages/core-renderer/src/components/PageBreakIndicator.tsx
 
 **Files created:**
 ```
-packages/core-renderer/src/components/DecorationFrame.tsx
-packages/core-renderer/src/components/MacOSBar.tsx
-packages/core-renderer/src/components/CanvasContainer.tsx
+packages/shared-ui/src/components/renderer/DecorationFrame.tsx
+packages/shared-ui/src/components/renderer/RendererMacOSBar.tsx
+packages/shared-ui/src/components/renderer/CanvasContainer.tsx
 ```
 
 ### T3.6 - Preview Components ✅
@@ -314,8 +304,8 @@ packages/core-renderer/src/components/CanvasContainer.tsx
 
 **Files created:**
 ```
-packages/core-renderer/src/components/PreviewPanel.tsx
-packages/core-renderer/src/components/PageIndicator.tsx
+packages/shared-ui/src/components/renderer/PreviewPanel.tsx
+packages/shared-ui/src/components/renderer/PageIndicator.tsx
 ```
 
 ---
@@ -344,7 +334,6 @@ packages/core-renderer/src/components/PageIndicator.tsx
 ```
 packages/core-pagination/package.json
 packages/core-pagination/tsconfig.json
-packages/core-pagination/tsconfig.build.json
 packages/core-pagination/tsup.config.ts
 packages/core-pagination/vitest.config.ts
 packages/core-pagination/src/index.ts
@@ -365,7 +354,6 @@ packages/core-pagination/src/paginator.test.ts
 ```
 packages/core-export/package.json
 packages/core-export/tsconfig.json
-packages/core-export/tsconfig.build.json
 packages/core-export/tsup.config.ts
 packages/core-export/vitest.config.ts
 packages/core-export/src/index.ts
@@ -590,15 +578,14 @@ apps/web-nextjs/src/app/api/parse-share-link/route.ts
 ```
 AI-1 owns:
   /packages/core-schema/**
-  /packages/shared-utils/**
   /package.json, /pnpm-workspace.yaml, /tsconfig.json, etc.
 
 AI-2 owns:
   /packages/core-adapters/**
 
 AI-3 owns:
-  /packages/core-renderer/**
-  /packages/themes/**
+  /packages/shared-ui/src/components/renderer/**
+  /packages/shared-ui/src/themes/**
 
 AI-4 owns:
   /packages/core-pagination/**
@@ -636,9 +623,9 @@ mkdir -p packages/core-adapters/src/adapters
 
 ### AI-3 Start Command
 ```bash
-# Create renderer and themes packages
-mkdir -p packages/core-renderer/src/components
-mkdir -p packages/themes/src/presets
+# Create shared renderer/themes inside shared-ui
+mkdir -p packages/shared-ui/src/components/renderer
+mkdir -p packages/shared-ui/src/themes/presets
 ```
 
 ### AI-4 Start Command
