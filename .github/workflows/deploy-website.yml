@@ -94,7 +94,7 @@ jobs:
 
       - name: Deploy to Cloudflare
         working-directory: ${{ env.WEBSITE_DIR }}
-        run: pnpm dlx @opennextjs/cloudflare deploy --skipWranglerConfigCheck
+        run: pnpm dlx @opennextjs/cloudflare deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -127,7 +127,7 @@ jobs:
       - name: Deploy Preview to Cloudflare
         id: deploy
         working-directory: ${{ env.WEBSITE_DIR }}
-        run: pnpm dlx @opennextjs/cloudflare deploy --skipWranglerConfigCheck --env preview
+        run: pnpm dlx @opennextjs/cloudflare deploy --env preview
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
