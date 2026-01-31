@@ -4,11 +4,11 @@ import * as React from "react";
 import { useState, useCallback, useEffect } from "react";
 import type { Conversation } from "@chat2poster/core-schema";
 import { cn } from "~/utils/common";
-import { useEditor } from "~/contexts/EditorContext";
+import { useEditor } from "~/contexts/editor-context";
 import { useI18n } from "~/i18n";
-import { MessagesTab } from "./MessagesTab";
-import { ThemeTab } from "./ThemeTab";
-import { ExportTab } from "./ExportTab";
+import { MessagesTab } from "./messages-tab";
+import { ThemeTab } from "./theme-tab";
+import { ExportTab } from "./export-tab";
 
 function CloseIcon() {
   return (

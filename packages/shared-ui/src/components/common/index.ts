@@ -1,2 +1,2 @@
-export * from "./Logo";
-export * from "./SocialIcons";
+export * from "./logo";
+export * from "./social-icons";

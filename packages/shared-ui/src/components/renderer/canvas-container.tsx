@@ -4,7 +4,7 @@ import { memo, forwardRef } from "react";
 import type { Decoration } from "@chat2poster/core-schema";
 import type { Theme } from "~/themes";
 import { applyThemeToElement } from "~/themes";
-import { DecorationFrame } from "./DecorationFrame";
+import { DecorationFrame } from "./decoration-frame";
 
 export interface CanvasContainerProps {
   /** Theme to apply */

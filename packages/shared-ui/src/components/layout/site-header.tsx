@@ -3,8 +3,8 @@
 import { Github } from "lucide-react";
 import * as React from "react";
 import { Button } from "../ui/button";
-import { ThemeToggle } from "./ThemeToggle";
-import { MobileNav, type NavItem } from "./MobileNav";
+import { ThemeToggle } from "./theme-toggle";
+import { MobileNav, type NavItem } from "./mobile-nav";
 import { cn } from "../../utils";
 import { useI18n } from "~/i18n";
 

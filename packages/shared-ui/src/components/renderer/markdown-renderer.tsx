@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import type { BundledTheme } from "shiki";
 import { highlightCode } from "~/utils/shiki";
-import { MermaidBlock } from "./MermaidBlock";
+import { MermaidBlock } from "./mermaid-block";
 
 export interface MarkdownRendererProps {
   content: string;

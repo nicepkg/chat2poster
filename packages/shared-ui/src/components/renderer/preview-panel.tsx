@@ -4,9 +4,9 @@ import { memo, useRef, useEffect, useState } from "react";
 import type { Message, Selection, Decoration } from "@chat2poster/core-schema";
 import type { Theme } from "~/themes";
 import { cssVar } from "~/themes";
-import { CanvasContainer } from "./CanvasContainer";
-import { ConversationView } from "./ConversationView";
-import { PageIndicator } from "./PageIndicator";
+import { CanvasContainer } from "./canvas-container";
+import { ConversationView } from "./conversation-view";
+import { PageIndicator } from "./page-indicator";
 
 export interface PreviewPanelProps {
   /** Messages to display */

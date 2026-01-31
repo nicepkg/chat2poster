@@ -6,8 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare } from "lucide-react";
 import { cn } from "~/utils/common";
 import { useI18n } from "~/i18n";
-import { MacOSBar } from "./MacOSBar";
-import { MessageBubble } from "./MessageBubble";
+import { MacOSBar } from "./mac-os-bar";
+import { MessageBubble } from "./message-bubble";
 
 export interface PreviewMessage {
   id: string;

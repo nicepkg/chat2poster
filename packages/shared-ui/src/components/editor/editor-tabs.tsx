@@ -3,12 +3,12 @@
 import * as React from "react";
 import { MessageSquare, Palette, Settings2 } from "lucide-react";
 import { cn } from "~/utils/common";
-import { useEditor, THEME_PRESETS } from "~/contexts/EditorContext";
+import { useEditor, THEME_PRESETS } from "~/contexts/editor-context";
 import { useI18n } from "~/i18n";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { MessagesTab } from "./MessagesTab";
-import { ThemeTab } from "./ThemeTab";
-import { ExportTab } from "./ExportTab";
+import { MessagesTab } from "./messages-tab";
+import { ThemeTab } from "./theme-tab";
+import { ExportTab } from "./export-tab";
 
 export interface EditorTabsProps {
   /** Default active tab */

@@ -3,7 +3,7 @@
 import { memo } from "react";
 import type { Decoration, ShadowLevel } from "@chat2poster/core-schema";
 import { cssVar } from "~/themes";
-import { RendererMacOSBar } from "./RendererMacOSBar";
+import { RendererMacOSBar } from "./renderer-mac-os-bar";
 
 export interface DecorationFrameProps {
   /** Decoration settings */

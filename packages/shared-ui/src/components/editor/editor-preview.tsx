@@ -5,12 +5,12 @@ import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, User, Bot } from "lucide-react";
 import { cn } from "~/utils/common";
-import { useEditor } from "~/contexts/EditorContext";
+import { useEditor } from "~/contexts/editor-context";
 import { useI18n } from "~/i18n";
 import { SHADOW_STYLES } from "~/themes/shadows";
 import { MarkdownRenderer } from "../renderer";
 import { Card, CardContent } from "../ui/card";
-import { MacOSBar } from "./MacOSBar";
+import { MacOSBar } from "./mac-os-bar";
 
 export interface EditorPreviewProps {
   /** Show checkerboard background pattern */

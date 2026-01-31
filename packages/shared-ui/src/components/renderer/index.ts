@@ -1,24 +1,24 @@
 // Markdown rendering
-export * from "./MarkdownRenderer";
-export * from "./MermaidBlock";
+export * from "./markdown-renderer";
+export * from "./mermaid-block";
 
 // Code highlighting
-export * from "./CodeBlock";
+export * from "./code-block";
 
 // Message components
-export * from "./MessageAvatar";
-export * from "./MessageItem";
+export * from "./message-avatar";
+export * from "./message-item";
 
 // Conversation components
-export * from "./ConversationHeader";
-export * from "./ConversationView";
-export * from "./PageBreakIndicator";
+export * from "./conversation-header";
+export * from "./conversation-view";
+export * from "./page-break-indicator";
 
 // Decoration components
-export * from "./RendererMacOSBar";
-export * from "./DecorationFrame";
-export * from "./CanvasContainer";
+export * from "./renderer-mac-os-bar";
+export * from "./decoration-frame";
+export * from "./canvas-container";
 
 // Preview components
-export * from "./PageIndicator";
-export * from "./PreviewPanel";
+export * from "./page-indicator";
+export * from "./preview-panel";

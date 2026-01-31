@@ -20,7 +20,7 @@ import {
   BackgroundPicker,
   DEFAULT_BACKGROUND_PRESETS,
   type BackgroundPreset,
-} from "./BackgroundPicker";
+} from "./background-picker";
 
 export interface ThemeTabProps {
   selectedThemeId: string;

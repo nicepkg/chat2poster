@@ -7,8 +7,8 @@ import rehypeRaw from "rehype-raw";
 import type { Message } from "@chat2poster/core-schema";
 import type { Theme } from "~/themes";
 import { cssVar } from "~/themes";
-import { MessageAvatar } from "./MessageAvatar";
-import { CodeBlock } from "./CodeBlock";
+import { MessageAvatar } from "./message-avatar";
+import { CodeBlock } from "./code-block";
 import type { BundledTheme } from "shiki";
 
 export interface MessageItemProps {
