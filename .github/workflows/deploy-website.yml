@@ -82,7 +82,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: website-build
-          path: ${{ env.WEBSITE_DIR }}
+          path: .
+          merge-multiple: true
 
       - name: Deploy to Cloudflare
         working-directory: ${{ env.WEBSITE_DIR }}
@@ -114,7 +115,8 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: website-build
-          path: ${{ env.WEBSITE_DIR }}
+          path: .
+          merge-multiple: true
 
       - name: Deploy Preview to Cloudflare
         id: deploy
