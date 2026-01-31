@@ -4,7 +4,7 @@ import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Scissors, X, User, Bot } from "lucide-react";
 import type { Message } from "@chat2poster/core-schema";
-import { cn } from "../../lib/utils";
+import { cn } from "~/utils/common";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { ScrollArea } from "../ui/scroll-area";

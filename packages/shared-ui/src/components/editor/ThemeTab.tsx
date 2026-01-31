@@ -4,7 +4,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { Monitor } from "lucide-react";
 import type { Decoration, Theme } from "@chat2poster/core-schema";
-import { cn } from "../../lib/utils";
+import { cn } from "~/utils/common";
 import { Label } from "../ui/label";
 import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";

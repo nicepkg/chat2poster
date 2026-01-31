@@ -3,8 +3,8 @@
 import * as React from "react";
 import { useState, useCallback, useEffect } from "react";
 import type { Conversation } from "@chat2poster/core-schema";
-import { cn } from "../../lib/utils";
-import { useEditor } from "../../contexts/EditorContext";
+import { cn } from "~/utils/common";
+import { useEditor } from "~/contexts/EditorContext";
 import { MessagesTab } from "./MessagesTab";
 import { ThemeTab } from "./ThemeTab";
 import { ExportTab } from "./ExportTab";

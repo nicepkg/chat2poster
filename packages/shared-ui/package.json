@@ -32,10 +32,6 @@
       "types": "./dist/hooks/index.d.ts",
       "import": "./dist/hooks/index.js"
     },
-    "./lib/utils": {
-      "types": "./dist/lib/utils.d.ts",
-      "import": "./dist/lib/utils.js"
-    },
     "./components/renderer": {
       "types": "./dist/components/renderer/index.d.ts",
       "import": "./dist/components/renderer/index.js"
@@ -47,7 +43,10 @@
     "./styles/globals.css": "./src/styles/globals.css",
     "./styles/renderer.css": "./src/styles/renderer.css"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

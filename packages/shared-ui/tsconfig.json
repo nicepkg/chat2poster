@@ -6,7 +6,11 @@
     "jsx": "react-jsx",
     "declaration": true,
     "declarationMap": true,
-    "noEmit": false
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "*.ts"],
   "exclude": ["node_modules", "dist"]

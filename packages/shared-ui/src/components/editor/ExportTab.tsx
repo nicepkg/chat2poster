@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import type { ExportParams } from "@chat2poster/core-schema";
-import { cn } from "../../lib/utils";
+import { cn } from "~/utils/common";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Slider } from "../ui/slider";

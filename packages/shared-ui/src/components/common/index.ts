@@ -1,2 +1,2 @@
-export { Logo, type LogoProps } from "./Logo";
-export { GitHubIcon, BilibiliIcon, DouyinIcon, XIcon } from "./SocialIcons";
+export * from "./Logo";
+export * from "./SocialIcons";

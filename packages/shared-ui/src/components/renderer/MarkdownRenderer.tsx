@@ -5,7 +5,7 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import type { BundledTheme } from "shiki";
-import { highlightCode } from "../../utils/shiki";
+import { highlightCode } from "~/utils/shiki";
 import { MermaidBlock } from "./MermaidBlock";
 
 export interface MarkdownRendererProps {

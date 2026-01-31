@@ -4,7 +4,7 @@ import * as React from "react";
 import { forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "~/utils/common";
 import { MacOSBar } from "./MacOSBar";
 import { MessageBubble } from "./MessageBubble";
 

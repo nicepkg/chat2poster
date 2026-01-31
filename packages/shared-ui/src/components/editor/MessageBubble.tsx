@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion } from "framer-motion";
 import { User, Bot } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "~/utils/common";
 
 export interface MessageBubbleProps {
   role: "user" | "assistant" | "system";

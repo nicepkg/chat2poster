@@ -4,7 +4,7 @@ import {
   DouyinIcon,
   XIcon,
 } from "@chat2poster/shared-ui/components/common";
-import { cn } from "@chat2poster/shared-ui/lib/utils";
+import { cn } from "@chat2poster/shared-ui/utils";
 import Link from "next/link";
 import {
   siteConfig,
