@@ -34,10 +34,15 @@
     "@commitlint/cli": "^20.4.0",
     "@commitlint/config-conventional": "^20.4.0",
     "@commitlint/types": "^20.4.0",
-    "eslint": "^9.39.2",
+    "eslint": "catalog:tooling",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.5",
     "globals": "^17.2.0",
     "husky": "^9.1.7",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0"
+    "prettier": "catalog:tooling",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "typescript": "catalog:tooling",
+    "typescript-eslint": "catalog:tooling"
   }
 }

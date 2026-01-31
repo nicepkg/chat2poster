@@ -3,12 +3,16 @@ import { defineConfig } from "tsup";
 export default defineConfig({
   entry: ["src/index.ts"],
   format: ["esm"],
-  dts: true,
+  dts: {
+    compilerOptions: {
+      composite: false,
+    },
+  },
   clean: true,
   sourcemap: true,
   treeshake: true,
   splitting: false,
   minify: false,
-  tsconfig: "tsconfig.build.json",
+  tsconfig: "tsconfig.json",
   external: ["@chat2poster/core-schema"],
 });

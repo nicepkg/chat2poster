@@ -13,7 +13,7 @@
     "zip:firefox": "wxt zip --browser firefox",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b --pretty false",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
@@ -27,19 +27,16 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@types/node": "^25.1.0",
-    "@types/react": "^19.2.10",
-    "@types/react-dom": "^19.2.3",
+    "@types/node": "catalog:tooling",
+    "@types/react": "catalog:tooling",
+    "@types/react-dom": "catalog:tooling",
     "@vitejs/plugin-react": "^5.1.2",
     "@tailwindcss/postcss": "^4.1.18",
     "autoprefixer": "^10.4.24",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-prettier": "^5.5.5",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18",
+    "typescript": "catalog:tooling",
+    "vitest": "catalog:tooling",
     "wxt": "^0.20.13"
   }
 }

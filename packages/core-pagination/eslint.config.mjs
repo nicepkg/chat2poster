@@ -1,41 +1,23 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import tseslint from "typescript-eslint";
 import globals from "globals";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { defineConfig, globalIgnores } from "eslint/config";
+import {
+  createTypeScriptConfig,
+  getConfigDir,
+  packageIgnores,
+} from "../../configs/eslint/shared.mjs";
 
-const configDir = path.dirname(fileURLToPath(import.meta.url));
+const configDir = getConfigDir(import.meta.url);
 
 export default defineConfig(
-  globalIgnores(["dist/**", "node_modules/**", "*.config.*"]),
-
-  {
+  globalIgnores(packageIgnores),
+  createTypeScriptConfig({
     files: ["src/**/*.ts"],
-    extends: [
-      ...tseslint.configs.recommended,
-      ...tseslint.configs.recommendedTypeChecked,
-      ...tseslint.configs.stylisticTypeChecked,
-    ],
-    languageOptions: {
-      globals: {
-        ...globals.node,
-      },
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: configDir,
-      },
+    configDir,
+    globals: {
+      ...globals.node,
     },
-    rules: {
+    extraRules: {
       "@typescript-eslint/prefer-nullish-coalescing": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
-      "@typescript-eslint/no-explicit-any": "warn",
     },
-  }
+  }),
 );

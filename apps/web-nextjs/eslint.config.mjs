@@ -1,146 +1,45 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 import prettier from "eslint-config-prettier/flat";
-import eslintPluginImport from "eslint-plugin-import";
-import eslintPluginPrettier from "eslint-plugin-prettier";
-import tseslint from "typescript-eslint";
+import {
+  appBaseConfig,
+  appIgnores,
+  appTsRules,
+  createTypeScriptConfig,
+  getConfigDir,
+  lintOptionsConfig,
+  withTsconfigRootDir,
+} from "../../configs/eslint/shared.mjs";
 
-const configDir = path.dirname(fileURLToPath(import.meta.url));
+const configDir = getConfigDir(import.meta.url);
 
-/** @typedef {import("eslint").Linter.Config} Config */
-/** @typedef {Config[]} ConfigArray */
-
-/**
- * @param {ConfigArray} configs
- */
-const withTsconfigRootDir = (configs) =>
-  configs.map((config) => {
-    const languageOptions =
-      config.languageOptions && typeof config.languageOptions === "object"
-        ? config.languageOptions
-        : {};
-    const parserOptions =
-      "parserOptions" in languageOptions &&
-      languageOptions.parserOptions &&
-      typeof languageOptions.parserOptions === "object"
-        ? languageOptions.parserOptions
-        : {};
-
-    return {
-      ...config,
-      languageOptions: {
-        ...languageOptions,
-        parserOptions: {
-          ...parserOptions,
-          tsconfigRootDir: configDir,
-        },
-      },
-    };
-  });
-
-const nextConfigs = withTsconfigRootDir(nextCoreWebVitals);
-const nextTypescriptConfigs = withTsconfigRootDir(nextTypescript);
+const nextConfigs = withTsconfigRootDir(nextCoreWebVitals, configDir);
+const nextTypescriptConfigs = withTsconfigRootDir(nextTypescript, configDir);
 
 export default defineConfig(
   ...nextConfigs,
   ...nextTypescriptConfigs,
-  prettier,
   globalIgnores([
     ".next/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
-    "node_modules/**",
-    ".git/**",
+    ...appIgnores,
   ]),
   {
-    files: ["**/*.{js,mjs,cjs,jsx,ts,tsx}"],
-    plugins: {
-      import: eslintPluginImport,
-      prettier: eslintPluginPrettier,
-    },
+    ...appBaseConfig,
     settings: {
       next: {
         rootDir: configDir,
       },
     },
-    rules: {
-      "@typescript-eslint/ban-ts-comment": "off",
-      "import/no-anonymous-default-export": "warn",
-      "import/order": [
-        "warn",
-        {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            "parent",
-            "sibling",
-            "index",
-          ],
-          "newlines-between": "never",
-          alphabetize: {
-            order: "asc",
-            caseInsensitive: true,
-          },
-        },
-      ],
-      "prettier/prettier": "warn",
-    },
   },
-  {
+  createTypeScriptConfig({
     files: ["**/*.{ts,tsx}"],
-    extends: [
-      ...tseslint.configs.recommended,
-      ...tseslint.configs.recommendedTypeChecked,
-      ...tseslint.configs.stylisticTypeChecked,
-    ],
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: configDir,
-      },
-    },
-    rules: {
-      "@typescript-eslint/ban-ts-comment": "off",
-      "@typescript-eslint/triple-slash-reference": "off",
-      "@typescript-eslint/array-type": "off",
-      "@typescript-eslint/consistent-type-definitions": "off",
-      "@typescript-eslint/consistent-type-imports": [
-        "warn",
-        {
-          prefer: "type-imports",
-          fixStyle: "inline-type-imports",
-        },
-      ],
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
-      "@typescript-eslint/require-await": "off",
-      "@typescript-eslint/no-misused-promises": [
-        "error",
-        {
-          checksVoidReturn: {
-            attributes: false,
-          },
-        },
-      ],
-      "@typescript-eslint/prefer-nullish-coalescing": "off",
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unnecessary-condition": "warn",
-    },
-  },
-  {
-    linterOptions: {
-      reportUnusedDisableDirectives: "warn",
-    },
-  },
+    configDir,
+    extraRules: appTsRules,
+  }),
+  prettier,
+  lintOptionsConfig,
 );

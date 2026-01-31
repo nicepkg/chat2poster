@@ -22,7 +22,7 @@
     "dev": "tsup --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b --pretty false",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
@@ -30,10 +30,10 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/node": "^25.1.0",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "@types/node": "catalog:tooling",
+    "tsup": "catalog:tooling",
+    "typescript": "catalog:tooling",
+    "vitest": "catalog:tooling"
   },
   "peerDependencies": {
     "typescript": ">=5.0.0"

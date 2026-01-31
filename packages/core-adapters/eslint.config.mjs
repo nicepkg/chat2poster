@@ -1,33 +1,22 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import tseslint from "typescript-eslint";
 import globals from "globals";
+import { defineConfig, globalIgnores } from "eslint/config";
+import {
+  createTypeScriptConfig,
+  getConfigDir,
+  packageIgnores,
+} from "../../configs/eslint/shared.mjs";
+
+const configDir = getConfigDir(import.meta.url);
 
 export default defineConfig(
-  globalIgnores(["dist/**", "node_modules/**", "*.config.*"]),
-
-  {
+  globalIgnores(packageIgnores),
+  createTypeScriptConfig({
     files: ["src/**/*.ts"],
-    extends: [...tseslint.configs.recommended],
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.browser,
-      },
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
+    configDir,
+    typeChecked: false,
+    globals: {
+      ...globals.node,
+      ...globals.browser,
     },
-    rules: {
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
-      "@typescript-eslint/no-explicit-any": "warn",
-    },
-  }
+  }),
 );

@@ -12,28 +12,45 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
-    "lib": ["dom", "dom.iterable", "ES2022"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2022"
+    ],
     "noEmit": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "preserve",
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "incremental": true,
     "baseUrl": ".",
+    "rootDir": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": [
+        "./src/*"
+      ]
     }
   },
   "include": [
     "next-env.d.ts",
+    "next.config.mjs",
+    ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.cjs",
     "**/*.js",
-    "**/*.d.ts",
-    ".next/types/**/*.ts",
-    "next.config.mjs",
-    "eslint.config.mjs"
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs",
+    "**/*.d.ts"
   ],
-  "exclude": ["node_modules", "build", "out", ".next"]
+  "exclude": [
+    "node_modules",
+    "build",
+    "out",
+    "eslint.config.mjs"
+  ]
 }

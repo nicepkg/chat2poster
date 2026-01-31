@@ -56,7 +56,7 @@
     "dev": "tsup --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b --pretty false",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
@@ -112,12 +112,12 @@
     "html-react-parser": "^5.2.15"
   },
   "devDependencies": {
-    "@types/node": "^25.1.0",
-    "@types/react": "^19.2.10",
-    "@types/react-dom": "^19.2.3",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "@types/node": "catalog:tooling",
+    "@types/react": "catalog:tooling",
+    "@types/react-dom": "catalog:tooling",
+    "tsup": "catalog:tooling",
+    "typescript": "catalog:tooling",
+    "vitest": "catalog:tooling"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

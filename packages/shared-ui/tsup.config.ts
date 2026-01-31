@@ -19,7 +19,11 @@ export default defineConfig({
     "src/themes/index.ts",
   ],
   format: ["esm"],
-  dts: true,
+  dts: {
+    compilerOptions: {
+      composite: false,
+    },
+  },
   clean: true,
   external: [
     "react",
