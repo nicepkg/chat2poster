@@ -36,14 +36,14 @@
 ## 2) 推荐目录结构（示例）
 
 apps/
-  extension-wxt/
+  browser-extension/
     src/
       entrypoints/ (content script + styles)
       components/
       background/
       popup/
       assets/
-  web-nextjs/
+  web/
     src/
       app/ (Next App Router)
       components/

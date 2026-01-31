@@ -52,7 +52,7 @@ type(scope): subject
 
 Common scopes in this project:
 
-- `web` - web-nextjs folder changes
+- `web` - web folder changes
 - `deps` - Dependencies
 
 ### Examples

@@ -78,7 +78,7 @@ importers:
         specifier: catalog:tooling
         version: 8.54.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
-  apps/extension-wxt:
+  apps/browser-extension:
     dependencies:
       '@chat2poster/core-adapters':
         specifier: workspace:*
@@ -136,7 +136,7 @@ importers:
         specifier: ^0.20.13
         version: 0.20.13(@types/node@25.1.0)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)(yaml@2.8.2)
 
-  apps/web-nextjs:
+  apps/web:
     dependencies:
       '@chat2poster/core-adapters':
         specifier: workspace:*

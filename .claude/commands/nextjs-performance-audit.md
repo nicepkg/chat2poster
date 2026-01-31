@@ -579,8 +579,8 @@ on:
     branches:
       - main
     paths:
-      # NOTE: Update this path to match your WEB_DIR (e.g., 'apps/web-nextjs/**')
-      - 'apps/web-nextjs/**'
+      # NOTE: Update this path to match your WEB_DIR (e.g., 'apps/web/**')
+      - 'apps/web/**'
       - '.github/workflows/performance.yml'
 
 env:

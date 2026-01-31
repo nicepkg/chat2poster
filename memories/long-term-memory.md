@@ -39,7 +39,7 @@
 
 ### AD-005: Shared UI Package
 **Decision:** Create @chat2poster/shared-ui for common components
-**Rationale:** Avoid code duplication between web-nextjs and extension-wxt
+**Rationale:** Avoid code duplication between web and browser-extension
 **Structure:** 53 Radix/Shadcn UI components + EditorContext + editor components + utils + hooks
 **Date:** 2026-01-31
 

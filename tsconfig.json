@@ -6,7 +6,7 @@
     { "path": "./packages/core-pagination" },
     { "path": "./packages/core-schema" },
     { "path": "./packages/shared-ui" },
-    { "path": "./apps/extension-wxt" },
-    { "path": "./apps/web-nextjs" }
+    { "path": "./apps/browser-extension" },
+    { "path": "./apps/web" }
   ]
 }

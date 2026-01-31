@@ -21,7 +21,7 @@
 | **T2** | Adapters | `core-adapters` | T1 (interfaces only) |
 | **T3** | Renderer | `shared-ui/components/renderer`, `shared-ui/themes` | T1 (interfaces only) |
 | **T4** | Pagination & Export | `core-pagination`, `core-export` | T1 (interfaces only) |
-| **T5** | Apps & Integration | `extension-wxt`, `web-nextjs`, `shared-ui` | T1 (interfaces only) |
+| **T5** | Apps & Integration | `browser-extension`, `web`, `shared-ui` | T1 (interfaces only) |
 
 ---
 
@@ -414,7 +414,7 @@ packages/core-export/src/export-job-manager.test.ts
 > Can work immediately using mock data and T1 interfaces.
 
 ### T5.1 - Extension Setup ✅
-- [x] Create `apps/extension-wxt/package.json`
+- [x] Create `apps/browser-extension/package.json`
 - [x] Configure WXT for Chrome/Firefox/Edge
 - [x] Setup Shadow DOM injection
 - [x] Configure content script for ChatGPT/Claude/Gemini pages
@@ -422,18 +422,18 @@ packages/core-export/src/export-job-manager.test.ts
 
 **Files created:**
 ```
-apps/extension-wxt/package.json
-apps/extension-wxt/tsconfig.json
-apps/extension-wxt/wxt.config.ts
-apps/extension-wxt/tailwind.config.ts
-apps/extension-wxt/postcss.config.cjs
-apps/extension-wxt/eslint.config.mjs
-apps/extension-wxt/src/entrypoints/content.tsx
-apps/extension-wxt/src/entrypoints/styles/globals.css
-apps/extension-wxt/src/components/App.tsx
-apps/extension-wxt/src/components/FloatingButton.tsx
-apps/extension-wxt/src/components/EditorPanel.tsx
-apps/extension-wxt/public/icon-*.svg
+apps/browser-extension/package.json
+apps/browser-extension/tsconfig.json
+apps/browser-extension/wxt.config.ts
+apps/browser-extension/tailwind.config.ts
+apps/browser-extension/postcss.config.cjs
+apps/browser-extension/eslint.config.mjs
+apps/browser-extension/src/entrypoints/content.tsx
+apps/browser-extension/src/entrypoints/styles/globals.css
+apps/browser-extension/src/components/App.tsx
+apps/browser-extension/src/components/FloatingButton.tsx
+apps/browser-extension/src/components/EditorPanel.tsx
+apps/browser-extension/public/icon-*.svg
 ```
 
 ### T5.2 - Extension Entry Point ✅
@@ -465,7 +465,7 @@ apps/extension-wxt/public/icon-*.svg
 
 **Files created:**
 ```
-apps/extension-wxt/src/contexts/EditorContext.tsx
+apps/browser-extension/src/contexts/EditorContext.tsx
 ```
 
 ### T5.4 - Extension State Management ✅
@@ -475,7 +475,7 @@ apps/extension-wxt/src/contexts/EditorContext.tsx
 - [x] Wire up adapter parsing on panel open (mock data, ready for integration)
 
 ### T5.5 - Web App Setup ✅
-- [x] Create `apps/web-nextjs/package.json`
+- [x] Create `apps/web/package.json`
 - [x] Setup Next.js with App Router
 - [x] Configure Tailwind + PostCSS
 - [x] Create basic layout and navigation
@@ -483,17 +483,17 @@ apps/extension-wxt/src/contexts/EditorContext.tsx
 
 **Files created:**
 ```
-apps/web-nextjs/package.json
-apps/web-nextjs/tsconfig.json
-apps/web-nextjs/next.config.mjs
-apps/web-nextjs/postcss.config.cjs
-apps/web-nextjs/eslint.config.mjs
-apps/web-nextjs/src/app/layout.tsx
-apps/web-nextjs/src/app/globals.css
-apps/web-nextjs/src/app/page.tsx
-apps/web-nextjs/src/app/manual/page.tsx
-apps/web-nextjs/src/app/paste/page.tsx
-apps/web-nextjs/src/app/editor/page.tsx
+apps/web/package.json
+apps/web/tsconfig.json
+apps/web/next.config.mjs
+apps/web/postcss.config.cjs
+apps/web/eslint.config.mjs
+apps/web/src/app/layout.tsx
+apps/web/src/app/globals.css
+apps/web/src/app/page.tsx
+apps/web/src/app/manual/page.tsx
+apps/web/src/app/paste/page.tsx
+apps/web/src/app/editor/page.tsx
 ```
 
 ### T5.6 - Web Import Page ✅
@@ -529,7 +529,7 @@ apps/web-nextjs/src/app/editor/page.tsx
 
 **Files created:**
 ```
-apps/web-nextjs/src/app/api/parse-share-link/route.ts
+apps/web/src/app/api/parse-share-link/route.ts
 ```
 
 ---
@@ -592,8 +592,8 @@ AI-4 owns:
   /packages/core-export/**
 
 AI-5 owns:
-  /apps/extension-wxt/**
-  /apps/web-nextjs/**
+  /apps/browser-extension/**
+  /apps/web/**
   /packages/shared-ui/**
 ```
 
@@ -638,6 +638,6 @@ mkdir -p packages/core-export/src
 ### AI-5 Start Command
 ```bash
 # Create extension and web app
-mkdir -p apps/extension-wxt/src
-mkdir -p apps/web-nextjs/src/app
+mkdir -p apps/browser-extension/src
+mkdir -p apps/web/src/app
 ```

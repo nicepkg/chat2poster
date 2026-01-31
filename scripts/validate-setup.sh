@@ -83,8 +83,8 @@ REQUIRED_FILES=(
   "package.json"
   "LICENSE"
   "CONTRIBUTING.md"
-  "apps/web-nextjs/src/lib/site-info.ts"
-  "apps/web-nextjs/public/icon.svg"
+  "apps/web/src/lib/site-info.ts"
+  "apps/web/public/icon.svg"
   ".github/workflows/ci.yml"
   ".github/workflows/deploy-website.yml"
 )

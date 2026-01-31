@@ -23,8 +23,8 @@
     "mdx"
   ],
   "eslint.workingDirectories": [
-    { "directory": "apps/web-nextjs", "changeProcessCWD": true },
-    { "directory": "apps/extension-wxt", "changeProcessCWD": true },
+    { "directory": "apps/web", "changeProcessCWD": true },
+    { "directory": "apps/browser-extension", "changeProcessCWD": true },
     { "directory": "packages/core-adapters", "changeProcessCWD": true },
     { "directory": "packages/core-export", "changeProcessCWD": true },
     { "directory": "packages/core-pagination", "changeProcessCWD": true },

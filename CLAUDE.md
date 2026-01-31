@@ -819,8 +819,8 @@ chat2poster/
 │   ├── core-export/       # SnapDOM export + ZIP packaging
 │   └── shared-ui/         # Shared UI components (Radix/Shadcn)
 ├── apps/
-│   ├── extension-wxt/     # Browser extension
-│   └── web-nextjs/        # Website
+│   ├── browser-extension/     # Browser extension
+│   └── web/        # Website
 ├── configs/               # Shared configs (eslint, etc.)
 ├── docs/                  # PRD, architecture, specs
 ├── memories/              # Session & long-term memory
@@ -908,7 +908,7 @@ AI-1 (T1): packages/core-schema/**
 AI-2 (T2): packages/core-adapters/**
 AI-3 (T3): packages/shared-ui/src/components/renderer/**, packages/shared-ui/src/themes/**
 AI-4 (T4): packages/core-pagination/**, packages/core-export/**
-AI-5 (T5): apps/extension-wxt/**, apps/web-nextjs/**, packages/shared-ui/**
+AI-5 (T5): apps/browser-extension/**, apps/web/**, packages/shared-ui/**
 ```
 
 ---

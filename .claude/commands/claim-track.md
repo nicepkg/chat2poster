@@ -17,7 +17,7 @@ Claim track **$ARGUMENTS** (T1/T2/T3/T4/T5) and prepare to work on it.
 | T2 | Adapters | `core-adapters` |
 | T3 | Renderer & Themes | `shared-ui/components/renderer`, `shared-ui/themes` |
 | T4 | Pagination & Export | `core-pagination`, `core-export` |
-| T5 | Apps & UI | `extension-wxt`, `web-nextjs`, `shared-ui` |
+| T5 | Apps & UI | `browser-extension`, `web`, `shared-ui` |
 
 ## Execution Flow
 
@@ -85,8 +85,8 @@ mkdir -p packages/core-export/src
 
 **T5:**
 ```bash
-mkdir -p apps/extension-wxt/src
-mkdir -p apps/web-nextjs/src/app
+mkdir -p apps/browser-extension/src
+mkdir -p apps/web/src/app
 ```
 
 ### 6. Report Ready

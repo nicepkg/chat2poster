@@ -54,7 +54,7 @@ Create a GitHub Pull Request following the project's Angular commit convention.
 
 ### Scopes (optional)
 
-- `web` - Changes to the web-nextjs package
+- `web` - Changes to the web package
 - `docs` - Documentation changes
 - `deps` - Dependency updates
 

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="apps/web-nextjs/public/icon.svg" width="120" height="120" />
+<img src="apps/web/public/icon.svg" width="120" height="120" />
 
 # chat2poster
 

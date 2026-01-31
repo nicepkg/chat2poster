@@ -76,7 +76,7 @@ We follow the [Angular Commit Convention](https://github.com/angular/angular/blo
 
 ### Scopes (optional)
 
-- `web` - Changes to the web-nextjs package
+- `web` - Changes to the web package
 - `extension` - Changes to the extension package
 - `docs` - Documentation changes
 - `deps` - Dependency updates

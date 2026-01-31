@@ -5,21 +5,21 @@ on:
     branches:
       - main
     paths:
-      - 'apps/web-nextjs/**'
+      - 'apps/web/**'
       - '.github/workflows/deploy-website.yml'
   pull_request:
     branches:
       - main
     paths:
-      - 'apps/web-nextjs/**'
+      - 'apps/web/**'
   workflow_dispatch:
 
 env:
   # Project Configuration - Update these values for your project
   PROJECT_NAME: 'chat2poster'
   SITE_DOMAIN: 'chat2poster.xiaominglab.com'
-  WEB_DIR: 'apps/web-nextjs'
-  BUILD_OUTPUT_DIR: 'apps/web-nextjs/.next'
+  WEB_DIR: 'apps/web'
+  BUILD_OUTPUT_DIR: 'apps/web/.next'
   BUILD_COMMAND: 'pnpm build:web'
 
   # Node.js Configuration
