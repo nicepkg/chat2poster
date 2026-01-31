@@ -25,6 +25,10 @@ interface ParseResponse {
   };
 }
 
+type RouteContext = {
+  params: Promise<{ locale: string }>;
+};
+
 // Rate limiting - simple in-memory store (for demo purposes)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 10; // requests per minute
@@ -53,6 +57,11 @@ function getClientIp(request: NextRequest): string {
     request.headers.get("x-real-ip") ??
     "unknown"
   );
+}
+
+async function resolveLocale(context: RouteContext): Promise<string> {
+  const params = await context.params;
+  return params.locale;
 }
 
 function validateShareUrl(url: string): {
@@ -102,9 +111,9 @@ function validateShareUrl(url: string): {
 
 export async function POST(
   request: NextRequest,
-  context: { params: { locale: string } },
+  context: RouteContext,
 ): Promise<NextResponse<ParseResponse>> {
-  const { t } = createTranslator(context.params.locale);
+  const { t } = createTranslator(await resolveLocale(context));
   const startTime = Date.now();
   const ip = getClientIp(request);
 
@@ -246,9 +255,9 @@ export async function POST(
 // Health check endpoint
 export async function GET(
   _request: NextRequest,
-  context: { params: { locale: string } },
+  context: RouteContext,
 ): Promise<NextResponse> {
-  const { t } = createTranslator(context.params.locale);
+  const { t } = createTranslator(await resolveLocale(context));
   return NextResponse.json({
     status: "ok",
     supportedProviders: ["chatgpt", "claude", "gemini"],

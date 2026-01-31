@@ -1,4 +1,4 @@
-name: Deploy Web to Cloudflare Pages
+name: Deploy Website to Cloudflare Pages
 
 on:
   push:
@@ -6,25 +6,33 @@ on:
       - main
     paths:
       - 'apps/web/**'
+      - 'packages/**'
+      - 'pnpm-lock.yaml'
       - '.github/workflows/deploy-website.yml'
   pull_request:
     branches:
       - main
     paths:
       - 'apps/web/**'
+      - 'packages/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/deploy-website.yml'
   workflow_dispatch:
+
+concurrency:
+  group: deploy-website-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   # Project Configuration - Update these values for your project
   PROJECT_NAME: 'chat2poster'
   SITE_DOMAIN: 'chat2poster.xiaominglab.com'
-  WEB_DIR: 'apps/web'
-  BUILD_OUTPUT_DIR: 'apps/web/.next'
-  BUILD_COMMAND: 'pnpm build:web'
+  WEBSITE_DIR: 'apps/web'
+  BUILD_OUTPUT_DIR: '.vercel/output/static'
+  BUILD_COMMAND: 'npx @cloudflare/next-on-pages@1'
 
-  # Node.js Configuration
-  NODE_VERSION: '24'
-  PNPM_VERSION: '10'
+  # Comment marker (used to update existing PR comment instead of spamming)
+  PREVIEW_COMMENT_MARKER: '<!-- CF_PAGES_PREVIEW_COMMENT -->'
 
 jobs:
   build:
@@ -35,13 +43,9 @@ jobs:
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          pnpm-version: ${{ env.PNPM_VERSION }}
-          install-dependencies: 'true'
-          setup-cache: 'true'
 
-      - name: Build web
+      - name: Build website
+        working-directory: ${{ env.WEBSITE_DIR }}
         run: ${{ env.BUILD_COMMAND }}
         env:
           NEXT_PUBLIC_SITE_URL: https://${{ env.SITE_DOMAIN }}
@@ -51,8 +55,8 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v6
         with:
-          name: web-build
-          path: ${{ env.BUILD_OUTPUT_DIR }}
+          name: website-build
+          path: ${{ env.WEBSITE_DIR }}/${{ env.BUILD_OUTPUT_DIR }}
           retention-days: 1
 
   deploy:
@@ -69,25 +73,26 @@ jobs:
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          pnpm-version: ${{ env.PNPM_VERSION }}
           install-dependencies: 'false'
           setup-cache: 'false'
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: web-build
-          path: ${{ env.BUILD_OUTPUT_DIR }}
+          name: website-build
+          path: ${{ env.WEBSITE_DIR }}/${{ env.BUILD_OUTPUT_DIR }}
+
+      - name: Install wrangler
+        run: pnpm install -g wrangler
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
+          packageManager: pnpm
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ${{ env.BUILD_OUTPUT_DIR }} --project-name=${{ env.PROJECT_NAME }} --commit-dirty=true
+          command: pages deploy ${{ env.WEBSITE_DIR }}/${{ env.BUILD_OUTPUT_DIR }} --project-name=${{ env.PROJECT_NAME }} --commit-dirty=true
 
-  # Preview deployment for pull requests
   preview:
     runs-on: ubuntu-latest
     needs: build
@@ -96,6 +101,7 @@ jobs:
       contents: read
       deployments: write
       pull-requests: write
+      issues: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -103,32 +109,75 @@ jobs:
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          pnpm-version: ${{ env.PNPM_VERSION }}
           install-dependencies: 'false'
           setup-cache: 'false'
 
       - name: Download build artifact
         uses: actions/download-artifact@v7
         with:
-          name: web-build
-          path: ${{ env.BUILD_OUTPUT_DIR }}
+          name: website-build
+          path: ${{ env.WEBSITE_DIR }}/${{ env.BUILD_OUTPUT_DIR }}
+
+      - name: Install wrangler
+        run: pnpm install -g wrangler
 
       - name: Deploy Preview to Cloudflare Pages
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
+          packageManager: pnpm
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ${{ env.BUILD_OUTPUT_DIR }} --project-name=${{ env.PROJECT_NAME }} --branch=${{ github.head_ref }} --commit-dirty=true
+          command: pages deploy ${{ env.WEBSITE_DIR }}/${{ env.BUILD_OUTPUT_DIR }} --project-name=${{ env.PROJECT_NAME }} --branch=${{ github.head_ref }} --commit-dirty=true
 
-      - name: Comment PR with preview URL
+      - name: Upsert PR comment with preview URL (no spam)
         uses: actions/github-script@v8
+        env:
+          MARKER: ${{ env.PREVIEW_COMMENT_MARKER }}
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+          # If your wrangler-action provides it, you can switch to this:
+          # ALIAS_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## 🚀 Preview Deployment Ready!\n\nPreview URL: ${{ steps.deploy.outputs.deployment-url }}\n\nThis preview will be available until the PR is closed.`
-            })
+            const marker = process.env.MARKER;
+            const url = process.env.DEPLOYMENT_URL;
+
+            const body = `${marker}
+            ## 🚀 Preview Deployment Ready!
+
+            Preview URL: ${url}
+
+            - Branch: \`${context.payload.pull_request.head.ref}\`
+            - Commit: \`${context.sha}\`
+
+            (This comment will be updated on new pushes.)
+            `;
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+
+            // List recent comments and find the one with our marker
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+
+            const existing = comments.find(c => (c.body || '').includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body,
+              });
+            }

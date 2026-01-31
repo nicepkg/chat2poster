@@ -20,17 +20,21 @@ function normalizeMdxPath(mdxPath?: string[] | string) {
 
 export async function generateStaticParams() {
   const params = await baseGenerateStaticParams();
-  return params.map((param) => ({
-    locale: param.locale as string,
-    mdxPath: (() => {
-      const normalized = normalizeMdxPath(
-        param.mdxPath as string[] | string | undefined,
-      );
-      return normalized[0] === DOCS_BASE_SEGMENT
-        ? normalized.slice(1)
-        : normalized;
-    })(),
-  }));
+  return params
+    .filter(
+      (param) => typeof param.locale === "string" && param.locale.length > 0,
+    )
+    .map((param) => ({
+      locale: param.locale as string,
+      mdxPath: (() => {
+        const normalized = normalizeMdxPath(
+          param.mdxPath as string[] | string | undefined,
+        );
+        return normalized[0] === DOCS_BASE_SEGMENT
+          ? normalized.slice(1)
+          : normalized;
+      })(),
+    }));
 }
 
 export async function generateMetadata(props: PageProps) {
