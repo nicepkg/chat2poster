@@ -47,9 +47,14 @@ export function stripLocaleFromPath(pathname: string): string {
 export function getLocaleFromNavigator(
   languages?: readonly string[] | string,
 ): Locale {
-  const list = Array.isArray(languages)
-    ? languages
-    : [languages ?? ""];
+  const isStringArray = (value: unknown): value is readonly string[] => {
+    if (!Array.isArray(value)) return false;
+    return (value as unknown[]).every((item) => typeof item === "string");
+  };
+
+  const list: string[] = isStringArray(languages)
+    ? [...languages]
+    : [typeof languages === "string" ? languages : ""];
   return list.some((lang) => lang.toLowerCase().startsWith("zh")) ? "zh" : "en";
 }
 
