@@ -1,7 +1,9 @@
 import { useState, useCallback } from "react";
-import { EditorProvider } from "@/contexts/EditorContext";
-import FloatingButton from "./FloatingButton";
-import EditorPanel from "./EditorPanel";
+import {
+  EditorProvider,
+  FloatingButton,
+  EditorPanel,
+} from "@chat2poster/shared-ui";
 
 export default function App() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);

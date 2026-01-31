@@ -1,3 +1,10 @@
+import {
+  cn,
+  GitHubIcon,
+  BilibiliIcon,
+  DouyinIcon,
+  XIcon,
+} from "@chat2poster/shared-ui";
 import Link from "next/link";
 import {
   siteConfig,
@@ -5,8 +12,6 @@ import {
   footerConfig,
   authorConfig,
 } from "~/lib/site-info";
-import { cn } from "~/lib/utils";
-import { GitHubIcon, BilibiliIcon, DouyinIcon, XIcon } from "./social-icons";
 
 const socialIconMap = {
   github: GitHubIcon,

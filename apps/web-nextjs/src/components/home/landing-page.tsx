@@ -1,5 +1,6 @@
 "use client";
 
+import { Button, cn } from "@chat2poster/shared-ui";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -15,9 +16,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Button } from "~/components/ui/button";
 import { githubConfig } from "~/lib/site-info";
-import { cn } from "~/lib/utils";
 
 const Hero3D = dynamic(() => import("./hero-3d").then((mod) => mod.Hero3D), {
   ssr: false,

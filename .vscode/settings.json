@@ -31,6 +31,7 @@
     { "directory": "packages/core-renderer", "changeProcessCWD": true },
     { "directory": "packages/core-schema", "changeProcessCWD": true },
     { "directory": "packages/shared-utils", "changeProcessCWD": true },
+    { "directory": "packages/shared-ui", "changeProcessCWD": true },
     { "directory": "packages/themes", "changeProcessCWD": true }
   ],
   "eslint.probe": [
