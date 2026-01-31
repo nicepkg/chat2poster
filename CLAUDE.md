@@ -815,10 +815,8 @@ chat2poster/
 ├── packages/
 │   ├── core-schema/       # Types + Zod validators
 │   ├── core-adapters/     # Parsing adapters (ChatGPT/Claude/Gemini)
-│   ├── shared-ui/         # Shared UI + renderer components
 │   ├── core-pagination/   # Height estimation + page splitting
 │   ├── core-export/       # SnapDOM export + ZIP packaging
-│   ├── themes/            # Preset themes (light/dark/custom)
 │   └── shared-ui/         # Shared UI components (Radix/Shadcn)
 ├── apps/
 │   ├── extension-wxt/     # Browser extension
