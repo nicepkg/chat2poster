@@ -52,4 +52,4 @@ runs:
     - name: Install dependencies
       if: inputs.install-dependencies == 'true'
       shell: bash
-      run: pnpm install --frozen-lockfile
+      run: pnpm install --frozen-lockfile && pnpm run build:packages
