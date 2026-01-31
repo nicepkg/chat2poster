@@ -1,4 +1,8 @@
 import { defineConfig } from "tsup";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const { TsconfigPathsPlugin } = require("@esbuild-plugins/tsconfig-paths");
 import { copyFileSync, existsSync, mkdirSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
@@ -14,7 +18,8 @@ export default defineConfig({
     "!src/**/*.stories.*",
   ],
   format: ["esm"],
-  bundle: false,
+  bundle: true,
+  tsconfig: "tsconfig.json",
   dts: {
     compilerOptions: {
       composite: false,
@@ -38,6 +43,7 @@ export default defineConfig({
   esbuildOptions(options) {
     options.jsx = "automatic";
   },
+  esbuildPlugins: [TsconfigPathsPlugin({ tsconfig: "tsconfig.json" })],
   async onSuccess() {
     // Copy CSS files to dist
     const cssFiles = [

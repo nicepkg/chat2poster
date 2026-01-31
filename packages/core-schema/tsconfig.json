@@ -5,9 +5,6 @@
     "rootDir": ".",
     "outDir": "./dist",
     "baseUrl": ".",
-    "paths": {
-      "~/*": ["./src/*"]
-    },
     "noEmit": false,
     "emitDeclarationOnly": true
   },
