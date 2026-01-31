@@ -65,6 +65,7 @@ jobs:
           path: |
             ${{ env.WEBSITE_DIR }}/.open-next/
             ${{ env.WEBSITE_DIR }}/wrangler.jsonc
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 1
 
