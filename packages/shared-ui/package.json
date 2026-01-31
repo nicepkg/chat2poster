@@ -40,6 +40,10 @@
       "types": "./dist/utils/index.d.ts",
       "import": "./dist/utils/index.js"
     },
+    "./themes": {
+      "types": "./dist/themes/index.d.ts",
+      "import": "./dist/themes/index.js"
+    },
     "./styles/globals.css": "./src/styles/globals.css",
     "./styles/renderer.css": "./src/styles/renderer.css"
   },
@@ -58,7 +62,6 @@
   },
   "dependencies": {
     "@chat2poster/core-schema": "workspace:*",
-    "@chat2poster/themes": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",

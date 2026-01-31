@@ -1,7 +1,5 @@
 /**
- * @chat2poster/themes
- *
- * Theme presets and utilities for chat2poster.
+ * Theme presets and utilities
  */
 
 // Presets

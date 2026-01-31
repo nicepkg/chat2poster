@@ -2,8 +2,8 @@
 
 import { memo, useRef, useEffect, useState } from "react";
 import type { Message, Selection, Decoration } from "@chat2poster/core-schema";
-import type { Theme } from "@chat2poster/themes";
-import { cssVar } from "@chat2poster/themes";
+import type { Theme } from "~/themes";
+import { cssVar } from "~/themes";
 import { CanvasContainer } from "./CanvasContainer";
 import { ConversationView } from "./ConversationView";
 import { PageIndicator } from "./PageIndicator";

@@ -5,9 +5,7 @@
     { "path": "./packages/core-export" },
     { "path": "./packages/core-pagination" },
     { "path": "./packages/core-schema" },
-    { "path": "./packages/shared-utils" },
     { "path": "./packages/shared-ui" },
-    { "path": "./packages/themes" },
     { "path": "./apps/extension-wxt" },
     { "path": "./apps/web-nextjs" }
   ]

@@ -2,7 +2,7 @@
 
 import { memo, useState, useEffect, useCallback } from "react";
 import { highlightCode } from "~/utils/shiki";
-import { cssVar } from "@chat2poster/themes";
+import { cssVar } from "~/themes";
 import type { BundledTheme } from "shiki";
 
 export interface CodeBlockProps {

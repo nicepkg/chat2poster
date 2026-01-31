@@ -10,21 +10,6 @@ export function formatFileSize(bytes: number): string {
 }
 
 /**
- * Generate a unique filename for export
- */
-export function generateExportFilename(
-  prefix = "chat2poster",
-  extension = "png",
-  pageNumber?: number,
-): string {
-  const date = new Date().toISOString().slice(0, 10);
-  const time = new Date().toTimeString().slice(0, 5).replace(":", "");
-  const page =
-    pageNumber !== undefined ? `_${String(pageNumber).padStart(3, "0")}` : "";
-  return `${prefix}_${date}_${time}${page}.${extension}`;
-}
-
-/**
  * Truncate text with ellipsis
  */
 export function truncate(text: string, maxLength: number): string {

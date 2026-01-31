@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { cssVar } from "@chat2poster/themes";
+import { cssVar } from "~/themes";
 
 export interface RendererMacOSBarProps {
   /** Title to display in the center (optional) */

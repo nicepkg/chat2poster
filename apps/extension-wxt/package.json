@@ -23,8 +23,6 @@
     "@chat2poster/core-pagination": "workspace:*",
     "@chat2poster/core-schema": "workspace:*",
     "@chat2poster/shared-ui": "workspace:*",
-    "@chat2poster/shared-utils": "workspace:*",
-    "@chat2poster/themes": "workspace:*",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

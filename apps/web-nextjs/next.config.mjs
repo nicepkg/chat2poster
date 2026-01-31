@@ -39,9 +39,7 @@ const config = {
     "@chat2poster/core-adapters",
     "@chat2poster/core-pagination",
     "@chat2poster/core-export",
-    "@chat2poster/shared-utils",
     "@chat2poster/shared-ui",
-    "@chat2poster/themes",
   ],
 
   i18n: {

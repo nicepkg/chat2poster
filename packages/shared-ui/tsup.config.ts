@@ -16,6 +16,7 @@ export default defineConfig({
     "src/hooks/index.ts",
     "src/lib/utils.ts",
     "src/utils/index.ts",
+    "src/themes/index.ts",
   ],
   format: ["esm"],
   dts: true,

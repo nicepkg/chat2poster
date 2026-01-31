@@ -50,12 +50,6 @@ importers:
       '@chat2poster/shared-ui':
         specifier: workspace:*
         version: link:../../packages/shared-ui
-      '@chat2poster/shared-utils':
-        specifier: workspace:*
-        version: link:../../packages/shared-utils
-      '@chat2poster/themes':
-        specifier: workspace:*
-        version: link:../../packages/themes
       react:
         specifier: ^19.1.0
         version: 19.2.3
@@ -114,12 +108,6 @@ importers:
       '@chat2poster/shared-ui':
         specifier: workspace:*
         version: link:../../packages/shared-ui
-      '@chat2poster/shared-utils':
-        specifier: workspace:*
-        version: link:../../packages/shared-utils
-      '@chat2poster/themes':
-        specifier: workspace:*
-        version: link:../../packages/themes
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.1(react@19.2.3))
@@ -464,9 +452,6 @@ importers:
       '@chat2poster/core-schema':
         specifier: workspace:*
         version: link:../core-schema
-      '@chat2poster/themes':
-        specifier: workspace:*
-        version: link:../themes
       '@radix-ui/react-accordion':
         specifier: ^1.2.12
         version: 1.2.12(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -627,40 +612,6 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.9)
-      tsup:
-        specifier: ^8.5.0
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.9)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(yaml@2.8.2)
-
-  packages/shared-utils:
-    devDependencies:
-      '@types/node':
-        specifier: ^24.0.10
-        version: 24.10.9
-      tsup:
-        specifier: ^8.5.0
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.9)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(yaml@2.8.2)
-
-  packages/themes:
-    dependencies:
-      '@chat2poster/core-schema':
-        specifier: workspace:*
-        version: link:../core-schema
-    devDependencies:
-      '@types/node':
-        specifier: ^24.0.10
-        version: 24.10.9
       tsup:
         specifier: ^8.5.0
         version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)

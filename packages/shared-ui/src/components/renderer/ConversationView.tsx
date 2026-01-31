@@ -2,8 +2,8 @@
 
 import { memo, useMemo } from "react";
 import type { Message, Selection, PageBreak } from "@chat2poster/core-schema";
-import type { Theme } from "@chat2poster/themes";
-import { cssVar } from "@chat2poster/themes";
+import type { Theme } from "~/themes";
+import { cssVar } from "~/themes";
 import { MessageItem } from "./MessageItem";
 import { ConversationHeader } from "./ConversationHeader";
 import { PageBreakIndicator } from "./PageBreakIndicator";

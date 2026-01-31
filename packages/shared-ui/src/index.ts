@@ -12,3 +12,6 @@ export * from "./hooks";
 
 // Utils (all utilities consolidated in src/utils/)
 export * from "./utils";
+
+// Themes
+export * from "./themes";

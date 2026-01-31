@@ -29,9 +29,7 @@
     { "directory": "packages/core-export", "changeProcessCWD": true },
     { "directory": "packages/core-pagination", "changeProcessCWD": true },
     { "directory": "packages/core-schema", "changeProcessCWD": true },
-    { "directory": "packages/shared-utils", "changeProcessCWD": true },
-    { "directory": "packages/shared-ui", "changeProcessCWD": true },
-    { "directory": "packages/themes", "changeProcessCWD": true }
+    { "directory": "packages/shared-ui", "changeProcessCWD": true }
   ],
   "eslint.probe": [
     "javascript",
