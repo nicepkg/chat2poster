@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 import type { MessageRole } from "@chat2poster/core-schema";
 import { cssVar } from "@chat2poster/themes";

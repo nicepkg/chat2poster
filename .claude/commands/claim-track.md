@@ -15,7 +15,7 @@ Claim track **$ARGUMENTS** (T1/T2/T3/T4/T5) and prepare to work on it.
 |-------|-------|----------|
 | T1 | Infrastructure & Schema | `core-schema`, `shared-utils` |
 | T2 | Adapters | `core-adapters` |
-| T3 | Renderer | `core-renderer`, `themes` |
+| T3 | Renderer | `shared-ui/components/renderer`, `themes` |
 | T4 | Pagination & Export | `core-pagination`, `core-export` |
 | T5 | Apps & UI | `extension-wxt`, `web-nextjs` |
 
@@ -74,7 +74,7 @@ mkdir -p packages/core-adapters/src/adapters
 
 **T3:**
 ```bash
-mkdir -p packages/core-renderer/src/components
+mkdir -p packages/shared-ui/src/components/renderer
 mkdir -p packages/themes/src/presets
 ```
 

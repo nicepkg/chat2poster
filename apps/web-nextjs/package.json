@@ -15,7 +15,6 @@
     "@chat2poster/core-adapters": "workspace:*",
     "@chat2poster/core-export": "workspace:*",
     "@chat2poster/core-pagination": "workspace:*",
-    "@chat2poster/core-renderer": "workspace:*",
     "@chat2poster/core-schema": "workspace:*",
     "@chat2poster/shared-ui": "workspace:*",
     "@chat2poster/shared-utils": "workspace:*",

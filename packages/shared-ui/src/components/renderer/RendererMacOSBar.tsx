@@ -1,7 +1,9 @@
+"use client";
+
 import { memo } from "react";
 import { cssVar } from "@chat2poster/themes";
 
-export interface MacOSBarProps {
+export interface RendererMacOSBarProps {
   /** Title to display in the center (optional) */
   title?: string;
   /** Show traffic light buttons */
@@ -12,12 +14,13 @@ export interface MacOSBarProps {
 
 /**
  * macOS-style window title bar with traffic light buttons
+ * For use in the renderer context (export images)
  */
-export const MacOSBar = memo(function MacOSBar({
+export const RendererMacOSBar = memo(function RendererMacOSBar({
   title,
   showButtons = true,
   backgroundColor,
-}: MacOSBarProps) {
+}: RendererMacOSBarProps) {
   const containerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",

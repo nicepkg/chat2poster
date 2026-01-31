@@ -1,13 +1,31 @@
 "use client";
 
 import * as React from "react";
+import { motion } from "framer-motion";
+import { Monitor } from "lucide-react";
 import type { Decoration, Theme } from "@chat2poster/core-schema";
 import { cn } from "../../lib/utils";
-import { THEME_PRESETS, BACKGROUND_PRESETS } from "../../contexts/EditorContext";
+import { Label } from "../ui/label";
+import { Slider } from "../ui/slider";
+import { Switch } from "../ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import {
+  BackgroundPicker,
+  DEFAULT_BACKGROUND_PRESETS,
+  type BackgroundPreset,
+} from "./BackgroundPicker";
 
 export interface ThemeTabProps {
   selectedThemeId: string;
   decoration: Decoration;
+  themes?: Theme[];
+  backgroundPresets?: BackgroundPreset[];
   onThemeChange: (theme: Theme) => void;
   onDecorationChange: (decoration: Partial<Decoration>) => void;
   className?: string;
@@ -16,157 +34,141 @@ export interface ThemeTabProps {
 export function ThemeTab({
   selectedThemeId,
   decoration,
+  themes = [],
+  backgroundPresets = DEFAULT_BACKGROUND_PRESETS,
   onThemeChange,
   onDecorationChange,
   className,
 }: ThemeTabProps) {
   return (
-    <div className={cn("space-y-5 p-4", className)}>
-      {/* Theme Selector */}
-      <div>
-        <label className="mb-2 block text-sm font-medium text-foreground">
-          Theme
-        </label>
-        <div className="grid grid-cols-3 gap-2">
-          {THEME_PRESETS.map((theme) => (
-            <button
-              key={theme.id}
-              onClick={() => onThemeChange(theme)}
-              className={cn(
-                "rounded-lg border-2 p-2 text-center text-xs font-medium transition-colors",
-                selectedThemeId === theme.id
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border text-muted-foreground hover:border-border/80"
-              )}
-            >
-              <div
-                className="mb-1.5 h-6 w-full rounded"
-                style={{
-                  background:
-                    theme.decorationDefaults.backgroundType === "gradient"
-                      ? theme.decorationDefaults.backgroundValue
-                      : theme.decorationDefaults.backgroundValue,
-                }}
-              />
-              {theme.name}
-            </button>
-          ))}
+    <div className={cn("space-y-6 p-4", className)}>
+      {/* Theme Selector (if themes provided) */}
+      {themes.length > 0 && (
+        <div className="space-y-3">
+          <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+            Theme
+          </Label>
+          <div className="grid grid-cols-3 gap-2">
+            {themes.map((theme) => (
+              <motion.button
+                key={theme.id}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => onThemeChange(theme)}
+                className={cn(
+                  "rounded-lg border-2 p-2 text-center text-xs font-medium transition-all",
+                  selectedThemeId === theme.id
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border text-muted-foreground hover:border-border/80",
+                )}
+              >
+                <div
+                  className="mb-1.5 h-6 w-full rounded"
+                  style={{
+                    background: theme.decorationDefaults.backgroundValue,
+                  }}
+                />
+                {theme.name}
+              </motion.button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Background Picker */}
-      <div>
-        <label className="mb-2 block text-sm font-medium text-foreground">
-          Background
-        </label>
-        <div className="grid grid-cols-3 gap-2">
-          {BACKGROUND_PRESETS.map((bg) => (
-            <button
-              key={bg.id}
-              onClick={() =>
-                onDecorationChange({
-                  backgroundType: bg.type,
-                  backgroundValue: bg.value,
-                })
-              }
-              className={cn(
-                "rounded-lg border-2 p-1.5 transition-colors",
-                decoration.backgroundValue === bg.value
-                  ? "border-primary"
-                  : "border-border hover:border-border/80"
-              )}
-              title={bg.label}
-            >
-              <div
-                className="h-6 w-full rounded"
-                style={{ background: bg.value }}
-              />
-            </button>
-          ))}
-        </div>
-      </div>
+      <BackgroundPicker
+        value={decoration.backgroundValue}
+        onChange={(value, type) =>
+          onDecorationChange({
+            backgroundType: type,
+            backgroundValue: value,
+          })
+        }
+        presets={backgroundPresets}
+      />
 
       {/* Border Radius */}
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-foreground">
-          Border Radius
-        </label>
-        <input
-          type="range"
-          min="0"
-          max="32"
-          value={decoration.canvasRadiusPx}
-          onChange={(e) =>
-            onDecorationChange({ canvasRadiusPx: Number(e.target.value) })
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+            Border Radius
+          </Label>
+          <span className="text-muted-foreground text-xs">
+            {decoration.canvasRadiusPx}px
+          </span>
+        </div>
+        <Slider
+          value={[decoration.canvasRadiusPx]}
+          min={0}
+          max={32}
+          step={2}
+          onValueChange={(values) =>
+            onDecorationChange({
+              canvasRadiusPx: values[0] ?? decoration.canvasRadiusPx,
+            })
           }
-          className="w-full"
         />
-        <span className="text-xs text-muted-foreground">
-          {decoration.canvasRadiusPx}px
-        </span>
       </div>
 
       {/* Padding */}
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-foreground">
-          Padding
-        </label>
-        <input
-          type="range"
-          min="0"
-          max="64"
-          value={decoration.canvasPaddingPx}
-          onChange={(e) =>
-            onDecorationChange({ canvasPaddingPx: Number(e.target.value) })
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+            Padding
+          </Label>
+          <span className="text-muted-foreground text-xs">
+            {decoration.canvasPaddingPx}px
+          </span>
+        </div>
+        <Slider
+          value={[decoration.canvasPaddingPx]}
+          min={0}
+          max={64}
+          step={4}
+          onValueChange={(values) =>
+            onDecorationChange({
+              canvasPaddingPx: values[0] ?? decoration.canvasPaddingPx,
+            })
           }
-          className="w-full"
         />
-        <span className="text-xs text-muted-foreground">
-          {decoration.canvasPaddingPx}px
-        </span>
       </div>
 
       {/* Shadow */}
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-foreground">
+      <div className="space-y-3">
+        <Label className="text-muted-foreground text-xs uppercase tracking-wide">
           Shadow
-        </label>
-        <select
+        </Label>
+        <Select
           value={decoration.shadowLevel}
-          onChange={(e) =>
-            onDecorationChange({
-              shadowLevel: e.target.value as Decoration["shadowLevel"],
-            })
+          onValueChange={(value: Decoration["shadowLevel"]) =>
+            onDecorationChange({ shadowLevel: value })
           }
-          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
         >
-          <option value="none">None</option>
-          <option value="sm">Small</option>
-          <option value="md">Medium</option>
-          <option value="lg">Large</option>
-          <option value="xl">Extra Large</option>
-        </select>
+          <SelectTrigger className="h-9">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">None</SelectItem>
+            <SelectItem value="sm">Small</SelectItem>
+            <SelectItem value="md">Medium</SelectItem>
+            <SelectItem value="lg">Large</SelectItem>
+            <SelectItem value="xl">Extra Large</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* macOS Bar Toggle */}
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-foreground">macOS Bar</label>
-        <button
-          onClick={() =>
-            onDecorationChange({ macosBarEnabled: !decoration.macosBarEnabled })
+        <div className="flex items-center gap-2">
+          <Monitor className="text-muted-foreground h-4 w-4" />
+          <Label className="text-sm">macOS Bar</Label>
+        </div>
+        <Switch
+          checked={decoration.macosBarEnabled}
+          onCheckedChange={(checked) =>
+            onDecorationChange({ macosBarEnabled: checked })
           }
-          className={cn(
-            "relative h-6 w-11 rounded-full transition-colors",
-            decoration.macosBarEnabled ? "bg-primary" : "bg-muted"
-          )}
-        >
-          <span
-            className={cn(
-              "absolute top-0.5 h-5 w-5 rounded-full bg-background shadow transition-transform",
-              decoration.macosBarEnabled ? "left-5" : "left-0.5"
-            )}
-          />
-        </button>
+        />
       </div>
     </div>
   );

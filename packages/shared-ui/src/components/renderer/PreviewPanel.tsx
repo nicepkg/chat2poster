@@ -1,3 +1,5 @@
+"use client";
+
 import { memo, useRef, useEffect, useState } from "react";
 import type { Message, Selection, Decoration } from "@chat2poster/core-schema";
 import type { Theme } from "@chat2poster/themes";

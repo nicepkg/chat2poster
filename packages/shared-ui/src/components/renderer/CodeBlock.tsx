@@ -1,5 +1,7 @@
+"use client";
+
 import { memo, useState, useEffect, useCallback } from "react";
-import { highlightCode } from "../utils/shiki";
+import { highlightCode } from "../../utils/shiki";
 import { cssVar } from "@chat2poster/themes";
 import type { BundledTheme } from "shiki";
 

@@ -1,9 +1,11 @@
-import { memo, useMemo, useEffect, useState } from "react";
+"use client";
+
+import { memo, useMemo, useEffect, useState, useCallback } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import type { BundledTheme } from "shiki";
-import { highlightCode } from "../utils/shiki";
+import { highlightCode } from "../../utils/shiki";
 import { MermaidBlock } from "./MermaidBlock";
 
 export interface MarkdownRendererProps {
@@ -183,7 +185,7 @@ const ShikiCodeBlock = memo(function ShikiCodeBlock({
     };
   }, [code, language, theme]);
 
-  const handleCopy = async () => {
+  const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(code);
       setCopied(true);
@@ -201,7 +203,7 @@ const ShikiCodeBlock = memo(function ShikiCodeBlock({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-  };
+  }, [code]);
 
   return (
     <div className="c2p-code-block">

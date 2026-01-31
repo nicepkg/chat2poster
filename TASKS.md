@@ -19,7 +19,7 @@
 |-------|------------|---------------|--------------|
 | **T1** | Infrastructure & Schema | `monorepo`, `core-schema` | None |
 | **T2** | Adapters | `core-adapters` | T1 (interfaces only) |
-| **T3** | Renderer | `core-renderer`, `themes` | T1 (interfaces only) |
+| **T3** | Renderer | `shared-ui/components/renderer`, `themes` | T1 (interfaces only) |
 | **T4** | Pagination & Export | `core-pagination`, `core-export` | T1 (interfaces only) |
 | **T5** | Apps & Integration | `extension-wxt`, `web-nextjs`, `shared-ui` | T1 (interfaces only) |
 
@@ -204,6 +204,8 @@ packages/core-adapters/src/__tests__/share-link-adapters.test.ts
 
 > Rendering layer. React components for displaying conversations.
 > Can work immediately using T1 interfaces as stubs.
+>
+> **Note:** `core-renderer` has been merged into `shared-ui/components/renderer` for better code reuse between web and extension apps.
 
 ### T3.1 - Theme System ✅
 - [x] Create `packages/themes/package.json`

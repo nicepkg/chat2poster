@@ -1,3 +1,5 @@
+"use client";
+
 import { memo, forwardRef } from "react";
 import type { Decoration } from "@chat2poster/core-schema";
 import type { Theme } from "@chat2poster/themes";

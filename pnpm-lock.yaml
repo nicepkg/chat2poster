@@ -44,9 +44,6 @@ importers:
       '@chat2poster/core-pagination':
         specifier: workspace:*
         version: link:../../packages/core-pagination
-      '@chat2poster/core-renderer':
-        specifier: workspace:*
-        version: link:../../packages/core-renderer
       '@chat2poster/core-schema':
         specifier: workspace:*
         version: link:../../packages/core-schema
@@ -111,9 +108,6 @@ importers:
       '@chat2poster/core-pagination':
         specifier: workspace:*
         version: link:../../packages/core-pagination
-      '@chat2poster/core-renderer':
-        specifier: workspace:*
-        version: link:../../packages/core-renderer
       '@chat2poster/core-schema':
         specifier: workspace:*
         version: link:../../packages/core-schema
@@ -446,52 +440,6 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.9)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(yaml@2.8.2)
 
-  packages/core-renderer:
-    dependencies:
-      '@chat2poster/core-schema':
-        specifier: workspace:*
-        version: link:../core-schema
-      '@chat2poster/themes':
-        specifier: workspace:*
-        version: link:../themes
-      html-react-parser:
-        specifier: ^5.2.14
-        version: 5.2.14(@types/react@19.2.9)(react@19.2.3)
-      mermaid:
-        specifier: ^11.12.2
-        version: 11.12.2
-      react:
-        specifier: ^19.1.0
-        version: 19.2.3
-      react-markdown:
-        specifier: ^10.1.0
-        version: 10.1.0(@types/react@19.2.9)(react@19.2.3)
-      rehype-raw:
-        specifier: ^7.0.0
-        version: 7.0.0
-      remark-gfm:
-        specifier: ^4.0.1
-        version: 4.0.1
-      shiki:
-        specifier: ^3.7.0
-        version: 3.21.0
-    devDependencies:
-      '@types/node':
-        specifier: ^24.0.10
-        version: 24.10.9
-      '@types/react':
-        specifier: ^19.1.8
-        version: 19.2.9
-      tsup:
-        specifier: ^8.5.0
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.9)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(yaml@2.8.2)
-
   packages/core-schema:
     dependencies:
       zod:
@@ -612,12 +560,21 @@ importers:
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.2.3)
+      framer-motion:
+        specifier: ^12.20.2
+        version: 12.29.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      html-react-parser:
+        specifier: ^5.2.14
+        version: 5.2.14(@types/react@19.2.9)(react@19.2.3)
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@19.2.3)
+      mermaid:
+        specifier: ^11.12.2
+        version: 11.12.2
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -633,12 +590,24 @@ importers:
       react-hook-form:
         specifier: ^7.71.1
         version: 7.71.1(react@19.2.3)
+      react-markdown:
+        specifier: ^10.1.0
+        version: 10.1.0(@types/react@19.2.9)(react@19.2.3)
       react-resizable-panels:
         specifier: ^4.4.1
         version: 4.4.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       recharts:
         specifier: 2.15.4
         version: 2.15.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      rehype-raw:
+        specifier: ^7.0.0
+        version: 7.0.0
+      remark-gfm:
+        specifier: ^4.0.1
+        version: 4.0.1
+      shiki:
+        specifier: ^3.7.0
+        version: 3.21.0
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)

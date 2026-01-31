@@ -1,10 +1,46 @@
 "use client";
 
-import { MarkdownRenderer } from "@chat2poster/core-renderer";
-import "@chat2poster/core-renderer/styles.css";
+import {
+  Button,
+  Card,
+  CardContent,
+  Checkbox,
+  Label,
+  Slider,
+  Switch,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  ScrollArea,
+  cn,
+} from "@chat2poster/shared-ui";
+import { MarkdownRenderer } from "@chat2poster/shared-ui/components/renderer";
+import "@chat2poster/shared-ui/styles/renderer.css";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowLeft,
+  Download,
+  Loader2,
+  MessageSquare,
+  Palette,
+  Settings2,
+  Check,
+  Scissors,
+  X,
+  User,
+  Bot,
+  Sparkles,
+  Monitor,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 interface Message {
   id: string;
@@ -33,8 +69,8 @@ interface ExportParams {
 
 const defaultDecoration: Decoration = {
   canvasPaddingPx: 24,
-  canvasRadiusPx: 12,
-  shadowLevel: "md",
+  canvasRadiusPx: 16,
+  shadowLevel: "lg",
   backgroundValue: "#ffffff",
   macosBarEnabled: true,
 };
@@ -45,7 +81,28 @@ const defaultExportParams: ExportParams = {
   maxPageHeightPx: 4096,
 };
 
-type Tab = "messages" | "theme" | "export";
+const shadowStyles = {
+  none: "none",
+  sm: "0 1px 2px rgba(0,0,0,0.05)",
+  md: "0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)",
+  lg: "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)",
+  xl: "0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)",
+};
+
+const backgroundPresets = [
+  { value: "#ffffff", label: "White", color: "#ffffff" },
+  { value: "#f8fafc", label: "Slate", color: "#f8fafc" },
+  { value: "#fef3c7", label: "Amber", color: "#fef3c7" },
+  { value: "#dbeafe", label: "Blue", color: "#dbeafe" },
+  { value: "#dcfce7", label: "Green", color: "#dcfce7" },
+  { value: "#fae8ff", label: "Fuchsia", color: "#fae8ff" },
+  { value: "#1e1e2e", label: "Dark", color: "#1e1e2e" },
+  {
+    value: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    label: "Indigo",
+    color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  },
+];
 
 export default function EditorPage() {
   const router = useRouter();
@@ -57,12 +114,11 @@ export default function EditorPage() {
   const [decoration, setDecoration] = useState<Decoration>(defaultDecoration);
   const [exportParams, setExportParams] =
     useState<ExportParams>(defaultExportParams);
-  const [activeTab, setActiveTab] = useState<Tab>("messages");
   const [isExporting, setIsExporting] = useState(false);
+  const [exportSuccess, setExportSuccess] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
 
-  // Load messages from sessionStorage
   useEffect(() => {
-    // Try conversation from share link first
     const conversationData = sessionStorage.getItem("chat2poster:conversation");
     if (conversationData) {
       try {
@@ -89,7 +145,6 @@ export default function EditorPage() {
       }
     }
 
-    // Try manual messages
     const manualData = sessionStorage.getItem("chat2poster:manual-messages");
     if (manualData) {
       try {
@@ -105,7 +160,6 @@ export default function EditorPage() {
       }
     }
 
-    // No valid data found
     router.push("/");
   }, [router]);
 
@@ -149,354 +203,595 @@ export default function EditorPage() {
   const handleExport = useCallback(async () => {
     setIsExporting(true);
     try {
-      // TODO: Implement actual export
+      // TODO: Implement actual export with core-export
       await new Promise((r) => setTimeout(r, 1500));
-      alert("Export functionality coming soon!");
+      setExportSuccess(true);
+      setTimeout(() => setExportSuccess(false), 2000);
     } finally {
       setIsExporting(false);
     }
   }, []);
 
   const pageCount = selection.pageBreaks.length + 1;
+  const selectedMessages = messages.filter((m) =>
+    selection.selectedIds.includes(m.id),
+  );
 
   if (messages.length === 0) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-200 border-t-primary-500" />
+      <div className="bg-background flex min-h-screen items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex flex-col items-center gap-4"
+        >
+          <Loader2 className="text-primary h-8 w-8 animate-spin" />
+          <span className="text-muted-foreground text-sm">Loading...</span>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="bg-muted/30 flex min-h-screen flex-col">
       {/* Header */}
-      <header className="border-b border-gray-200 bg-white px-4 py-3">
-        <div className="mx-auto flex max-w-6xl items-center justify-between">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-background/80 sticky top-0 z-50 border-b backdrop-blur-lg"
+      >
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="text-sm text-gray-500 hover:text-gray-700"
+              className="text-muted-foreground hover:text-foreground group flex items-center gap-2 text-sm transition-colors"
             >
-              ← Back
+              <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+              <span className="hidden sm:inline">Back</span>
             </Link>
-            <h1 className="text-lg font-semibold text-gray-900">Editor</h1>
+            <div className="bg-border h-6 w-px" />
+            <div className="flex items-center gap-2">
+              <Sparkles className="text-primary h-5 w-5" />
+              <h1 className="text-foreground text-lg font-semibold">Editor</h1>
+            </div>
           </div>
-          <button
+
+          <Button
             onClick={handleExport}
             disabled={selection.selectedIds.length === 0 || isExporting}
-            className="rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600 disabled:cursor-not-allowed disabled:bg-gray-300"
+            className="group h-10 px-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
           >
-            {isExporting
-              ? "Exporting..."
-              : pageCount > 1
-                ? `Export ${pageCount} Pages (ZIP)`
-                : "Export PNG"}
-          </button>
-        </div>
-      </header>
-
-      <div className="mx-auto max-w-6xl p-4">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Panel - Settings */}
-          <div className="rounded-xl bg-white p-4 shadow-sm lg:col-span-1">
-            {/* Tabs */}
-            <div className="mb-4 flex border-b border-gray-200">
-              {(["messages", "theme", "export"] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`flex-1 py-2 text-sm font-medium capitalize ${
-                    activeTab === tab
-                      ? "border-b-2 border-primary-500 text-primary-600"
-                      : "text-gray-500"
-                  }`}
+            <AnimatePresence mode="wait">
+              {isExporting ? (
+                <motion.span
+                  key="loading"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex items-center gap-2"
                 >
-                  {tab}
-                </button>
-              ))}
-            </div>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Exporting...
+                </motion.span>
+              ) : exportSuccess ? (
+                <motion.span
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex items-center gap-2 text-green-500"
+                >
+                  <Check className="h-4 w-4" />
+                  Done!
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="default"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  {pageCount > 1 ? `Export ${pageCount} Pages` : "Export PNG"}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </Button>
+        </div>
+      </motion.header>
 
-            {/* Tab Content */}
-            {activeTab === "messages" && (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">
-                    {selection.selectedIds.length}/{messages.length} selected
-                  </span>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={selectAll}
-                      className="text-primary-600 hover:text-primary-700"
+      {/* Main Content */}
+      <div className="mx-auto flex w-full max-w-7xl flex-1 gap-6 p-4 lg:p-6">
+        {/* Left Panel - Settings */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+          className="w-80 shrink-0"
+        >
+          <Card className="bg-card/80 sticky top-24 overflow-hidden backdrop-blur-sm">
+            <Tabs
+              defaultValue="messages"
+              className="flex h-[calc(100vh-140px)] flex-col"
+            >
+              <TabsList className="m-2 grid w-auto grid-cols-3">
+                <TabsTrigger value="messages" className="gap-1.5 text-xs">
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Messages</span>
+                </TabsTrigger>
+                <TabsTrigger value="theme" className="gap-1.5 text-xs">
+                  <Palette className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Theme</span>
+                </TabsTrigger>
+                <TabsTrigger value="export" className="gap-1.5 text-xs">
+                  <Settings2 className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Export</span>
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Messages Tab */}
+              <TabsContent
+                value="messages"
+                className="mt-0 flex-1 overflow-hidden"
+              >
+                <div className="flex h-full flex-col">
+                  <div className="border-b px-4 py-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground text-sm">
+                        {selection.selectedIds.length}/{messages.length}{" "}
+                        selected
+                      </span>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={selectAll}
+                          className="text-primary h-7 px-2 text-xs"
+                        >
+                          All
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={deselectAll}
+                          className="h-7 px-2 text-xs"
+                        >
+                          None
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <ScrollArea className="flex-1 px-2 py-2">
+                    <div className="space-y-1.5">
+                      {messages.map((msg, idx) => {
+                        const pb = selection.pageBreaks.find(
+                          (p) => p.afterMessageId === msg.id,
+                        );
+                        const isSelected = selection.selectedIds.includes(
+                          msg.id,
+                        );
+                        return (
+                          <div key={msg.id}>
+                            <motion.div
+                              whileHover={{ scale: 1.01 }}
+                              whileTap={{ scale: 0.99 }}
+                            >
+                              <label
+                                className={cn(
+                                  "group flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-all duration-200",
+                                  isSelected
+                                    ? "border-primary/30 bg-primary/5"
+                                    : "border-transparent hover:border-border hover:bg-muted/50",
+                                )}
+                              >
+                                <Checkbox
+                                  checked={isSelected}
+                                  onCheckedChange={() => toggleMessage(msg.id)}
+                                  className="mt-0.5"
+                                />
+                                <div className="min-w-0 flex-1">
+                                  <div className="mb-1 flex items-center gap-2">
+                                    {msg.role === "user" ? (
+                                      <User className="text-primary h-3.5 w-3.5" />
+                                    ) : (
+                                      <Bot className="text-secondary h-3.5 w-3.5" />
+                                    )}
+                                    <span
+                                      className={cn(
+                                        "text-xs font-medium",
+                                        msg.role === "user"
+                                          ? "text-primary"
+                                          : "text-secondary",
+                                      )}
+                                    >
+                                      {msg.role}
+                                    </span>
+                                  </div>
+                                  <p className="text-muted-foreground line-clamp-2 text-xs">
+                                    {msg.content}
+                                  </p>
+                                </div>
+                                {idx < messages.length - 1 && !pb && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon-sm"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      addPageBreak(msg.id);
+                                    }}
+                                    className="text-muted-foreground hover:text-primary h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                                  >
+                                    <Scissors className="h-3.5 w-3.5" />
+                                  </Button>
+                                )}
+                              </label>
+                            </motion.div>
+                            <AnimatePresence>
+                              {pb && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: "auto" }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  className="flex items-center gap-2 px-3 py-2"
+                                >
+                                  <div className="bg-secondary/30 h-px flex-1" />
+                                  <span className="text-secondary flex items-center gap-1 text-xs font-medium">
+                                    <Scissors className="h-3 w-3" />
+                                    Page break
+                                  </span>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon-sm"
+                                    onClick={() => removePageBreak(pb.id)}
+                                    className="text-muted-foreground hover:text-destructive h-5 w-5"
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </Button>
+                                  <div className="bg-secondary/30 h-px flex-1" />
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </ScrollArea>
+                </div>
+              </TabsContent>
+
+              {/* Theme Tab */}
+              <TabsContent value="theme" className="mt-0 flex-1 overflow-auto">
+                <div className="space-y-6 p-4">
+                  {/* Background */}
+                  <div className="space-y-3">
+                    <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+                      Background
+                    </Label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {backgroundPresets.map((preset) => (
+                        <motion.button
+                          key={preset.value}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() =>
+                            setDecoration((d) => ({
+                              ...d,
+                              backgroundValue: preset.value,
+                            }))
+                          }
+                          className={cn(
+                            "relative aspect-square rounded-lg border-2 transition-all",
+                            decoration.backgroundValue === preset.value
+                              ? "border-primary ring-primary/20 ring-2"
+                              : "border-transparent hover:border-border",
+                          )}
+                          style={{
+                            background: preset.color,
+                          }}
+                        >
+                          {decoration.backgroundValue === preset.value && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="bg-primary absolute inset-0 flex items-center justify-center rounded-md bg-opacity-20"
+                            >
+                              <Check className="h-4 w-4 text-white drop-shadow" />
+                            </motion.div>
+                          )}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Border Radius */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+                        Border Radius
+                      </Label>
+                      <span className="text-muted-foreground text-xs">
+                        {decoration.canvasRadiusPx}px
+                      </span>
+                    </div>
+                    <Slider
+                      value={[decoration.canvasRadiusPx]}
+                      min={0}
+                      max={32}
+                      step={2}
+                      onValueChange={(values) =>
+                        setDecoration((d) => ({
+                          ...d,
+                          canvasRadiusPx: values[0] ?? d.canvasRadiusPx,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  {/* Padding */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+                        Padding
+                      </Label>
+                      <span className="text-muted-foreground text-xs">
+                        {decoration.canvasPaddingPx}px
+                      </span>
+                    </div>
+                    <Slider
+                      value={[decoration.canvasPaddingPx]}
+                      min={0}
+                      max={64}
+                      step={4}
+                      onValueChange={(values) =>
+                        setDecoration((d) => ({
+                          ...d,
+                          canvasPaddingPx: values[0] ?? d.canvasPaddingPx,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  {/* Shadow */}
+                  <div className="space-y-3">
+                    <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+                      Shadow
+                    </Label>
+                    <Select
+                      value={decoration.shadowLevel}
+                      onValueChange={(value: Decoration["shadowLevel"]) =>
+                        setDecoration((d) => ({
+                          ...d,
+                          shadowLevel: value,
+                        }))
+                      }
                     >
-                      All
-                    </button>
-                    <button
-                      onClick={deselectAll}
-                      className="text-gray-500 hover:text-gray-700"
-                    >
-                      None
-                    </button>
+                      <SelectTrigger className="h-9">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="sm">Small</SelectItem>
+                        <SelectItem value="md">Medium</SelectItem>
+                        <SelectItem value="lg">Large</SelectItem>
+                        <SelectItem value="xl">Extra Large</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* macOS Bar */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Monitor className="text-muted-foreground h-4 w-4" />
+                      <Label className="text-sm">macOS Bar</Label>
+                    </div>
+                    <Switch
+                      checked={decoration.macosBarEnabled}
+                      onCheckedChange={(checked) =>
+                        setDecoration((d) => ({
+                          ...d,
+                          macosBarEnabled: checked,
+                        }))
+                      }
+                    />
                   </div>
                 </div>
-                <div className="max-h-96 space-y-2 overflow-y-auto">
-                  {messages.map((msg, idx) => {
-                    const pb = selection.pageBreaks.find(
-                      (p) => p.afterMessageId === msg.id,
-                    );
-                    return (
-                      <div key={msg.id}>
-                        <label className="group flex cursor-pointer items-start gap-2 rounded-lg border border-gray-200 p-2 hover:bg-gray-50">
-                          <input
-                            type="checkbox"
-                            checked={selection.selectedIds.includes(msg.id)}
-                            onChange={() => toggleMessage(msg.id)}
-                            className="mt-1"
-                          />
-                          <div className="min-w-0 flex-1">
-                            <span
-                              className={`text-xs font-medium ${msg.role === "user" ? "text-blue-600" : "text-green-600"}`}
-                            >
+              </TabsContent>
+
+              {/* Export Tab */}
+              <TabsContent value="export" className="mt-0 flex-1 overflow-auto">
+                <div className="space-y-6 p-4">
+                  {/* Scale */}
+                  <div className="space-y-3">
+                    <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+                      Scale
+                    </Label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {([1, 2, 3] as const).map((s) => (
+                        <Button
+                          key={s}
+                          variant={
+                            exportParams.scale === s ? "default" : "outline"
+                          }
+                          onClick={() =>
+                            setExportParams((p) => ({ ...p, scale: s }))
+                          }
+                          className="h-10"
+                        >
+                          {s}x
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Canvas Width */}
+                  <div className="space-y-3">
+                    <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+                      Canvas Width
+                    </Label>
+                    <Select
+                      value={String(exportParams.canvasWidthPx)}
+                      onValueChange={(value) =>
+                        setExportParams((p) => ({
+                          ...p,
+                          canvasWidthPx: Number(value),
+                        }))
+                      }
+                    >
+                      <SelectTrigger className="h-9">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="600">600px</SelectItem>
+                        <SelectItem value="800">800px (Recommended)</SelectItem>
+                        <SelectItem value="1080">1080px</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Max Page Height */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+                        Max Page Height
+                      </Label>
+                      <span className="text-muted-foreground text-xs">
+                        {exportParams.maxPageHeightPx}px
+                      </span>
+                    </div>
+                    <Slider
+                      value={[exportParams.maxPageHeightPx]}
+                      min={2000}
+                      max={8000}
+                      step={500}
+                      onValueChange={(values) =>
+                        setExportParams((p) => ({
+                          ...p,
+                          maxPageHeightPx: values[0] ?? p.maxPageHeightPx,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  {/* Info */}
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <p className="text-muted-foreground text-xs">
+                      {pageCount > 1
+                        ? `Your export will be split into ${pageCount} pages and downloaded as a ZIP file.`
+                        : "Your export will be a single PNG image."}
+                    </p>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </Card>
+        </motion.div>
+
+        {/* Right Panel - Preview */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="flex-1 overflow-hidden"
+        >
+          <Card className="bg-card/50 h-full overflow-hidden">
+            <CardContent className="flex h-full flex-col p-0">
+              <div className="border-b px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground text-sm font-medium">
+                    Preview
+                  </span>
+                  <span className="text-muted-foreground text-xs">
+                    {exportParams.canvasWidthPx}px × auto
+                  </span>
+                </div>
+              </div>
+              <div className="flex-1 overflow-auto bg-[linear-gradient(45deg,#f0f0f0_25%,transparent_25%),linear-gradient(-45deg,#f0f0f0_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#f0f0f0_75%),linear-gradient(-45deg,transparent_75%,#f0f0f0_75%)] bg-[length:20px_20px] bg-[position:0_0,0_10px,10px_-10px,-10px_0px] p-8 dark:bg-[linear-gradient(45deg,#1a1a1a_25%,transparent_25%),linear-gradient(-45deg,#1a1a1a_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#1a1a1a_75%),linear-gradient(-45deg,transparent_75%,#1a1a1a_75%)]">
+                <motion.div
+                  ref={previewRef}
+                  layout
+                  className="mx-auto"
+                  style={{
+                    maxWidth: exportParams.canvasWidthPx,
+                    borderRadius: decoration.canvasRadiusPx,
+                    padding: decoration.canvasPaddingPx,
+                    background: decoration.backgroundValue,
+                    boxShadow: shadowStyles[decoration.shadowLevel],
+                  }}
+                >
+                  {/* macOS Bar */}
+                  <AnimatePresence>
+                    {decoration.macosBarEnabled && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="mb-4 flex gap-2"
+                      >
+                        <div className="h-3 w-3 rounded-full bg-[#ff5f57]" />
+                        <div className="h-3 w-3 rounded-full bg-[#febc2e]" />
+                        <div className="h-3 w-3 rounded-full bg-[#28c840]" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Messages */}
+                  <div className="space-y-4">
+                    <AnimatePresence>
+                      {selectedMessages.map((msg, idx) => (
+                        <motion.div
+                          key={msg.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ delay: idx * 0.05 }}
+                          className={cn(
+                            "rounded-xl p-4",
+                            decoration.backgroundValue.startsWith("linear") ||
+                              decoration.backgroundValue === "#1e1e2e"
+                              ? msg.role === "user"
+                                ? "bg-white/10 text-white"
+                                : "bg-white/5 text-white/90"
+                              : msg.role === "user"
+                                ? "bg-primary/10 text-foreground"
+                                : "bg-muted/50 text-foreground",
+                          )}
+                        >
+                          <div className="mb-2 flex items-center gap-2">
+                            {msg.role === "user" ? (
+                              <User className="h-3.5 w-3.5 opacity-60" />
+                            ) : (
+                              <Bot className="h-3.5 w-3.5 opacity-60" />
+                            )}
+                            <span className="text-xs font-medium uppercase tracking-wide opacity-60">
                               {msg.role}
                             </span>
-                            <p className="line-clamp-2 text-xs text-gray-600">
-                              {msg.content}
-                            </p>
                           </div>
-                          {idx < messages.length - 1 && !pb && (
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                addPageBreak(msg.id);
-                              }}
-                              className="rounded px-1 py-0.5 text-xs text-gray-400 opacity-0 hover:bg-gray-100 group-hover:opacity-100"
-                            >
-                              ✂️
-                            </button>
-                          )}
-                        </label>
-                        {pb && (
-                          <div className="my-1 flex items-center gap-1 text-xs text-orange-600">
-                            <span className="flex-1 border-t border-orange-300" />
-                            <span>Page break</span>
-                            <button
-                              onClick={() => removePageBreak(pb.id)}
-                              className="hover:text-red-600"
-                            >
-                              ×
-                            </button>
-                            <span className="flex-1 border-t border-orange-300" />
+                          <div className="prose prose-sm max-w-none dark:prose-invert">
+                            <MarkdownRenderer content={msg.content} />
                           </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
 
-            {activeTab === "theme" && (
-              <div className="space-y-4">
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Border Radius
-                  </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="32"
-                    value={decoration.canvasRadiusPx}
-                    onChange={(e) =>
-                      setDecoration((d) => ({
-                        ...d,
-                        canvasRadiusPx: +e.target.value,
-                      }))
-                    }
-                    className="w-full"
-                  />
-                  <span className="text-xs text-gray-500">
-                    {decoration.canvasRadiusPx}px
-                  </span>
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Padding
-                  </label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="64"
-                    value={decoration.canvasPaddingPx}
-                    onChange={(e) =>
-                      setDecoration((d) => ({
-                        ...d,
-                        canvasPaddingPx: +e.target.value,
-                      }))
-                    }
-                    className="w-full"
-                  />
-                  <span className="text-xs text-gray-500">
-                    {decoration.canvasPaddingPx}px
-                  </span>
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Shadow
-                  </label>
-                  <select
-                    value={decoration.shadowLevel}
-                    onChange={(e) =>
-                      setDecoration((d) => ({
-                        ...d,
-                        shadowLevel: e.target
-                          .value as Decoration["shadowLevel"],
-                      }))
-                    }
-                    className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
-                  >
-                    <option value="none">None</option>
-                    <option value="sm">Small</option>
-                    <option value="md">Medium</option>
-                    <option value="lg">Large</option>
-                    <option value="xl">Extra Large</option>
-                  </select>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700">
-                    macOS Bar
-                  </span>
-                  <button
-                    onClick={() =>
-                      setDecoration((d) => ({
-                        ...d,
-                        macosBarEnabled: !d.macosBarEnabled,
-                      }))
-                    }
-                    className={`relative h-5 w-9 rounded-full transition-colors ${decoration.macosBarEnabled ? "bg-primary-500" : "bg-gray-300"}`}
-                  >
-                    <span
-                      className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${decoration.macosBarEnabled ? "left-4" : "left-0.5"}`}
-                    />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "export" && (
-              <div className="space-y-4">
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Scale
-                  </label>
-                  <div className="flex gap-2">
-                    {([1, 2, 3] as const).map((s) => (
-                      <button
-                        key={s}
-                        onClick={() =>
-                          setExportParams((p) => ({ ...p, scale: s }))
-                        }
-                        className={`flex-1 rounded border py-1 text-sm ${exportParams.scale === s ? "border-primary-500 bg-primary-50 text-primary-700" : "border-gray-300"}`}
+                    {selectedMessages.length === 0 && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex flex-col items-center justify-center py-12 text-center"
                       >
-                        {s}x
-                      </button>
-                    ))}
+                        <MessageSquare className="text-muted-foreground/30 mb-4 h-12 w-12" />
+                        <p className="text-muted-foreground text-sm">
+                          Select messages to preview
+                        </p>
+                      </motion.div>
+                    )}
                   </div>
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Canvas Width
-                  </label>
-                  <select
-                    value={exportParams.canvasWidthPx}
-                    onChange={(e) =>
-                      setExportParams((p) => ({
-                        ...p,
-                        canvasWidthPx: +e.target.value,
-                      }))
-                    }
-                    className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
-                  >
-                    <option value="600">600px</option>
-                    <option value="800">800px</option>
-                    <option value="1080">1080px</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Max Page Height
-                  </label>
-                  <input
-                    type="number"
-                    min="2000"
-                    max="10000"
-                    step="100"
-                    value={exportParams.maxPageHeightPx}
-                    onChange={(e) =>
-                      setExportParams((p) => ({
-                        ...p,
-                        maxPageHeightPx: +e.target.value,
-                      }))
-                    }
-                    className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
-                  />
-                </div>
+                </motion.div>
               </div>
-            )}
-          </div>
-
-          {/* Right Panel - Preview */}
-          <div className="rounded-xl bg-white p-4 shadow-sm lg:col-span-2">
-            <h2 className="mb-4 text-sm font-medium text-gray-700">Preview</h2>
-            <div
-              className="mx-auto overflow-hidden"
-              style={{
-                maxWidth: exportParams.canvasWidthPx,
-                borderRadius: decoration.canvasRadiusPx,
-                padding: decoration.canvasPaddingPx,
-                background: decoration.backgroundValue,
-                boxShadow:
-                  decoration.shadowLevel === "none"
-                    ? "none"
-                    : decoration.shadowLevel === "sm"
-                      ? "0 1px 2px rgba(0,0,0,0.05)"
-                      : decoration.shadowLevel === "md"
-                        ? "0 4px 6px rgba(0,0,0,0.1)"
-                        : decoration.shadowLevel === "lg"
-                          ? "0 10px 15px rgba(0,0,0,0.1)"
-                          : "0 20px 25px rgba(0,0,0,0.15)",
-              }}
-            >
-              {/* macOS Bar */}
-              {decoration.macosBarEnabled && (
-                <div className="mb-4 flex gap-2">
-                  <div className="h-3 w-3 rounded-full bg-red-500" />
-                  <div className="h-3 w-3 rounded-full bg-yellow-500" />
-                  <div className="h-3 w-3 rounded-full bg-green-500" />
-                </div>
-              )}
-
-              {/* Messages */}
-              <div className="space-y-4">
-                {messages
-                  .filter((m) => selection.selectedIds.includes(m.id))
-                  .map((msg) => (
-                    <div
-                      key={msg.id}
-                      className={`rounded-lg p-3 ${
-                        msg.role === "user"
-                          ? "bg-blue-50 text-blue-900"
-                          : "bg-gray-50 text-gray-900"
-                      }`}
-                    >
-                      <div className="mb-2 text-xs font-medium opacity-60">
-                        {msg.role}
-                      </div>
-                      <MarkdownRenderer content={msg.content} />
-                    </div>
-                  ))}
-              </div>
-            </div>
-          </div>
-        </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </main>
   );

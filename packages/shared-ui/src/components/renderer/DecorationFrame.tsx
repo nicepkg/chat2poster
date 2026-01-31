@@ -1,7 +1,9 @@
+"use client";
+
 import { memo } from "react";
 import type { Decoration, ShadowLevel } from "@chat2poster/core-schema";
 import { cssVar } from "@chat2poster/themes";
-import { MacOSBar } from "./MacOSBar";
+import { RendererMacOSBar } from "./RendererMacOSBar";
 
 export interface DecorationFrameProps {
   /** Decoration settings */
@@ -86,7 +88,7 @@ export const DecorationFrame = memo(function DecorationFrame({
     <div style={outerStyle} className={`c2p-decoration-frame ${className || ""}`}>
       <div style={innerStyle} className="c2p-decoration-inner">
         {decoration.macosBarEnabled && (
-          <MacOSBar title={macosBarTitle} />
+          <RendererMacOSBar title={macosBarTitle} />
         )}
         <div style={contentStyle} className="c2p-decoration-content">
           {children}

@@ -1,3 +1,5 @@
+"use client";
+
 import { memo, useMemo } from "react";
 import type { Message, Selection, PageBreak } from "@chat2poster/core-schema";
 import type { Theme } from "@chat2poster/themes";

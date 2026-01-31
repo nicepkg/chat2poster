@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 import { cssVar } from "@chat2poster/themes";
 

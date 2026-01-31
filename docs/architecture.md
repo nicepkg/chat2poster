@@ -50,8 +50,6 @@
 /packages
 /core-schema
 index.ts (Conversation/Message/Selection/Theme/ExportJob types + validators)
-/core-renderer
-(React 组件：ConversationView、MessageItem、ThemeProvider、DecorationFrame)
 /core-pagination
 (height estimation + manual breaks + auto pagination)
 /core-export
@@ -61,7 +59,7 @@ index.ts (Conversation/Message/Selection/Theme/ExportJob types + validators)
 /themes
 (预设主题 tokens + defaults)
 /shared-ui
-(共享 UI 组件：Radix/Shadcn 基础组件、EditorContext、编辑器组件、通用组件、hooks)
+(共享 UI 组件：Radix/Shadcn 基础组件、EditorContext、编辑器组件、通用组件、hooks、渲染组件 ConversationView/MessageItem/ThemeProvider/DecorationFrame)
 
 说明：
 
@@ -101,11 +99,12 @@ index.ts (Conversation/Message/Selection/Theme/ExportJob types + validators)
   约束（验收可通过代码审查）：
 - 新增 adapter 只需新增文件并 register 一次；不允许在多处 switch-case 修改。
 
-### 3.3 渲染（packages/core-renderer）
+### 3.3 渲染（packages/shared-ui/components/renderer）
 
 - React 组件化：ConversationView 接受 messages + theme + decoration + selection。
 - 使用 react-markdown + plugins 渲染 markdown。
 - 代码高亮：Shiki（建议在导出前确保高亮资源就绪，避免导出时闪烁）。
+- 注：渲染组件已合并到 shared-ui 包中，便于 web 和 extension 复用。
 
 性能建议（长对话）：
 

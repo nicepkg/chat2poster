@@ -815,7 +815,7 @@ chat2poster/
 ├── packages/
 │   ├── core-schema/       # Types + Zod validators
 │   ├── core-adapters/     # Parsing adapters (ChatGPT/Claude/Gemini)
-│   ├── core-renderer/     # React components for rendering
+│   ├── shared-ui/         # Shared UI + renderer components
 │   ├── core-pagination/   # Height estimation + page splitting
 │   ├── core-export/       # SnapDOM export + ZIP packaging
 │   ├── themes/            # Preset themes (light/dark/custom)
@@ -907,7 +907,7 @@ Before every UI change, ask yourself:
 ```
 AI-1 (T1): packages/core-schema/**, packages/shared-utils/**
 AI-2 (T2): packages/core-adapters/**
-AI-3 (T3): packages/core-renderer/**, packages/themes/**
+AI-3 (T3): packages/shared-ui/src/components/renderer/**, packages/themes/**
 AI-4 (T4): packages/core-pagination/**, packages/core-export/**
 AI-5 (T5): apps/extension-wxt/**, apps/web-nextjs/**, packages/shared-ui/**
 ```

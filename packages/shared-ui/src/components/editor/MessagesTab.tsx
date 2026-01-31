@@ -1,30 +1,13 @@
 "use client";
 
 import * as React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Scissors, X, User, Bot } from "lucide-react";
 import type { Message } from "@chat2poster/core-schema";
 import { cn } from "../../lib/utils";
-
-function ScissorsIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="6" cy="6" r="3" />
-      <circle cx="6" cy="18" r="3" />
-      <line x1="20" y1="4" x2="8.12" y2="15.88" />
-      <line x1="14.47" y1="14.48" x2="20" y2="20" />
-      <line x1="8.12" y1="8.12" x2="12" y2="12" />
-    </svg>
-  );
-}
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
+import { ScrollArea } from "../ui/scroll-area";
 
 export interface MessagesTabProps {
   messages: Message[];
@@ -53,105 +36,132 @@ export function MessagesTab({
     pageBreaks.find((pb) => pb.afterMessageId === messageId);
 
   return (
-    <div className={cn("p-4", className)}>
-      <div className="mb-3 flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">
-          {selectedIds.length} of {messages.length} selected
-        </span>
-        <div className="flex gap-2">
-          <button
-            onClick={onSelectAll}
-            className="text-sm text-primary hover:text-primary/80"
-          >
-            Select All
-          </button>
-          <button
-            onClick={onDeselectAll}
-            className="text-sm text-muted-foreground hover:text-foreground"
-          >
-            Deselect
-          </button>
+    <div className={cn("flex h-full flex-col", className)}>
+      {/* Header */}
+      <div className="border-b px-4 py-3">
+        <div className="flex items-center justify-between">
+          <span className="text-muted-foreground text-sm">
+            {selectedIds.length}/{messages.length} selected
+          </span>
+          <div className="flex gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onSelectAll}
+              className="text-primary h-7 px-2 text-xs"
+            >
+              All
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onDeselectAll}
+              className="h-7 px-2 text-xs"
+            >
+              None
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="space-y-2">
-        {messages.map((message, index) => {
-          const pageBreak = getPageBreakAfter(message.id);
-          const isLast = index === messages.length - 1;
+      {/* Message List */}
+      <ScrollArea className="flex-1 px-2 py-2">
+        <div className="space-y-1.5">
+          {messages.map((message, index) => {
+            const pageBreak = getPageBreakAfter(message.id);
+            const isSelected = selectedIds.includes(message.id);
+            const isLast = index === messages.length - 1;
 
-          return (
-            <div key={message.id}>
-              <div className="group relative">
-                <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-border p-3 transition-colors hover:bg-accent">
-                  <input
-                    type="checkbox"
-                    checked={selectedIds.includes(message.id)}
-                    onChange={() => onToggle(message.id)}
-                    className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <span
-                      className={cn(
-                        "inline-block rounded px-1.5 py-0.5 text-xs font-medium",
-                        message.role === "user"
-                          ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
-                          : message.role === "assistant"
-                            ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                            : "bg-muted text-muted-foreground"
-                      )}
-                    >
-                      {message.role}
-                    </span>
-                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                      {message.contentMarkdown}
-                    </p>
-                  </div>
-                </label>
-
-                {/* Page break button */}
-                {!isLast && !pageBreak && (
-                  <button
-                    onClick={() => onAddPageBreak(message.id)}
-                    className="absolute -bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-full border border-border bg-background px-2 py-0.5 text-xs text-muted-foreground opacity-0 shadow-sm transition-opacity hover:border-primary hover:text-primary group-hover:opacity-100"
-                    title="Insert page break"
+            return (
+              <div key={message.id}>
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                >
+                  <label
+                    className={cn(
+                      "group flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-all duration-200",
+                      isSelected
+                        ? "border-primary/30 bg-primary/5"
+                        : "border-transparent hover:border-border hover:bg-muted/50",
+                    )}
                   >
-                    <ScissorsIcon />
-                    <span>Page break</span>
-                  </button>
-                )}
-              </div>
+                    <Checkbox
+                      checked={isSelected}
+                      onCheckedChange={() => onToggle(message.id)}
+                      className="mt-0.5"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-1 flex items-center gap-2">
+                        {message.role === "user" ? (
+                          <User className="text-primary h-3.5 w-3.5" />
+                        ) : (
+                          <Bot className="text-secondary h-3.5 w-3.5" />
+                        )}
+                        <span
+                          className={cn(
+                            "text-xs font-medium",
+                            message.role === "user"
+                              ? "text-primary"
+                              : "text-secondary",
+                          )}
+                        >
+                          {message.role}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground line-clamp-2 text-xs">
+                        {message.contentMarkdown}
+                      </p>
+                    </div>
 
-              {/* Page break indicator */}
-              {pageBreak && (
-                <div className="my-3 flex items-center gap-2">
-                  <div className="h-px flex-1 bg-orange-300" />
-                  <div className="flex items-center gap-1 rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-700 dark:bg-orange-900 dark:text-orange-300">
-                    <ScissorsIcon />
-                    <span>Page break</span>
-                    <button
-                      onClick={() => onRemovePageBreak(pageBreak.id)}
-                      className="ml-1 rounded-full p-0.5 hover:bg-orange-200 dark:hover:bg-orange-800"
-                      title="Remove page break"
-                    >
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
+                    {/* Page break button */}
+                    {!isLast && !pageBreak && (
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onAddPageBreak(message.id);
+                        }}
+                        className="text-muted-foreground hover:text-primary h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
                       >
-                        <path d="M18 6 6 18M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="h-px flex-1 bg-orange-300" />
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+                        <Scissors className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                  </label>
+                </motion.div>
+
+                {/* Page break indicator */}
+                <AnimatePresence>
+                  {pageBreak && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="flex items-center gap-2 px-3 py-2"
+                    >
+                      <div className="bg-secondary/30 h-px flex-1" />
+                      <span className="text-secondary flex items-center gap-1 text-xs font-medium">
+                        <Scissors className="h-3 w-3" />
+                        Page break
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => onRemovePageBreak(pageBreak.id)}
+                        className="text-muted-foreground hover:text-destructive h-5 w-5"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                      <div className="bg-secondary/30 h-px flex-1" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+      </ScrollArea>
     </div>
   );
 }
