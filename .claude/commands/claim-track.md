@@ -13,11 +13,11 @@ Claim track **$ARGUMENTS** (T1/T2/T3/T4/T5) and prepare to work on it.
 
 | Track | Focus | Packages |
 |-------|-------|----------|
-| T1 | Infrastructure & Schema | `core-schema`, `shared-utils` |
+| T1 | Infrastructure & Schema | `core-schema` |
 | T2 | Adapters | `core-adapters` |
-| T3 | Renderer | `shared-ui/components/renderer`, `themes` |
+| T3 | Renderer & Themes | `shared-ui/components/renderer`, `shared-ui/themes` |
 | T4 | Pagination & Export | `core-pagination`, `core-export` |
-| T5 | Apps & UI | `extension-wxt`, `web-nextjs` |
+| T5 | Apps & UI | `extension-wxt`, `web-nextjs`, `shared-ui` |
 
 ## Execution Flow
 
@@ -64,7 +64,6 @@ Create initial directories based on your track:
 **T1:**
 ```bash
 mkdir -p packages/core-schema/src
-mkdir -p packages/shared-utils/src
 ```
 
 **T2:**
@@ -75,7 +74,7 @@ mkdir -p packages/core-adapters/src/adapters
 **T3:**
 ```bash
 mkdir -p packages/shared-ui/src/components/renderer
-mkdir -p packages/themes/src/presets
+mkdir -p packages/shared-ui/src/themes/presets
 ```
 
 **T4:**

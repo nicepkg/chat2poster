@@ -905,9 +905,9 @@ Before every UI change, ask yourself:
 ## 📁 File Ownership (Multi-AI Mode)
 
 ```
-AI-1 (T1): packages/core-schema/**, packages/shared-utils/**
+AI-1 (T1): packages/core-schema/**
 AI-2 (T2): packages/core-adapters/**
-AI-3 (T3): packages/shared-ui/src/components/renderer/**, packages/themes/**
+AI-3 (T3): packages/shared-ui/src/components/renderer/**, packages/shared-ui/src/themes/**
 AI-4 (T4): packages/core-pagination/**, packages/core-export/**
 AI-5 (T5): apps/extension-wxt/**, apps/web-nextjs/**, packages/shared-ui/**
 ```
