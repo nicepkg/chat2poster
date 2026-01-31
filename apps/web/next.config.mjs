@@ -7,6 +7,7 @@ const withNextra = nextra({
     codeblocks: false,
   },
   contentDirBasePath: "/docs",
+  unstable_shouldAddLocaleToLinks: true,
 });
 
 const svgrLoader = {
@@ -33,6 +34,10 @@ const svgrLoader = {
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  i18n: {
+    locales: ["en", "zh"],
+    defaultLocale: "en",
+  },
   transpilePackages: [
     "@chat2poster/core-schema",
     "@chat2poster/core-adapters",

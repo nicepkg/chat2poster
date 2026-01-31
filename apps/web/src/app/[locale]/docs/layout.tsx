@@ -10,7 +10,7 @@ type LayoutProps = {
 
 export default async function DocsLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
-  const pageMap = await getPageMap(`/${locale}/docs`);
+  const pageMap = await getPageMap(`/${locale}`);
 
   return (
     <DocsLayoutClient locale={locale} pageMap={pageMap}>
