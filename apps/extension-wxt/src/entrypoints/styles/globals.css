@@ -1,32 +1,28 @@
 @import "tailwindcss";
+@import "@chat2poster/shared-ui/styles/globals.css";
+@import "@chat2poster/shared-ui/styles/renderer.css";
+@import "tw-animate-css";
 
-@theme {
-  --color-primary-50: #f0f9ff;
-  --color-primary-100: #e0f2fe;
-  --color-primary-200: #bae6fd;
-  --color-primary-300: #7dd3fc;
-  --color-primary-400: #38bdf8;
-  --color-primary-500: #0ea5e9;
-  --color-primary-600: #0284c7;
-  --color-primary-700: #0369a1;
-  --color-primary-800: #075985;
-  --color-primary-900: #0c4a6e;
-  --color-primary-950: #082f49;
-}
+@source "../../../../../packages/shared-ui/src/**/*.{ts,tsx,js,jsx}";
+
+@custom-variant dark (&:is(.dark *));
 
 :host {
   all: initial;
   font-family:
+    "Inter var",
+    "SF Pro Display",
     -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
+    "Noto Sans SC",
     sans-serif;
 }
 
 #chat2poster-root {
   position: fixed;
   z-index: 2147483647;
+  color-scheme: light;
+}
+
+#chat2poster-root.dark {
+  color-scheme: dark;
 }

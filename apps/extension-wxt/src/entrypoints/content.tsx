@@ -22,13 +22,43 @@ export default defineContentScript({
         wrapper.id = "chat2poster-root";
         container.appendChild(wrapper);
 
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+        const updateTheme = () => {
+          const isDark =
+            document.documentElement.classList.contains("dark") ||
+            document.body.classList.contains("dark") ||
+            prefersDark.matches;
+          wrapper.classList.toggle("dark", isDark);
+        };
+        updateTheme();
+
+        const observer = new MutationObserver(updateTheme);
+        observer.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+        observer.observe(document.body, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+        prefersDark.addEventListener("change", updateTheme);
+
         const root = createRoot(wrapper);
         root.render(<App />);
-        return { root, wrapper };
+        return {
+          root,
+          wrapper,
+          cleanup: () => {
+            observer.disconnect();
+            prefersDark.removeEventListener("change", updateTheme);
+          },
+        };
       },
       onRemove(elements) {
-        elements?.root.unmount();
-        elements?.wrapper.remove();
+        if (!elements) return;
+        elements.cleanup();
+        elements.root.unmount();
+        elements.wrapper.remove();
       },
     });
 
