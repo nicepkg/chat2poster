@@ -1,3 +1,4 @@
+import { defaultLocale, locales } from "@chat2poster/shared-ui/i18n/core";
 import nextra from "nextra";
 
 const withNextra = nextra({
@@ -35,8 +36,8 @@ const svgrLoader = {
 const config = {
   reactStrictMode: true,
   i18n: {
-    locales: ["en", "zh"],
-    defaultLocale: "en",
+    locales,
+    defaultLocale,
   },
   transpilePackages: [
     "@chat2poster/core-schema",
