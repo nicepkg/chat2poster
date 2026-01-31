@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { cn } from "~/utils/common";
+import { useI18n } from "~/i18n";
 import { Label } from "../ui/label";
 
 export interface BackgroundPreset {
@@ -41,14 +42,16 @@ export function BackgroundPicker({
   value,
   onChange,
   presets = DEFAULT_BACKGROUND_PRESETS,
-  label = "Background",
+  label,
   className,
 }: BackgroundPickerProps) {
+  const { t } = useI18n();
+  const resolvedLabel = label ?? t("theme.background");
   return (
     <div className={cn("space-y-3", className)}>
-      {label && (
+      {resolvedLabel && (
         <Label className="text-muted-foreground text-xs uppercase tracking-wide">
-          {label}
+          {resolvedLabel}
         </Label>
       )}
       <div className="grid grid-cols-4 gap-2">

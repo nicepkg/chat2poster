@@ -10,6 +10,7 @@ type PageProps = {
 };
 
 const baseGenerateStaticParams = generateStaticParamsFor("mdxPath", "locale");
+const DOCS_BASE_SEGMENT = "docs";
 
 function normalizeMdxPath(mdxPath?: string[] | string) {
   if (!mdxPath) return [];
@@ -21,14 +22,24 @@ export async function generateStaticParams() {
   const params = await baseGenerateStaticParams();
   return params.map((param) => ({
     locale: param.locale as string,
-    mdxPath: normalizeMdxPath(param.mdxPath as string[] | string | undefined),
+    mdxPath: (() => {
+      const normalized = normalizeMdxPath(
+        param.mdxPath as string[] | string | undefined,
+      );
+      return normalized[0] === DOCS_BASE_SEGMENT
+        ? normalized.slice(1)
+        : normalized;
+    })(),
   }));
 }
 
 export async function generateMetadata(props: PageProps) {
   const params = await props.params;
   const mdxPath = normalizeMdxPath(params.mdxPath);
-  const { metadata } = await importPage(mdxPath, params.locale);
+  const { metadata } = await importPage(
+    [DOCS_BASE_SEGMENT, ...mdxPath],
+    params.locale,
+  );
   return metadata;
 }
 
@@ -37,7 +48,10 @@ const Wrapper = getMDXComponents().wrapper;
 export default async function Page(props: PageProps) {
   const params = await props.params;
   const mdxPath = normalizeMdxPath(params.mdxPath);
-  const result = await importPage(mdxPath, params.locale);
+  const result = await importPage(
+    [DOCS_BASE_SEGMENT, ...mdxPath],
+    params.locale,
+  );
   const { default: MDXContent, toc, metadata, sourceCode } = result;
 
   return (

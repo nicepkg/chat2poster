@@ -5,6 +5,7 @@ import { forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare } from "lucide-react";
 import { cn } from "~/utils/common";
+import { useI18n } from "~/i18n";
 import { MacOSBar } from "./MacOSBar";
 import { MessageBubble } from "./MessageBubble";
 
@@ -47,6 +48,7 @@ export const PreviewCanvas = forwardRef<HTMLDivElement, PreviewCanvasProps>(
     },
     ref,
   ) => {
+    const { t } = useI18n();
     const isDarkBackground =
       background.startsWith("linear") ||
       background === "#1e1e2e" ||
@@ -93,7 +95,7 @@ export const PreviewCanvas = forwardRef<HTMLDivElement, PreviewCanvasProps>(
             >
               <MessageSquare className="text-muted-foreground/30 mb-4 h-12 w-12" />
               <p className="text-muted-foreground text-sm">
-                Select messages to preview
+                {t("preview.empty")}
               </p>
             </motion.div>
           )}

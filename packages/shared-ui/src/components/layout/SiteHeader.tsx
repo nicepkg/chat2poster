@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { MobileNav, type NavItem } from "./MobileNav";
 import { cn } from "../../utils";
+import { useI18n } from "~/i18n";
 
 export interface SiteHeaderProps {
   logo: React.ReactNode;
@@ -24,6 +25,7 @@ export function SiteHeader({
   className,
   onNavigate,
 }: SiteHeaderProps) {
+  const { t } = useI18n();
   return (
     <header
       className={cn(
@@ -50,6 +52,7 @@ export function SiteHeader({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-muted-foreground hover:text-foreground transition-colors"
+                    aria-label={t("siteHeader.viewOnGithub")}
                   >
                     <Github className="h-5 w-5" />
                   </a>
@@ -110,7 +113,7 @@ export function SiteHeader({
                 href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="View on GitHub"
+                aria-label={t("siteHeader.viewOnGithub")}
               >
                 <Github className="h-4 w-4" />
               </a>

@@ -28,6 +28,10 @@
       "types": "./dist/components/layout/index.d.ts",
       "import": "./dist/components/layout/index.js"
     },
+    "./components/renderer": {
+      "types": "./dist/components/renderer/index.d.ts",
+      "import": "./dist/components/renderer/index.js"
+    },
     "./contexts": {
       "types": "./dist/contexts/index.d.ts",
       "import": "./dist/contexts/index.js"
@@ -36,10 +40,6 @@
       "types": "./dist/hooks/index.d.ts",
       "import": "./dist/hooks/index.js"
     },
-    "./components/renderer": {
-      "types": "./dist/components/renderer/index.d.ts",
-      "import": "./dist/components/renderer/index.js"
-    },
     "./utils": {
       "types": "./dist/utils/index.d.ts",
       "import": "./dist/utils/index.js"
@@ -47,6 +47,22 @@
     "./themes": {
       "types": "./dist/themes/index.d.ts",
       "import": "./dist/themes/index.js"
+    },
+    "./i18n": {
+      "types": "./dist/i18n/index.d.ts",
+      "import": "./dist/i18n/index.js"
+    },
+    "./i18n/core": {
+      "types": "./dist/i18n/core.d.ts",
+      "import": "./dist/i18n/core.js"
+    },
+    "./i18n/react": {
+      "types": "./dist/i18n/react.d.ts",
+      "import": "./dist/i18n/react.js"
+    },
+    "./i18n/types": {
+      "types": "./dist/i18n/types.d.ts",
+      "import": "./dist/i18n/types.js"
     },
     "./styles/globals.css": "./src/styles/globals.css",
     "./styles/renderer.css": "./src/styles/renderer.css"

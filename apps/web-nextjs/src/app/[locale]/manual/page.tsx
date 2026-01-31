@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
   cn,
+  useI18n,
 } from "@chat2poster/shared-ui";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import {
@@ -34,11 +35,19 @@ interface MessageInput {
 }
 
 export default function ManualBuilderPage() {
+  const { t, locale } = useI18n();
   const router = useRouter();
   const [messages, setMessages] = useState<MessageInput[]>([
     { id: crypto.randomUUID(), role: "user", content: "" },
     { id: crypto.randomUUID(), role: "assistant", content: "" },
   ]);
+  const validCount = messages.filter((m) => m.content.trim()).length;
+  const roleUser = t("web.manual.roleUser");
+  const roleAssistant = t("web.manual.roleAssistant");
+  const messageCount = t("web.manual.messageCount", {
+    count: validCount,
+    suffix: validCount === 1 ? "" : "s",
+  });
 
   const addMessage = useCallback(() => {
     const lastRole = messages[messages.length - 1]?.role ?? "assistant";
@@ -75,10 +84,8 @@ export default function ManualBuilderPage() {
       "chat2poster:manual-messages",
       JSON.stringify(validMessages),
     );
-    router.push("/editor");
+    router.push(`/${locale}/editor`);
   };
-
-  const validCount = messages.filter((m) => m.content.trim()).length;
 
   return (
     <main className="bg-background relative min-h-screen">
@@ -96,23 +103,23 @@ export default function ManualBuilderPage() {
           className="mb-8"
         >
           <Link
-            href="/"
+            href={`/${locale}/import`}
             className="text-muted-foreground hover:text-foreground group mb-4 inline-flex items-center gap-2 text-sm transition-colors"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            Back to Import
+            {t("web.manual.back")}
           </Link>
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-foreground text-3xl font-bold tracking-tight">
-                Manual Builder
+                {t("web.manual.title")}
               </h1>
               <p className="text-muted-foreground mt-2">
-                Create a conversation from scratch
+                {t("web.manual.subtitle")}
               </p>
             </div>
             <div className="bg-primary/10 text-primary rounded-full px-3 py-1 text-sm font-medium">
-              {validCount} message{validCount !== 1 ? "s" : ""}
+              {messageCount}
             </div>
           </div>
         </motion.div>
@@ -171,13 +178,13 @@ export default function ManualBuilderPage() {
                             <SelectItem value="user">
                               <span className="flex items-center gap-2">
                                 <User className="h-3.5 w-3.5" />
-                                User
+                                {roleUser}
                               </span>
                             </SelectItem>
                             <SelectItem value="assistant">
                               <span className="flex items-center gap-2">
                                 <Bot className="h-3.5 w-3.5" />
-                                Assistant
+                                {roleAssistant}
                               </span>
                             </SelectItem>
                           </SelectContent>
@@ -205,7 +212,10 @@ export default function ManualBuilderPage() {
                       onChange={(e) =>
                         updateMessage(message.id, "content", e.target.value)
                       }
-                      placeholder={`Enter ${message.role} message (supports Markdown)...`}
+                      placeholder={t("web.manual.placeholder", {
+                        role:
+                          message.role === "user" ? roleUser : roleAssistant,
+                      })}
                       className="min-h-[100px] resize-none text-sm transition-all duration-200 focus:ring-4 focus:ring-primary/10 focus:border-primary"
                     />
                     {/* Role indicator bar */}
@@ -234,7 +244,7 @@ export default function ManualBuilderPage() {
             className="group mt-4 h-12 w-full border-2 border-dashed transition-all duration-200 hover:border-solid hover:shadow-sm"
           >
             <Plus className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
-            Add Message
+            {t("web.manual.addMessage")}
           </Button>
         </motion.div>
 
@@ -247,14 +257,14 @@ export default function ManualBuilderPage() {
         >
           <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <MessageSquare className="h-4 w-4" />
-            <span>Drag to reorder messages</span>
+            <span>{t("web.manual.tip")}</span>
           </div>
           <Button
             onClick={handleContinue}
             disabled={validCount === 0}
             className="group h-11 px-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
           >
-            Continue to Editor
+            {t("web.manual.continue")}
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Button>
         </motion.div>

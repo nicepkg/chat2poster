@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { cn } from "~/utils/common";
+import { useI18n } from "~/i18n";
 
 export interface EditorHeaderProps {
   /** Page title */
@@ -27,14 +28,17 @@ export interface EditorHeaderProps {
  * Provides consistent header styling across editor pages.
  */
 export function EditorHeader({
-  title = "Editor",
+  title,
   backHref,
   onBack,
-  backLabel = "Back",
+  backLabel,
   showIcon = true,
   exportSlot,
   className,
 }: EditorHeaderProps) {
+  const { t } = useI18n();
+  const resolvedTitle = title ?? t("editor.title");
+  const resolvedBackLabel = backLabel ?? t("editor.back");
   const BackComponent = backHref ? "a" : "button";
   const backProps = backHref
     ? { href: backHref }
@@ -58,14 +62,16 @@ export function EditorHeader({
                 className="text-muted-foreground hover:text-foreground group flex items-center gap-2 text-sm transition-colors"
               >
                 <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-                <span className="hidden sm:inline">{backLabel}</span>
+                <span className="hidden sm:inline">{resolvedBackLabel}</span>
               </BackComponent>
               <div className="bg-border h-6 w-px" />
             </>
           )}
           <div className="flex items-center gap-2">
             {showIcon && <Sparkles className="text-primary h-5 w-5" />}
-            <h1 className="text-foreground text-lg font-semibold">{title}</h1>
+            <h1 className="text-foreground text-lg font-semibold">
+              {resolvedTitle}
+            </h1>
           </div>
         </div>
 

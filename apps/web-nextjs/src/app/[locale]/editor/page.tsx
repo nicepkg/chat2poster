@@ -15,6 +15,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
   Button,
+  useI18n,
 } from "@chat2poster/shared-ui";
 import "@chat2poster/shared-ui/styles/renderer.css";
 import { motion } from "framer-motion";
@@ -74,7 +75,7 @@ function loadConversationFromStorage() {
 /**
  * Mobile drawer for settings
  */
-function MobileSettingsDrawer() {
+function MobileSettingsDrawer({ title }: { title: string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -90,7 +91,7 @@ function MobileSettingsDrawer() {
       </DrawerTrigger>
       <DrawerContent className="max-h-[85vh]">
         <DrawerHeader className="border-b">
-          <DrawerTitle>Settings</DrawerTitle>
+          <DrawerTitle>{title}</DrawerTitle>
         </DrawerHeader>
         <div className="flex-1 overflow-y-auto">
           <EditorTabs defaultTab="messages" />
@@ -104,6 +105,7 @@ function MobileSettingsDrawer() {
  * Inner editor content that uses EditorContext
  */
 function EditorContent() {
+  const { t, locale } = useI18n();
   const router = useRouter();
   const canvasRef = useRef<HTMLDivElement>(null);
   const { editor, dispatch } = useEditor();
@@ -113,7 +115,7 @@ function EditorContent() {
   useEffect(() => {
     const conversation = loadConversationFromStorage();
     if (!conversation) {
-      router.push("/");
+      router.push(`/${locale}/import`);
       return;
     }
 
@@ -141,7 +143,7 @@ function EditorContent() {
         pageBreaks: [],
       },
     });
-  }, [router, dispatch]);
+  }, [router, dispatch, locale]);
 
   // Export handler
   const handleExport = useCallback(async () => {
@@ -163,7 +165,9 @@ function EditorContent() {
           className="flex flex-col items-center gap-4"
         >
           <Loader2 className="text-primary h-8 w-8 animate-spin" />
-          <span className="text-muted-foreground text-sm">Loading...</span>
+          <span className="text-muted-foreground text-sm">
+            {t("web.editor.loading")}
+          </span>
         </motion.div>
       </div>
     );
@@ -172,9 +176,8 @@ function EditorContent() {
   return (
     <main className="bg-muted/30 flex min-h-screen flex-col">
       <EditorHeader
-        title="Editor"
-        backHref="/"
-        backLabel="Back"
+        backHref={`/${locale}/import`}
+        backLabel={t("web.editor.back")}
         exportSlot={
           <ExportButton
             pageCount={pageCount}
@@ -211,7 +214,7 @@ function EditorContent() {
       </div>
 
       {/* Mobile Settings Drawer */}
-      {isMobile && <MobileSettingsDrawer />}
+      {isMobile && <MobileSettingsDrawer title={t("web.editor.settings")} />}
     </main>
   );
 }

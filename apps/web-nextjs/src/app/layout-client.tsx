@@ -9,8 +9,16 @@ import {
   DouyinIcon,
   XIcon,
   type NavItem,
+  I18nProvider,
+  useI18n,
 } from "@chat2poster/shared-ui";
+import {
+  getLocaleFromPath,
+  normalizeLocale,
+  stripLocaleFromPath,
+} from "@chat2poster/shared-ui/i18n/core";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo } from "react";
 import { ThemeProvider } from "~/components/theme-provider";
 import {
   siteConfig,
@@ -19,12 +27,6 @@ import {
   footerConfig,
   authorConfig,
 } from "~/lib/site-info";
-
-const navItems: NavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "Import", href: "/import" },
-  { label: "Docs", href: "/docs/en" },
-];
 
 const socialIconMap = {
   github: GitHubIcon,
@@ -47,13 +49,19 @@ const socialLinks = Object.entries(socialLinksConfig)
 export function RootLayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const locale = useMemo(
+    () => normalizeLocale(getLocaleFromPath(pathname) ?? undefined),
+    [pathname],
+  );
 
   // Check if we're on a docs page - don't show header/footer there (Nextra has its own)
-  const isDocsPage = pathname.startsWith("/docs");
+  const stripLocalePath = stripLocaleFromPath(pathname);
+  const isDocsPage = stripLocalePath.startsWith("/docs");
   // Check if we're on the editor page - no header/footer needed
-  const isEditorPage = pathname === "/editor";
+  const isEditorPage = stripLocalePath === "/editor";
   // Check if we're on manual or paste page - minimal header/footer
-  const isMinimalPage = pathname === "/manual" || pathname === "/paste";
+  const isMinimalPage =
+    stripLocalePath === "/manual" || stripLocalePath === "/paste";
 
   const showHeaderFooter = !isDocsPage && !isEditorPage && !isMinimalPage;
 
@@ -61,15 +69,55 @@ export function RootLayoutClient({ children }: { children: React.ReactNode }) {
     router.push(href);
   };
 
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = locale;
+    }
+  }, [locale]);
+
   return (
-    <ThemeProvider>
+    <I18nProvider locale={locale}>
+      <ThemeProvider>
+        <LayoutFrame
+          onNavigate={handleNavigate}
+          showHeaderFooter={showHeaderFooter}
+        >
+          {children}
+        </LayoutFrame>
+      </ThemeProvider>
+    </I18nProvider>
+  );
+}
+
+function LayoutFrame({
+  children,
+  onNavigate,
+  showHeaderFooter,
+}: {
+  children: React.ReactNode;
+  onNavigate: (href: string) => void;
+  showHeaderFooter: boolean;
+}) {
+  const { t, locale } = useI18n();
+  const localePrefix = `/${locale}`;
+  const navItems = useMemo<NavItem[]>(
+    () => [
+      { label: t("web.nav.home"), href: localePrefix },
+      { label: t("web.nav.import"), href: `${localePrefix}/import` },
+      { label: t("web.nav.docs"), href: `${localePrefix}/docs` },
+    ],
+    [localePrefix, t],
+  );
+
+  return (
+    <>
       {showHeaderFooter && (
         <SiteHeader
           logo={<Logo width={28} height={28} name={siteConfig.name} />}
           navItems={navItems}
           githubUrl={githubConfig.url}
           showThemeToggle
-          onNavigate={handleNavigate}
+          onNavigate={onNavigate}
         />
       )}
       <div className={showHeaderFooter ? "min-h-[calc(100vh-64px)]" : ""}>
@@ -78,7 +126,7 @@ export function RootLayoutClient({ children }: { children: React.ReactNode }) {
       {showHeaderFooter && (
         <SiteFooter
           logo={<Logo width={28} height={28} name={siteConfig.name} />}
-          description={footerConfig.description.en}
+          description={t("web.footer.description")}
           socialLinks={socialLinks}
           copyright={{
             holder: footerConfig.copyright.holder,
@@ -90,6 +138,6 @@ export function RootLayoutClient({ children }: { children: React.ReactNode }) {
           }}
         />
       )}
-    </ThemeProvider>
+    </>
   );
 }

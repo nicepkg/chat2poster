@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Monitor } from "lucide-react";
 import type { Decoration, Theme } from "@chat2poster/core-schema";
 import { cn } from "~/utils/common";
+import { useI18n } from "~/i18n";
 import { Label } from "../ui/label";
 import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
@@ -40,13 +41,14 @@ export function ThemeTab({
   onDecorationChange,
   className,
 }: ThemeTabProps) {
+  const { t } = useI18n();
   return (
     <div className={cn("space-y-6 p-4", className)}>
       {/* Theme Selector (if themes provided) */}
       {themes.length > 0 && (
         <div className="space-y-3">
           <Label className="text-muted-foreground text-xs uppercase tracking-wide">
-            Theme
+            {t("theme.label")}
           </Label>
           <div className="grid grid-cols-3 gap-2">
             {themes.map((theme) => (
@@ -85,13 +87,14 @@ export function ThemeTab({
           })
         }
         presets={backgroundPresets}
+        label={t("theme.background")}
       />
 
       {/* Border Radius */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <Label className="text-muted-foreground text-xs uppercase tracking-wide">
-            Border Radius
+            {t("theme.borderRadius")}
           </Label>
           <span className="text-muted-foreground text-xs">
             {decoration.canvasRadiusPx}px
@@ -114,7 +117,7 @@ export function ThemeTab({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <Label className="text-muted-foreground text-xs uppercase tracking-wide">
-            Padding
+            {t("theme.padding")}
           </Label>
           <span className="text-muted-foreground text-xs">
             {decoration.canvasPaddingPx}px
@@ -136,7 +139,7 @@ export function ThemeTab({
       {/* Shadow */}
       <div className="space-y-3">
         <Label className="text-muted-foreground text-xs uppercase tracking-wide">
-          Shadow
+          {t("theme.shadow")}
         </Label>
         <Select
           value={decoration.shadowLevel}
@@ -148,11 +151,11 @@ export function ThemeTab({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="none">None</SelectItem>
-            <SelectItem value="sm">Small</SelectItem>
-            <SelectItem value="md">Medium</SelectItem>
-            <SelectItem value="lg">Large</SelectItem>
-            <SelectItem value="xl">Extra Large</SelectItem>
+            <SelectItem value="none">{t("theme.shadow.none")}</SelectItem>
+            <SelectItem value="sm">{t("theme.shadow.small")}</SelectItem>
+            <SelectItem value="md">{t("theme.shadow.medium")}</SelectItem>
+            <SelectItem value="lg">{t("theme.shadow.large")}</SelectItem>
+            <SelectItem value="xl">{t("theme.shadow.extraLarge")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -161,7 +164,7 @@ export function ThemeTab({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Monitor className="text-muted-foreground h-4 w-4" />
-          <Label className="text-sm">macOS Bar</Label>
+          <Label className="text-sm">{t("theme.macosBar")}</Label>
         </div>
         <Switch
           checked={decoration.macosBarEnabled}

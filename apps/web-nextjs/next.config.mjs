@@ -7,7 +7,6 @@ const withNextra = nextra({
     codeblocks: false,
   },
   contentDirBasePath: "/docs",
-  unstable_shouldAddLocaleToLinks: true,
 });
 
 const svgrLoader = {
@@ -41,11 +40,6 @@ const config = {
     "@chat2poster/core-export",
     "@chat2poster/shared-ui",
   ],
-
-  i18n: {
-    locales: ["en", "zh"],
-    defaultLocale: "en",
-  },
 
   // Required for image optimization
   images: {

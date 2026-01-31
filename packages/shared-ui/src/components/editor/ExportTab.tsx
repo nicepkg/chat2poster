@@ -3,6 +3,7 @@
 import * as React from "react";
 import type { ExportParams } from "@chat2poster/core-schema";
 import { cn } from "~/utils/common";
+import { useI18n } from "~/i18n";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Slider } from "../ui/slider";
@@ -32,12 +33,13 @@ export function ExportTab({
   onAutoPaginationChange,
   className,
 }: ExportTabProps) {
+  const { t } = useI18n();
   return (
     <div className={cn("space-y-6 p-4", className)}>
       {/* Scale */}
       <div className="space-y-3">
         <Label className="text-muted-foreground text-xs uppercase tracking-wide">
-          Scale
+          {t("export.scale")}
         </Label>
         <div className="grid grid-cols-3 gap-2">
           {([1, 2, 3] as const).map((scale) => (
@@ -52,14 +54,14 @@ export function ExportTab({
           ))}
         </div>
         <p className="text-muted-foreground text-xs">
-          Higher scale = better quality, larger file
+          {t("export.scaleHint")}
         </p>
       </div>
 
       {/* Canvas Width */}
       <div className="space-y-3">
         <Label className="text-muted-foreground text-xs uppercase tracking-wide">
-          Canvas Width
+          {t("export.canvasWidth")}
         </Label>
         <Select
           value={String(exportParams.canvasWidthPx)}
@@ -72,7 +74,9 @@ export function ExportTab({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="600">600px</SelectItem>
-            <SelectItem value="800">800px (Recommended)</SelectItem>
+            <SelectItem value="800">
+              {t("export.canvasWidthRecommended")}
+            </SelectItem>
             <SelectItem value="1080">1080px</SelectItem>
           </SelectContent>
         </Select>
@@ -81,9 +85,9 @@ export function ExportTab({
       {/* Auto Pagination Toggle */}
       <div className="flex items-center justify-between">
         <div>
-          <Label className="text-sm">Auto Pagination</Label>
+          <Label className="text-sm">{t("export.autoPagination")}</Label>
           <p className="text-muted-foreground text-xs">
-            Split long conversations into pages
+            {t("export.autoPaginationHint")}
           </p>
         </div>
         <Switch
@@ -96,7 +100,7 @@ export function ExportTab({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <Label className="text-muted-foreground text-xs uppercase tracking-wide">
-            Max Page Height
+            {t("export.maxPageHeight")}
           </Label>
           <span className="text-muted-foreground text-xs">
             {exportParams.maxPageHeightPx}px
@@ -119,8 +123,8 @@ export function ExportTab({
       <div className="bg-muted/50 rounded-lg p-3">
         <p className="text-muted-foreground text-xs">
           {pageCount > 1
-            ? `Your export will be split into ${pageCount} pages and downloaded as a ZIP file.`
-            : "Your export will be a single PNG image."}
+            ? t("export.infoMulti", { count: pageCount })
+            : t("export.infoSingle")}
         </p>
       </div>
     </div>

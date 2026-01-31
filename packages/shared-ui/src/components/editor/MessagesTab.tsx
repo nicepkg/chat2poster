@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Scissors, X, User, Bot } from "lucide-react";
 import type { Message } from "@chat2poster/core-schema";
 import { cn } from "~/utils/common";
+import { useI18n } from "~/i18n";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { ScrollArea } from "../ui/scroll-area";
@@ -32,6 +33,7 @@ export function MessagesTab({
   onRemovePageBreak,
   className,
 }: MessagesTabProps) {
+  const { t } = useI18n();
   const getPageBreakAfter = (messageId: string) =>
     pageBreaks.find((pb) => pb.afterMessageId === messageId);
 
@@ -41,7 +43,10 @@ export function MessagesTab({
       <div className="border-b px-4 py-3">
         <div className="flex items-center justify-between">
           <span className="text-muted-foreground text-sm">
-            {selectedIds.length}/{messages.length} selected
+            {t("messages.selected", {
+              selected: selectedIds.length,
+              total: messages.length,
+            })}
           </span>
           <div className="flex gap-1">
             <Button
@@ -50,7 +55,7 @@ export function MessagesTab({
               onClick={onSelectAll}
               className="text-primary h-7 px-2 text-xs"
             >
-              All
+              {t("messages.selectAll")}
             </Button>
             <Button
               variant="ghost"
@@ -58,7 +63,7 @@ export function MessagesTab({
               onClick={onDeselectAll}
               className="h-7 px-2 text-xs"
             >
-              None
+              {t("messages.selectNone")}
             </Button>
           </div>
         </div>
@@ -92,11 +97,11 @@ export function MessagesTab({
                       className="mt-0.5"
                     />
                     <div className="min-w-0 flex-1">
-                      <div className="mb-1 flex items-center gap-2">
-                        {message.role === "user" ? (
-                          <User className="text-primary h-3.5 w-3.5" />
-                        ) : (
-                          <Bot className="text-secondary h-3.5 w-3.5" />
+                    <div className="mb-1 flex items-center gap-2">
+                      {message.role === "user" ? (
+                        <User className="text-primary h-3.5 w-3.5" />
+                      ) : (
+                        <Bot className="text-secondary h-3.5 w-3.5" />
                         )}
                         <span
                           className={cn(
@@ -106,7 +111,11 @@ export function MessagesTab({
                               : "text-secondary",
                           )}
                         >
-                          {message.role}
+                          {message.role === "user"
+                            ? t("role.user")
+                            : message.role === "assistant"
+                              ? t("role.assistant")
+                              : t("role.system")}
                         </span>
                       </div>
                       <p className="text-muted-foreground line-clamp-2 text-xs">
@@ -143,7 +152,7 @@ export function MessagesTab({
                       <div className="bg-secondary/30 h-px flex-1" />
                       <span className="text-secondary flex items-center gap-1 text-xs font-medium">
                         <Scissors className="h-3 w-3" />
-                        Page break
+                        {t("messages.pageBreak")}
                       </span>
                       <Button
                         variant="ghost"

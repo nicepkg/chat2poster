@@ -1,6 +1,13 @@
 "use client";
 
-import { Button, Card, CardContent, Input, cn } from "@chat2poster/shared-ui";
+import {
+  Button,
+  Card,
+  CardContent,
+  Input,
+  cn,
+  useI18n,
+} from "@chat2poster/shared-ui";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -40,14 +47,33 @@ const itemVariants = {
 };
 
 export default function ImportPage() {
+  const { t, locale } = useI18n();
   const router = useRouter();
   const [shareLink, setShareLink] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const copy = {
+    badge: t("web.import.badge"),
+    title: t("web.import.title"),
+    subtitle: t("web.import.subtitle"),
+    sectionTitle: t("web.import.sectionTitle"),
+    sectionDesc: t("web.import.sectionDesc"),
+    errorEmpty: t("web.import.errorEmpty"),
+    errorParse: t("web.import.errorParse"),
+    errorParseFallback: t("web.import.errorParseFallback"),
+    parse: t("web.import.parse"),
+    parsing: t("web.import.parsing"),
+    or: t("web.import.or"),
+    manualTitle: t("web.import.manualTitle"),
+    manualDesc: t("web.import.manualDesc"),
+    pasteTitle: t("web.import.pasteTitle"),
+    pasteDesc: t("web.import.pasteDesc"),
+    privacy: t("web.import.privacy"),
+  };
 
   const handleParse = async () => {
     if (!shareLink.trim()) {
-      setError("Please enter a share link");
+      setError(copy.errorEmpty);
       return;
     }
 
@@ -55,7 +81,7 @@ export default function ImportPage() {
     setError(null);
 
     try {
-      const response = await fetch("/api/parse-share-link", {
+      const response = await fetch(`/${locale}/api/parse-share-link`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: shareLink.trim() }),
@@ -68,7 +94,7 @@ export default function ImportPage() {
       };
 
       if (!data.success) {
-        setError(data.error?.message ?? "Failed to parse share link");
+        setError(data.error?.message ?? copy.errorParse);
         return;
       }
 
@@ -77,10 +103,10 @@ export default function ImportPage() {
           "chat2poster:conversation",
           JSON.stringify(data.conversation),
         );
-        router.push("/editor");
+        router.push(`/${locale}/editor`);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to parse link");
+      setError(err instanceof Error ? err.message : copy.errorParseFallback);
     } finally {
       setIsLoading(false);
     }
@@ -109,14 +135,12 @@ export default function ImportPage() {
             className="bg-primary/10 text-primary mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium"
           >
             <Sparkles className="h-4 w-4" />
-            AI Chat to Poster
+            {copy.badge}
           </motion.div>
           <h1 className="from-foreground to-foreground/70 bg-gradient-to-b bg-clip-text text-4xl font-bold tracking-tight text-transparent">
-            Import Conversation
+            {copy.title}
           </h1>
-          <p className="text-muted-foreground mt-3 text-lg">
-            Paste a share link or create from scratch
-          </p>
+          <p className="text-muted-foreground mt-3 text-lg">{copy.subtitle}</p>
         </div>
 
         {/* Main Card */}
@@ -128,10 +152,10 @@ export default function ImportPage() {
               </div>
               <div>
                 <h2 className="text-foreground font-semibold">
-                  Import from Share Link
+                  {copy.sectionTitle}
                 </h2>
                 <p className="text-muted-foreground text-sm">
-                  Paste your ChatGPT, Claude, or Gemini share link
+                  {copy.sectionDesc}
                 </p>
               </div>
             </div>
@@ -170,11 +194,11 @@ export default function ImportPage() {
                 {isLoading ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Parsing...
+                    {copy.parsing}
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    Parse & Continue
+                    {copy.parse}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </span>
                 )}
@@ -184,7 +208,7 @@ export default function ImportPage() {
             {/* Divider */}
             <div className="my-6 flex items-center gap-4">
               <div className="bg-border h-px flex-1" />
-              <span className="text-muted-foreground text-sm">or</span>
+              <span className="text-muted-foreground text-sm">{copy.or}</span>
               <div className="bg-border h-px flex-1" />
             </div>
 
@@ -196,7 +220,7 @@ export default function ImportPage() {
               className="grid grid-cols-2 gap-3"
             >
               <motion.div variants={itemVariants}>
-                <Link href="/manual" className="group block">
+                <Link href={`/${locale}/manual`} className="group block">
                   <motion.div
                     whileHover={{
                       y: -3,
@@ -214,17 +238,17 @@ export default function ImportPage() {
                       <PenLine className="text-primary h-5 w-5" />
                     </div>
                     <span className="text-foreground text-sm font-medium">
-                      Manual Builder
+                      {copy.manualTitle}
                     </span>
                     <span className="text-muted-foreground mt-0.5 text-xs">
-                      Create from scratch
+                      {copy.manualDesc}
                     </span>
                   </motion.div>
                 </Link>
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <Link href="/paste" className="group block">
+                <Link href={`/${locale}/paste`} className="group block">
                   <motion.div
                     whileHover={{
                       y: -3,
@@ -242,10 +266,10 @@ export default function ImportPage() {
                       <ClipboardPaste className="text-primary h-5 w-5" />
                     </div>
                     <span className="text-foreground text-sm font-medium">
-                      Paste Text
+                      {copy.pasteTitle}
                     </span>
                     <span className="text-muted-foreground mt-0.5 text-xs">
-                      Import from clipboard
+                      {copy.pasteDesc}
                     </span>
                   </motion.div>
                 </Link>
@@ -262,9 +286,7 @@ export default function ImportPage() {
           className="text-muted-foreground mt-6 flex items-center justify-center gap-2 text-center text-sm"
         >
           <Shield className="h-4 w-4" />
-          <span>
-            Your conversations are processed locally. We never store your data.
-          </span>
+          <span>{copy.privacy}</span>
         </motion.div>
       </motion.div>
     </main>

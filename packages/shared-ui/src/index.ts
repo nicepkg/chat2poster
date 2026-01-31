@@ -16,3 +16,6 @@ export * from "./utils";
 
 // Themes
 export * from "./themes";
+
+// i18n
+export * from "./i18n";

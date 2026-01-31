@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, cn } from "@chat2poster/shared-ui";
+import { Button, cn, useI18n } from "@chat2poster/shared-ui";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -29,157 +29,78 @@ const Hero3D = dynamic(() => import("./hero-3d").then((mod) => mod.Hero3D), {
 const workflows = [
   {
     icon: Presentation,
-    title: { en: "Beautiful Themes", zh: "精美主题" },
-    desc: { en: "Dark, Light, Custom Styles", zh: "暗色、亮色、自定义样式" },
+    titleKey: "web.home.workflows.theme.title",
+    descKey: "web.home.workflows.theme.desc",
     link: "/docs/themes",
     color: "text-primary",
     bg: "bg-primary/10",
   },
   {
     icon: BarChart2,
-    title: { en: "Smart Pagination", zh: "智能分页" },
-    desc: { en: "Auto-split Long Chats", zh: "自动拆分超长对话" },
+    titleKey: "web.home.workflows.pagination.title",
+    descKey: "web.home.workflows.pagination.desc",
     link: "/docs/pagination",
     color: "text-chart-1",
     bg: "bg-chart-1/10",
   },
   {
     icon: Zap,
-    title: { en: "One-Click Export", zh: "一键导出" },
-    desc: { en: "PNG at 1x/2x/3x DPI", zh: "1x/2x/3x 倍率 PNG" },
+    titleKey: "web.home.workflows.export.title",
+    descKey: "web.home.workflows.export.desc",
     link: "/docs/export",
     color: "text-chart-2",
     bg: "bg-chart-2/10",
   },
   {
     icon: BookOpen,
-    title: { en: "Multi-Platform", zh: "多平台支持" },
-    desc: { en: "ChatGPT, Claude, Gemini", zh: "ChatGPT, Claude, Gemini" },
+    titleKey: "web.home.workflows.platform.title",
+    descKey: "web.home.workflows.platform.desc",
     link: "/docs/platforms",
     color: "text-chart-3",
     bg: "bg-chart-3/10",
   },
   {
     icon: Video,
-    title: { en: "Browser Extension", zh: "浏览器扩展" },
-    desc: { en: "Export from Any Chat", zh: "从任意对话页面导出" },
+    titleKey: "web.home.workflows.extension.title",
+    descKey: "web.home.workflows.extension.desc",
     link: "/docs/extension",
     color: "text-destructive",
     bg: "bg-destructive/10",
   },
   {
     icon: TrendingUp,
-    title: { en: "Web App", zh: "网页版" },
-    desc: { en: "Share Link & Manual Input", zh: "分享链接 & 手动输入" },
+    titleKey: "web.home.workflows.webapp.title",
+    descKey: "web.home.workflows.webapp.desc",
     link: "/docs/web-app",
     color: "text-chart-4",
     bg: "bg-chart-4/10",
   },
-];
+] as const;
 
 // =============================================================================
 // PROBLEM/SOLUTION CARDS - User pain points and chat2poster solutions
 // =============================================================================
 const problems = [
   {
-    role: { en: "Content Creator", zh: "内容创作者" },
-    pain: {
-      en: "Screenshots look ugly, inconsistent formatting, can't fit long chats",
-      zh: "截图丑、格式乱、长对话截不全",
-    },
-    gain: {
-      en: "Beautiful posters with consistent themes, auto-pagination for any length",
-      zh: "统一主题的精美海报，自动分页适配任意长度",
-    },
+    roleKey: "web.home.problems.creator.role",
+    painKey: "web.home.problems.creator.pain",
+    gainKey: "web.home.problems.creator.gain",
   },
   {
-    role: { en: "Developer", zh: "开发者" },
-    pain: {
-      en: "Code blocks look terrible in screenshots, syntax highlighting lost",
-      zh: "代码块截图难看，语法高亮丢失",
-    },
-    gain: {
-      en: "Shiki-powered code highlighting, preserves formatting perfectly",
-      zh: "Shiki 代码高亮，完美保留格式",
-    },
+    roleKey: "web.home.problems.developer.role",
+    painKey: "web.home.problems.developer.pain",
+    gainKey: "web.home.problems.developer.gain",
   },
   {
-    role: { en: "Social Sharer", zh: "社交分享者" },
-    pain: {
-      en: "Platform limits image size, manual cropping is tedious",
-      zh: "平台限制图片大小，手动裁剪很麻烦",
-    },
-    gain: {
-      en: "Export at 1x/2x/3x, multi-page zip for long chats",
-      zh: "1x/2x/3x 倍率导出，长对话多页打包",
-    },
+    roleKey: "web.home.problems.sharer.role",
+    painKey: "web.home.problems.sharer.pain",
+    gainKey: "web.home.problems.sharer.gain",
   },
-];
+] as const;
 
-type Translation = {
-  hero: {
-    title: string;
-    subtitle: string;
-    desc: string;
-    getStarted: string;
-    viewGithub: string;
-  };
-  problem: {
-    title: string;
-    without: string;
-    with: string;
-  };
-  workflows: {
-    title: string;
-    subtitle: string;
-  };
-  cta: {
-    title: string;
-    desc: string;
-    button: string;
-  };
-};
-
-export function LandingPage({ lang }: { lang: "en" | "zh" }) {
-  const t: Translation = {
-    hero: {
-      title:
-        lang === "en" ? "Turn AI Chats into Posters" : "把 AI 聊天变成海报",
-      subtitle:
-        lang === "en"
-          ? "Share-worthy images in one click."
-          : "一键生成能直接发的精美图片。",
-      desc:
-        lang === "en"
-          ? "Export ChatGPT, Claude, Gemini conversations as beautiful, paginated PNG images. Perfect for Twitter, WeChat, blogs, and docs."
-          : "将 ChatGPT、Claude、Gemini 对话导出为精美的分页 PNG 图片。完美适配推特、微信、博客和文档。",
-      getStarted: lang === "en" ? "Get Started" : "开始使用",
-      viewGithub: lang === "en" ? "Star on GitHub" : "Star on GitHub",
-    },
-    problem: {
-      title: lang === "en" ? "Why chat2poster?" : "为什么选择 chat2poster？",
-      without: lang === "en" ? "Without chat2poster" : "没有 chat2poster",
-      with: lang === "en" ? "With chat2poster" : "有了 chat2poster",
-    },
-    workflows: {
-      title: lang === "en" ? "Core Features" : "核心功能",
-      subtitle:
-        lang === "en"
-          ? "Everything you need for beautiful AI chat exports"
-          : "导出精美 AI 对话所需的一切",
-    },
-    cta: {
-      title:
-        lang === "en"
-          ? "Ready to share your AI chats?"
-          : "准备好分享你的 AI 对话了吗？",
-      desc:
-        lang === "en"
-          ? "Install the extension or try the web app. Start creating beautiful posters today."
-          : "安装扩展或使用网页版。今天就开始创建精美海报。",
-      button: lang === "en" ? "Get Started Now" : "立即开始",
-    },
-  };
+export function LandingPage() {
+  const { t, locale } = useI18n();
+  const localePrefix = `/${locale}`;
 
   return (
     <div className="homepage relative flex min-h-screen flex-col font-sans">
@@ -195,22 +116,23 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
             >
               <h1 className="mb-8 text-5xl leading-tight font-extrabold tracking-tight md:text-7xl">
                 <span className="from-primary animate-gradient-x bg-gradient-to-r via-secondary to-chart-1 bg-clip-text text-transparent">
-                  {t.hero.title}
+                  {t("web.home.hero.title")}
                 </span>
               </h1>
               <p className="text-foreground mb-6 text-2xl font-semibold md:text-3xl">
-                {t.hero.subtitle}
+                {t("web.home.hero.subtitle")}
               </p>
               <p className="text-muted-foreground mx-auto mb-12 max-w-2xl text-lg leading-relaxed md:text-xl">
-                {t.hero.desc}
+                {t("web.home.hero.desc")}
               </p>
               <div className="mb-16 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Link href={`/docs/${lang}/getting-started`}>
+                <Link href={`${localePrefix}/docs/getting-started`}>
                   <Button
                     size="lg"
                     className="shadow-primary/25 hover:shadow-primary/40 h-14 rounded-full px-8 text-lg font-semibold shadow-lg transition-shadow"
                   >
-                    {t.hero.getStarted} <ArrowRight className="ml-2 h-5 w-5" />
+                    {t("web.home.hero.getStarted")}{" "}
+                    <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
                 <Link href={githubConfig.url} target="_blank">
@@ -219,7 +141,8 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                     size="lg"
                     className="bg-background/50 hover:bg-muted/50 border-primary/20 hover:border-primary/50 h-14 rounded-full px-8 text-lg backdrop-blur-sm"
                   >
-                    <Github className="mr-2 h-5 w-5" /> {t.hero.viewGithub}
+                    <Github className="mr-2 h-5 w-5" />{" "}
+                    {t("web.home.hero.viewGithub")}
                   </Button>
                 </Link>
               </div>
@@ -236,9 +159,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                     <div className="flex items-center overflow-x-auto text-left font-mono text-sm whitespace-nowrap md:text-base">
                       <span className="text-primary mr-3 select-none">1.</span>
                       <span className="text-foreground">
-                        {lang === "en"
-                          ? "Install extension → Open ChatGPT → Click Export → Done!"
-                          : "安装扩展 → 打开 ChatGPT → 点击导出 → 搞定！"}
+                        {t("web.home.hero.demoLine")}
                       </span>
                     </div>
                   </div>
@@ -261,7 +182,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
             className="mb-24 text-center"
           >
             <h2 className="mb-6 text-3xl font-bold tracking-tight md:text-5xl">
-              {t.problem.title}
+              {t("web.home.problem.title")}
             </h2>
           </motion.div>
 
@@ -281,7 +202,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                   {/* Header: Role */}
                   <div className="px-8 pt-8 pb-4 text-center">
                     <h3 className="bg-gradient-to-br from-zinc-900 to-zinc-600 bg-clip-text text-2xl font-bold text-transparent transition-all duration-300 group-hover:from-primary group-hover:to-purple-600 dark:from-white dark:to-zinc-400">
-                      {item.role[lang]}
+                      {t(item.roleKey)}
                     </h3>
                   </div>
 
@@ -291,12 +212,12 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                     <div className="relative flex-1 rounded-2xl bg-zinc-50 p-6 transition-colors group-hover:bg-red-50/50 dark:bg-white/5 dark:group-hover:bg-red-950/20">
                       <div className="mb-3 flex items-center justify-between">
                         <span className="text-xs font-bold tracking-widest text-zinc-400 uppercase">
-                          BEFORE
+                          {t("web.home.problem.before")}
                         </span>
                         <XCircle className="h-5 w-5 text-zinc-300 transition-colors group-hover:text-red-400 dark:text-zinc-600" />
                       </div>
                       <p className="font-mono text-sm leading-relaxed text-zinc-500 transition-all decoration-red-400/50 group-hover:text-zinc-400 group-hover:line-through dark:text-zinc-400">
-                        {item.pain[lang]}
+                        {t(item.painKey)}
                       </p>
                     </div>
 
@@ -311,12 +232,12 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                     <div className="relative flex-1 rounded-2xl bg-gradient-to-b from-blue-50/50 to-purple-50/50 p-6 pt-8 transition-colors group-hover:from-blue-50/80 group-hover:to-purple-50/80 dark:from-blue-900/10 dark:to-purple-900/10">
                       <div className="mb-3 flex items-center justify-between">
                         <span className="text-xs font-bold tracking-widest text-primary/80 uppercase">
-                          AFTER
+                          {t("web.home.problem.after")}
                         </span>
                         <CheckCircle className="h-5 w-5 text-primary" />
                       </div>
                       <p className="text-base font-semibold leading-relaxed text-zinc-800 dark:text-zinc-100">
-                        {item.gain[lang]}
+                        {t(item.gainKey)}
                       </p>
                     </div>
                   </div>
@@ -332,17 +253,17 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
         <div className="container relative z-10 mx-auto px-4">
           <div className="mb-24 text-center">
             <h2 className="mb-6 text-3xl font-bold md:text-5xl">
-              {t.workflows.title}
+              {t("web.home.workflows.title")}
             </h2>
             <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-              {t.workflows.subtitle}
+              {t("web.home.workflows.subtitle")}
             </p>
           </div>
 
           <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {workflows.map((wf, i) => (
               <Link
-                href={`/docs/${lang}${wf.link.replace("/docs", "")}`}
+                href={`${localePrefix}${wf.link}`}
                 key={i}
                 className="group block h-full"
               >
@@ -383,10 +304,10 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
                     {/* Content */}
                     <div className="relative z-10 flex flex-1 flex-col">
                       <h3 className="mb-3 text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
-                        {wf.title[lang]}
+                        {t(wf.titleKey)}
                       </h3>
                       <p className="flex-1 text-lg leading-relaxed text-muted-foreground/80 transition-colors group-hover:text-muted-foreground">
-                        {wf.desc[lang]}
+                        {t(wf.descKey)}
                       </p>
                     </div>
 
@@ -401,7 +322,7 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
       </section>
 
       {/* Extension Section */}
-      <ExtensionSection lang={lang} />
+      <ExtensionSection />
 
       {/* CTA */}
       <section className="relative overflow-hidden pt-24 pb-16 text-center">
@@ -410,17 +331,17 @@ export function LandingPage({ lang }: { lang: "en" | "zh" }) {
           <div className="bg-primary/10 absolute top-1/2 left-1/2 -z-10 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px]" />
 
           <h2 className="mb-8 text-4xl font-bold tracking-tight md:text-6xl">
-            {t.cta.title}
+            {t("web.home.cta.title")}
           </h2>
           <p className="text-muted-foreground mx-auto mb-12 max-w-2xl text-xl leading-relaxed md:text-2xl">
-            {t.cta.desc}
+            {t("web.home.cta.desc")}
           </p>
-          <Link href={`/docs/${lang}/getting-started`}>
+          <Link href={`${localePrefix}/docs/getting-started`}>
             <Button
               size="lg"
               className="shadow-primary/30 hover:shadow-primary/50 h-16 rounded-full px-12 text-xl shadow-2xl transition-all hover:scale-105"
             >
-              {t.cta.button}
+              {t("web.home.cta.button")}
             </Button>
           </Link>
         </div>

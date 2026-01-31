@@ -1,13 +1,9 @@
 "use client";
 
-import { Button, cn } from "@chat2poster/shared-ui";
+import { Button, cn, useI18n } from "@chat2poster/shared-ui";
 import { motion } from "framer-motion";
 import { Download, Chrome, Globe, Zap, Sparkles, Shield } from "lucide-react";
 import Link from "next/link";
-
-interface ExtensionSectionProps {
-  lang: "en" | "zh";
-}
 
 const browsers = [
   {
@@ -39,41 +35,24 @@ const browsers = [
 const features = [
   {
     icon: Zap,
-    title: { en: "One-Click Export", zh: "一键导出" },
-    desc: {
-      en: "Export directly from ChatGPT, Claude, or Gemini",
-      zh: "直接从 ChatGPT、Claude 或 Gemini 导出",
-    },
+    titleKey: "web.extension.features.export.title",
+    descKey: "web.extension.features.export.desc",
   },
   {
     icon: Sparkles,
-    title: { en: "Beautiful Themes", zh: "精美主题" },
-    desc: {
-      en: "Multiple themes with customizable styles",
-      zh: "多种主题可供选择，支持自定义样式",
-    },
+    titleKey: "web.extension.features.themes.title",
+    descKey: "web.extension.features.themes.desc",
   },
   {
     icon: Shield,
-    title: { en: "Privacy First", zh: "隐私优先" },
-    desc: {
-      en: "All processing happens locally in your browser",
-      zh: "所有处理都在本地浏览器中完成",
-    },
+    titleKey: "web.extension.features.privacy.title",
+    descKey: "web.extension.features.privacy.desc",
   },
-];
+] as const;
 
-export function ExtensionSection({ lang }: ExtensionSectionProps) {
-  const t = {
-    title: lang === "en" ? "Browser Extension" : "浏览器扩展",
-    subtitle:
-      lang === "en"
-        ? "Export AI chats with one click - no copy-paste needed"
-        : "一键导出 AI 对话 - 无需复制粘贴",
-    download: lang === "en" ? "Download" : "下载",
-    comingSoon: lang === "en" ? "Coming Soon" : "即将推出",
-    tryWebApp: lang === "en" ? "Or try the Web App" : "或尝试网页版",
-  };
+export function ExtensionSection() {
+  const { t, locale } = useI18n();
+  const localePrefix = `/${locale}`;
 
   return (
     <section className="relative overflow-hidden py-24 md:py-32">
@@ -93,10 +72,10 @@ export function ExtensionSection({ lang }: ExtensionSectionProps) {
         >
           <div className="bg-primary/10 text-primary mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium">
             <Download className="h-4 w-4" />
-            {t.title}
+            {t("web.extension.title")}
           </div>
           <h2 className="mb-6 text-3xl font-bold tracking-tight md:text-5xl">
-            {t.subtitle}
+            {t("web.extension.subtitle")}
           </h2>
         </motion.div>
 
@@ -143,11 +122,11 @@ export function ExtensionSection({ lang }: ExtensionSectionProps) {
               <span className="mb-2 font-semibold">{browser.name}</span>
               {browser.status === "available" ? (
                 <span className="text-primary text-sm font-medium">
-                  {t.download}
+                  {t("web.extension.download")}
                 </span>
               ) : (
                 <span className="text-muted-foreground text-xs">
-                  {t.comingSoon}
+                  {t("web.extension.comingSoon")}
                 </span>
               )}
             </motion.div>
@@ -164,7 +143,7 @@ export function ExtensionSection({ lang }: ExtensionSectionProps) {
         >
           {features.map((feature, i) => (
             <motion.div
-              key={feature.title.en}
+              key={feature.titleKey}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -175,9 +154,9 @@ export function ExtensionSection({ lang }: ExtensionSectionProps) {
                 <feature.icon className="text-primary h-6 w-6" />
               </div>
               <div>
-                <h3 className="mb-1 font-semibold">{feature.title[lang]}</h3>
+                <h3 className="mb-1 font-semibold">{t(feature.titleKey)}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  {feature.desc[lang]}
+                  {t(feature.descKey)}
                 </p>
               </div>
             </motion.div>
@@ -192,13 +171,13 @@ export function ExtensionSection({ lang }: ExtensionSectionProps) {
           transition={{ delay: 0.3 }}
           className="mt-12 text-center"
         >
-          <Link href="/import">
+          <Link href={`${localePrefix}/import`}>
             <Button
               variant="outline"
               size="lg"
               className="rounded-full px-8 text-lg"
             >
-              {t.tryWebApp}
+              {t("web.extension.tryWebApp")}
             </Button>
           </Link>
         </motion.div>

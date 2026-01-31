@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "../../utils";
+import { useI18n } from "~/i18n";
 
 export interface FooterLink {
   label: string;
@@ -45,6 +46,10 @@ export function SiteFooter({
   author,
   className,
 }: SiteFooterProps) {
+  const { t } = useI18n();
+  const licenseText = copyright?.license
+    ? t("siteFooter.license", { license: copyright.license })
+    : undefined;
   return (
     <footer className={cn("bg-background border-t", className)}>
       <div className="container mx-auto px-4 py-12 md:py-16">
@@ -115,12 +120,14 @@ export function SiteFooter({
           {copyright && (
             <p>
               &copy; {new Date().getFullYear()} {copyright.holder}.
-              {copyright.license && ` Released under the ${copyright.license} License.`}
+              {licenseText ? ` ${licenseText}` : ""}
             </p>
           )}
           {author && (
             <p className="flex items-center gap-1">
-              Built with <span className="text-destructive">&#9829;</span> by{" "}
+              {t("siteFooter.builtWithPrefix")}{" "}
+              <span className="text-destructive">&#9829;</span>{" "}
+              {t("siteFooter.builtWithSuffix")}{" "}
               {author.href ? (
                 <a
                   href={author.href}

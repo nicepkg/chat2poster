@@ -1,6 +1,12 @@
 "use client";
 
-import { Button, Card, CardContent, Textarea } from "@chat2poster/shared-ui";
+import {
+  Button,
+  Card,
+  CardContent,
+  Textarea,
+  useI18n,
+} from "@chat2poster/shared-ui";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -16,20 +22,31 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const formatExamples = [
-  { prefix: "User:", desc: "User message", template: "User: " },
-  { prefix: "Assistant:", desc: "AI response", template: "Assistant: " },
-  { prefix: "Human:", desc: "Alternative user", template: "Human: " },
-  { prefix: "AI:", desc: "Alternative AI", template: "AI: " },
-];
-
 export default function PasteImportPage() {
+  const { t, locale } = useI18n();
   const router = useRouter();
   const [pastedText, setPastedText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPasteEffect, setShowPasteEffect] = useState(false);
-
+  const formatExamples = [
+    {
+      prefix: t("web.paste.example.user.prefix"),
+      desc: t("web.paste.example.user.desc"),
+    },
+    {
+      prefix: t("web.paste.example.assistant.prefix"),
+      desc: t("web.paste.example.assistant.desc"),
+    },
+    {
+      prefix: t("web.paste.example.human.prefix"),
+      desc: t("web.paste.example.human.desc"),
+    },
+    {
+      prefix: t("web.paste.example.ai.prefix"),
+      desc: t("web.paste.example.ai.desc"),
+    },
+  ];
   const insertFormat = (template: string) => {
     setPastedText((prev) => {
       const newValue = prev ? `${prev}\n\n${template}` : template;
@@ -44,7 +61,7 @@ export default function PasteImportPage() {
 
   const handleParse = async () => {
     if (!pastedText.trim()) {
-      setError("Please paste some text");
+      setError(t("web.paste.errorEmpty"));
       return;
     }
 
@@ -64,9 +81,11 @@ export default function PasteImportPage() {
 
       for (const line of lines) {
         const trimmedLine = line.trim();
-        const userMatch = /^(User|Human|Me|You):\s*/i.exec(trimmedLine);
+        const userMatch = /^(User|Human|Me|You|用户|我):\s*/i.exec(trimmedLine);
         const assistantMatch =
-          /^(Assistant|AI|ChatGPT|Claude|Gemini|Bot):\s*/i.exec(trimmedLine);
+          /^(Assistant|AI|ChatGPT|Claude|Gemini|Bot|助手|AI助手):\s*/i.exec(
+            trimmedLine,
+          );
 
         if (userMatch) {
           if (currentContent.length > 0) {
@@ -117,9 +136,9 @@ export default function PasteImportPage() {
         "chat2poster:manual-messages",
         JSON.stringify(messages),
       );
-      router.push("/editor");
+      router.push(`/${locale}/editor`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to parse text");
+      setError(err instanceof Error ? err.message : t("web.paste.errorParse"));
     } finally {
       setIsLoading(false);
     }
@@ -144,11 +163,11 @@ export default function PasteImportPage() {
           className="mb-8"
         >
           <Link
-            href="/"
+            href={`/${locale}/import`}
             className="text-muted-foreground hover:text-foreground group mb-4 inline-flex items-center gap-2 text-sm transition-colors"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            Back to Import
+            {t("web.paste.back")}
           </Link>
           <div className="flex items-start gap-4">
             <div className="bg-secondary/10 rounded-xl p-3">
@@ -156,10 +175,10 @@ export default function PasteImportPage() {
             </div>
             <div>
               <h1 className="text-foreground text-3xl font-bold tracking-tight">
-                Paste Import
+                {t("web.paste.title")}
               </h1>
               <p className="text-muted-foreground mt-2">
-                Paste your conversation text and we&apos;ll detect the format
+                {t("web.paste.subtitle")}
               </p>
             </div>
           </div>
@@ -194,7 +213,7 @@ export default function PasteImportPage() {
                     value={pastedText}
                     onChange={(e) => setPastedText(e.target.value)}
                     onPaste={handlePaste}
-                    placeholder={`User: Hello, can you help me?\n\nAssistant: Of course! What do you need help with?\n\nUser: I need to...\n\nAssistant: Sure, here's how...`}
+                    placeholder={t("web.paste.placeholder")}
                     className="min-h-[280px] resize-none font-mono text-sm transition-all duration-200 focus:ring-4 focus:ring-primary/10 focus:border-primary"
                   />
                 </motion.div>
@@ -207,9 +226,15 @@ export default function PasteImportPage() {
                       exit={{ opacity: 0, scale: 0.9 }}
                       className="text-muted-foreground absolute right-3 bottom-3 flex items-center gap-3 text-xs"
                     >
-                      <span>{charCount.toLocaleString()} chars</span>
+                      <span>
+                        {t("web.paste.statsChars", {
+                          count: charCount.toLocaleString(),
+                        })}
+                      </span>
                       <span className="bg-border h-3 w-px" />
-                      <span>{lineCount} lines</span>
+                      <span>
+                        {t("web.paste.statsLines", { count: lineCount })}
+                      </span>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -225,7 +250,7 @@ export default function PasteImportPage() {
                 <div className="mb-3 flex items-center gap-2">
                   <Lightbulb className="text-primary h-4 w-4" />
                   <span className="text-foreground text-sm font-medium">
-                    Quick insert format
+                    {t("web.paste.quickInsertTitle")}
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -234,7 +259,7 @@ export default function PasteImportPage() {
                       key={fmt.prefix}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => insertFormat(fmt.template)}
+                      onClick={() => insertFormat(`${fmt.prefix} `)}
                       className="group flex items-center gap-1.5 rounded-lg border border-border/50 bg-background px-3 py-1.5 text-sm transition-all duration-200 hover:border-primary/30 hover:shadow-sm"
                     >
                       <code className="text-primary font-medium">
@@ -247,7 +272,7 @@ export default function PasteImportPage() {
                   ))}
                 </div>
                 <p className="text-muted-foreground mt-3 text-xs">
-                  Click to insert format, or paste text with markers directly
+                  {t("web.paste.quickInsertHint")}
                 </p>
               </motion.div>
 
@@ -268,13 +293,13 @@ export default function PasteImportPage() {
 
               {/* Actions */}
               <div className="mt-6 flex items-center justify-between gap-3">
-                <Link href="/manual">
+                <Link href={`/${locale}/manual`}>
                   <Button
                     variant="outline"
                     className="group transition-all duration-200"
                   >
                     <PenLine className="mr-2 h-4 w-4" />
-                    Use Manual Builder
+                    {t("web.paste.useManual")}
                   </Button>
                 </Link>
                 <Button
@@ -285,12 +310,12 @@ export default function PasteImportPage() {
                   {isLoading ? (
                     <span className="flex items-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Parsing...
+                      {t("web.paste.parsing")}
                     </span>
                   ) : (
                     <span className="flex items-center gap-2">
                       <FileText className="h-4 w-4" />
-                      Parse & Continue
+                      {t("web.paste.parse")}
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </span>
                   )}

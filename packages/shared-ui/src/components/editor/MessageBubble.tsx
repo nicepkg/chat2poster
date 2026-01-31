@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { User, Bot } from "lucide-react";
 import { cn } from "~/utils/common";
+import { useI18n } from "~/i18n";
 
 export interface MessageBubbleProps {
   role: "user" | "assistant" | "system";
@@ -18,6 +19,7 @@ export function MessageBubble({
   isDarkBackground = false,
   className,
 }: MessageBubbleProps) {
+  const { t } = useI18n();
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -42,7 +44,11 @@ export function MessageBubble({
           <Bot className="h-3.5 w-3.5 opacity-60" />
         )}
         <span className="text-xs font-medium uppercase tracking-wide opacity-60">
-          {role}
+          {role === "user"
+            ? t("role.user")
+            : role === "assistant"
+              ? t("role.assistant")
+              : t("role.system")}
         </span>
       </div>
       <div className="prose prose-sm max-w-none dark:prose-invert">

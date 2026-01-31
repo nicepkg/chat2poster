@@ -7,19 +7,14 @@ const dir = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   entry: [
-    "src/index.ts",
-    "src/components/ui/index.ts",
-    "src/components/common/index.ts",
-    "src/components/editor/index.ts",
-    "src/components/renderer/index.ts",
-    "src/components/layout/index.ts",
-    "src/contexts/index.ts",
-    "src/hooks/index.ts",
-    "src/lib/utils.ts",
-    "src/utils/index.ts",
-    "src/themes/index.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "!src/**/*.test.*",
+    "!src/**/*.spec.*",
+    "!src/**/*.stories.*",
   ],
   format: ["esm"],
+  bundle: false,
   dts: {
     compilerOptions: {
       composite: false,
@@ -37,7 +32,7 @@ export default defineConfig({
     "mermaid",
   ],
   treeshake: true,
-  splitting: true,
+  splitting: false,
   sourcemap: true,
   minify: false,
   esbuildOptions(options) {

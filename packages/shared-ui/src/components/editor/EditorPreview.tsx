@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, User, Bot } from "lucide-react";
 import { cn } from "~/utils/common";
 import { useEditor } from "~/contexts/EditorContext";
+import { useI18n } from "~/i18n";
 import { SHADOW_STYLES } from "~/themes/shadows";
 import { MarkdownRenderer } from "../renderer";
 import { Card, CardContent } from "../ui/card";
@@ -29,6 +30,7 @@ export function EditorPreview({
   className,
   canvasRef: externalCanvasRef,
 }: EditorPreviewProps) {
+  const { t } = useI18n();
   const internalCanvasRef = useRef<HTMLDivElement>(null);
   const canvasRef = externalCanvasRef ?? internalCanvasRef;
   const { editor } = useEditor();
@@ -68,7 +70,7 @@ export function EditorPreview({
         <div className="border-b px-4 py-3">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground text-sm font-medium">
-              Preview
+              {t("preview.title")}
             </span>
             <span className="text-muted-foreground text-xs">
               {exportParams.canvasWidthPx}px × auto
@@ -135,7 +137,11 @@ export function EditorPreview({
                         <Bot className="h-3.5 w-3.5 opacity-60" />
                       )}
                       <span className="text-xs font-medium uppercase tracking-wide opacity-60">
-                        {message.role}
+                        {message.role === "user"
+                          ? t("role.user")
+                          : message.role === "assistant"
+                            ? t("role.assistant")
+                            : t("role.system")}
                       </span>
                     </div>
 
@@ -170,7 +176,7 @@ export function EditorPreview({
                         : "text-muted-foreground"
                     )}
                   >
-                    Select messages to preview
+                    {t("preview.empty")}
                   </p>
                 </motion.div>
               )}

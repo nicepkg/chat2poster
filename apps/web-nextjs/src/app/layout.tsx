@@ -1,3 +1,4 @@
+import { defaultLocale } from "@chat2poster/shared-ui/i18n/core";
 import type { Metadata } from "next";
 import { Head } from "nextra/components";
 import "nextra-theme-docs/style.css";
@@ -38,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
+    <html lang={defaultLocale} dir="ltr" suppressHydrationWarning>
       <Head>
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
       </Head>

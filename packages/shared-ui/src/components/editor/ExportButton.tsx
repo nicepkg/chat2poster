@@ -5,6 +5,7 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Download, Loader2, Check } from "lucide-react";
 import { cn } from "~/utils/common";
+import { useI18n } from "~/i18n";
 import { Button } from "../ui/button";
 
 export interface ExportButtonProps {
@@ -28,6 +29,7 @@ export function ExportButton({
   onExport,
   className,
 }: ExportButtonProps) {
+  const { t } = useI18n();
   const [isExporting, setIsExporting] = useState(false);
   const [exportSuccess, setExportSuccess] = useState(false);
 
@@ -48,7 +50,9 @@ export function ExportButton({
   }, [isExporting, disabled, onExport]);
 
   const buttonText =
-    pageCount > 1 ? `Export ${pageCount} Pages` : "Export PNG";
+    pageCount > 1
+      ? t("exportButton.exportPages", { count: pageCount })
+      : t("exportButton.exportPng");
 
   return (
     <Button
@@ -71,7 +75,7 @@ export function ExportButton({
             className="flex items-center gap-2"
           >
             <Loader2 className="h-4 w-4 animate-spin" />
-            Exporting...
+            {t("exportButton.exporting")}
           </motion.span>
         ) : exportSuccess ? (
           <motion.span
@@ -83,7 +87,7 @@ export function ExportButton({
             className="flex items-center gap-2 text-green-500"
           >
             <Check className="h-4 w-4" />
-            Done!
+            {t("exportButton.done")}
           </motion.span>
         ) : (
           <motion.span

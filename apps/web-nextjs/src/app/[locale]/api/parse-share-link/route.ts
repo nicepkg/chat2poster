@@ -3,6 +3,10 @@ import {
   parseWithAdapters,
 } from "@chat2poster/core-adapters";
 import type { Conversation } from "@chat2poster/core-schema";
+import {
+  createTranslator,
+  type MessageKey,
+} from "@chat2poster/shared-ui/i18n/core";
 import { type NextRequest, NextResponse } from "next/server";
 
 // Register adapters at module load time
@@ -54,7 +58,7 @@ function getClientIp(request: NextRequest): string {
 function validateShareUrl(url: string): {
   valid: boolean;
   provider?: string;
-  error?: string;
+  errorKey?: MessageKey;
 } {
   try {
     const parsed = new URL(url);
@@ -71,7 +75,7 @@ function validateShareUrl(url: string): {
       ) {
         return { valid: true, provider: "chatgpt" };
       }
-      return { valid: false, error: "Invalid ChatGPT share link format" };
+      return { valid: false, errorKey: "api.parseShareLink.invalidChatgpt" };
     }
 
     // Claude share links
@@ -79,7 +83,7 @@ function validateShareUrl(url: string): {
       if (parsed.pathname.startsWith("/share/")) {
         return { valid: true, provider: "claude" };
       }
-      return { valid: false, error: "Invalid Claude share link format" };
+      return { valid: false, errorKey: "api.parseShareLink.invalidClaude" };
     }
 
     // Gemini share links
@@ -87,18 +91,20 @@ function validateShareUrl(url: string): {
       if (parsed.pathname.startsWith("/share/")) {
         return { valid: true, provider: "gemini" };
       }
-      return { valid: false, error: "Invalid Gemini share link format" };
+      return { valid: false, errorKey: "api.parseShareLink.invalidGemini" };
     }
 
-    return { valid: false, error: "Unsupported share link domain" };
+    return { valid: false, errorKey: "api.parseShareLink.unsupportedDomain" };
   } catch {
-    return { valid: false, error: "Invalid URL format" };
+    return { valid: false, errorKey: "api.parseShareLink.invalidUrl" };
   }
 }
 
 export async function POST(
   request: NextRequest,
+  context: { params: { locale: string } },
 ): Promise<NextResponse<ParseResponse>> {
+  const { t } = createTranslator(context.params.locale);
   const startTime = Date.now();
   const ip = getClientIp(request);
 
@@ -110,7 +116,7 @@ export async function POST(
         success: false,
         error: {
           code: "E-PARSE-RATE-LIMIT",
-          message: "Too many requests. Please try again later.",
+          message: t("api.parseShareLink.rateLimit"),
         },
       },
       { status: 429 },
@@ -127,7 +133,7 @@ export async function POST(
           success: false,
           error: {
             code: "E-PARSE-INVALID-INPUT",
-            message: "Please provide a valid share link URL",
+            message: t("api.parseShareLink.invalidInput"),
           },
         },
         { status: 400 },
@@ -138,14 +144,16 @@ export async function POST(
     const validation = validateShareUrl(url);
     if (!validation.valid) {
       console.log(
-        `[parse-share-link] Invalid URL: ${url}, error: ${validation.error}`,
+        `[parse-share-link] Invalid URL: ${url}, errorKey: ${validation.errorKey}`,
       );
       return NextResponse.json(
         {
           success: false,
           error: {
             code: "E-PARSE-UNSUPPORTED",
-            message: validation.error ?? "Unsupported URL",
+            message: t(
+              validation.errorKey ?? "api.parseShareLink.unsupportedUrl",
+            ),
           },
         },
         { status: 400 },
@@ -177,7 +185,7 @@ export async function POST(
 
       if (parseError instanceof Error) {
         // Standard Error instance
-        errorMessage = parseError.message;
+        errorMessage = t("api.parseShareLink.parseFailed");
         errorCode = "E-PARSE-FAILED";
       } else if (
         parseError &&
@@ -192,10 +200,9 @@ export async function POST(
           detail?: string;
         };
         errorCode = appError.code;
-        errorMessage = appError.detail || appError.message;
+        errorMessage = t("api.parseShareLink.parseFailed");
       } else {
-        errorMessage =
-          "Failed to parse share link. The page may require browser authentication.";
+        errorMessage = t("api.parseShareLink.parseFailed");
         errorCode = "E-PARSE-FAILED";
       }
 
@@ -228,7 +235,7 @@ export async function POST(
         success: false,
         error: {
           code: "E-PARSE-NETWORK",
-          message: "Failed to process the share link. Please try again.",
+          message: t("api.parseShareLink.networkError"),
         },
       },
       { status: 500 },
@@ -237,10 +244,14 @@ export async function POST(
 }
 
 // Health check endpoint
-export async function GET(): Promise<NextResponse> {
+export async function GET(
+  _request: NextRequest,
+  context: { params: { locale: string } },
+): Promise<NextResponse> {
+  const { t } = createTranslator(context.params.locale);
   return NextResponse.json({
     status: "ok",
     supportedProviders: ["chatgpt", "claude", "gemini"],
-    message: "Share link parsing API is ready",
+    message: t("api.parseShareLink.ready"),
   });
 }

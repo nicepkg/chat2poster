@@ -5,6 +5,7 @@ import { useState, useCallback, useEffect } from "react";
 import type { Conversation } from "@chat2poster/core-schema";
 import { cn } from "~/utils/common";
 import { useEditor } from "~/contexts/EditorContext";
+import { useI18n } from "~/i18n";
 import { MessagesTab } from "./MessagesTab";
 import { ThemeTab } from "./ThemeTab";
 import { ExportTab } from "./ExportTab";
@@ -45,6 +46,7 @@ export function EditorPanel({
   onExport,
   className,
 }: EditorPanelProps) {
+  const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<PanelTab>("messages");
   const { editor, runtime, dispatch, runtimeDispatch, actions } = useEditor();
 
@@ -117,12 +119,12 @@ export function EditorPanel({
       runtimeDispatch({
         type: "SET_ERROR",
         payload:
-          err instanceof Error ? err.message : "Failed to parse conversation",
+          err instanceof Error ? err.message : t("editor.panel.parseError"),
       });
     } finally {
       runtimeDispatch({ type: "SET_PARSING", payload: false });
     }
-  }, [dispatch, runtimeDispatch, onParse]);
+  }, [dispatch, runtimeDispatch, onParse, t]);
 
   useEffect(() => {
     if (isOpen && !editor.conversation && !runtime.isParsing) {
@@ -143,17 +145,17 @@ export function EditorPanel({
           await new Promise((r) => setTimeout(r, 200));
           runtimeDispatch({ type: "SET_EXPORT_PROGRESS", payload: i });
         }
-        alert("Export functionality coming soon!");
+        alert(t("editor.panel.exportSoon"));
       }
     } catch (err) {
       runtimeDispatch({
         type: "SET_ERROR",
-        payload: err instanceof Error ? err.message : "Export failed",
+        payload: err instanceof Error ? err.message : t("editor.panel.exportError"),
       });
     } finally {
       runtimeDispatch({ type: "SET_EXPORTING", payload: false });
     }
-  }, [onExport, runtimeDispatch]);
+  }, [onExport, runtimeDispatch, t]);
 
   if (!isOpen) return null;
 
@@ -201,7 +203,11 @@ export function EditorPanel({
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
-            {tab}
+            {tab === "messages"
+              ? t("editor.tabs.messages")
+              : tab === "theme"
+                ? t("editor.tabs.theme")
+                : t("editor.tabs.export")}
           </button>
         ))}
       </div>
@@ -215,13 +221,13 @@ export function EditorPanel({
         ) : runtime.error ? (
           <div className="p-4">
             <div className="rounded-lg bg-destructive/10 p-4 text-destructive">
-              <p className="font-medium">Error</p>
+              <p className="font-medium">{t("editor.panel.errorTitle")}</p>
               <p className="mt-1 text-sm">{runtime.error}</p>
               <button
                 onClick={() => void handleParseConversation()}
                 className="mt-3 rounded bg-destructive/20 px-3 py-1.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/30"
               >
-                Retry
+                {t("editor.panel.retry")}
               </button>
             </div>
           </div>
@@ -257,9 +263,14 @@ export function EditorPanel({
       <div className="border-t border-border p-4">
         <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
           <span>
-            {selectedCount} of {totalCount} messages
+            {t("editor.panel.selectedCount", {
+              selected: selectedCount,
+              total: totalCount,
+            })}
           </span>
-          {pageCount > 1 && <span>{pageCount} pages</span>}
+          {pageCount > 1 && (
+            <span>{t("editor.panel.pagesCount", { count: pageCount })}</span>
+          )}
         </div>
         <button
           onClick={() => void handleExport()}
@@ -269,12 +280,14 @@ export function EditorPanel({
           {runtime.isExporting ? (
             <span className="flex items-center justify-center gap-2">
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-              Exporting ({runtime.exportProgress}%)
+              {t("editor.panel.exportingProgress", {
+                progress: runtime.exportProgress,
+              })}
             </span>
           ) : pageCount > 1 ? (
-            `Export ${pageCount} Pages (ZIP)`
+            t("editor.panel.exportPages", { count: pageCount })
           ) : (
-            "Export PNG"
+            t("editor.panel.exportPng")
           )}
         </button>
       </div>

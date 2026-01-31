@@ -4,6 +4,7 @@ import * as React from "react";
 import { MessageSquare, Palette, Settings2 } from "lucide-react";
 import { cn } from "~/utils/common";
 import { useEditor, THEME_PRESETS } from "~/contexts/EditorContext";
+import { useI18n } from "~/i18n";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { MessagesTab } from "./MessagesTab";
 import { ThemeTab } from "./ThemeTab";
@@ -30,6 +31,7 @@ export function EditorTabs({
   showIcons = true,
   showLabels = true,
 }: EditorTabsProps) {
+  const { t } = useI18n();
   const { editor, actions } = useEditor();
 
   const messages = editor.conversation?.messages ?? [];
@@ -48,21 +50,27 @@ export function EditorTabs({
           className={cn("gap-1.5", showLabels ? "text-xs" : "")}
         >
           {showIcons && <MessageSquare className="h-3.5 w-3.5" />}
-          {showLabels && <span className="hidden sm:inline">Messages</span>}
+          {showLabels && (
+            <span className="hidden sm:inline">{t("editor.tabs.messages")}</span>
+          )}
         </TabsTrigger>
         <TabsTrigger
           value="theme"
           className={cn("gap-1.5", showLabels ? "text-xs" : "")}
         >
           {showIcons && <Palette className="h-3.5 w-3.5" />}
-          {showLabels && <span className="hidden sm:inline">Theme</span>}
+          {showLabels && (
+            <span className="hidden sm:inline">{t("editor.tabs.theme")}</span>
+          )}
         </TabsTrigger>
         <TabsTrigger
           value="export"
           className={cn("gap-1.5", showLabels ? "text-xs" : "")}
         >
           {showIcons && <Settings2 className="h-3.5 w-3.5" />}
-          {showLabels && <span className="hidden sm:inline">Export</span>}
+          {showLabels && (
+            <span className="hidden sm:inline">{t("editor.tabs.export")}</span>
+          )}
         </TabsTrigger>
       </TabsList>
 

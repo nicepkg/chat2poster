@@ -3,6 +3,7 @@
 import { memo, useState, useEffect, useCallback } from "react";
 import { highlightCode } from "~/utils/shiki";
 import { cssVar } from "~/themes";
+import { useI18n } from "~/i18n";
 import type { BundledTheme } from "shiki";
 
 export interface CodeBlockProps {
@@ -23,6 +24,7 @@ export const CodeBlock = memo(function CodeBlock({
   showCopyButton = true,
   showLanguageLabel = true,
 }: CodeBlockProps) {
+  const { t } = useI18n();
   const [html, setHtml] = useState<string>("");
   const [copied, setCopied] = useState(false);
 
@@ -123,17 +125,17 @@ export const CodeBlock = memo(function CodeBlock({
               onClick={handleCopy}
               style={copyButtonStyle}
               className="c2p-code-block-copy"
-              title={copied ? "Copied!" : "Copy code"}
+              title={copied ? t("code.copiedTitle") : t("code.copyCode")}
             >
               {copied ? (
                 <>
                   <CheckIcon />
-                  <span>Copied</span>
+                  <span>{t("code.copied")}</span>
                 </>
               ) : (
                 <>
                   <CopyIcon />
-                  <span>Copy</span>
+                  <span>{t("code.copy")}</span>
                 </>
               )}
             </button>

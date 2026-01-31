@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "~/utils/common";
+import { useI18n } from "~/i18n";
 
 export interface FloatingButtonProps {
   onClick: () => void;
@@ -14,6 +15,7 @@ export function FloatingButton({
   visible,
   className,
 }: FloatingButtonProps) {
+  const { t } = useI18n();
   if (!visible) return null;
 
   return (
@@ -23,7 +25,7 @@ export function FloatingButton({
         "fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl active:scale-95",
         className
       )}
-      title="Export to Poster"
+      title={t("floatingButton.title")}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

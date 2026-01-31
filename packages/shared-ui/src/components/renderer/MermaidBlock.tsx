@@ -2,6 +2,7 @@
 
 import { memo, useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
+import { useI18n } from "~/i18n";
 
 // Initialize mermaid
 let mermaidInitialized = false;
@@ -29,6 +30,7 @@ export const MermaidBlock = memo(function MermaidBlock({
   code,
   className,
 }: MermaidBlockProps) {
+  const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
   const [svg, setSvg] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
@@ -93,10 +95,12 @@ export const MermaidBlock = memo(function MermaidBlock({
         style={containerStyle}
         className={`c2p-mermaid-block c2p-mermaid-error ${className || ""}`}
       >
-        <div style={errorStyle}>Error: {error}</div>
+        <div style={errorStyle}>
+          {t("mermaid.error")}: {error}
+        </div>
         <details style={{ marginTop: "8px", textAlign: "left" }}>
           <summary style={{ cursor: "pointer", fontSize: "14px" }}>
-            View source
+            {t("mermaid.viewSource")}
           </summary>
           <pre style={fallbackStyle}>{code}</pre>
         </details>
@@ -109,13 +113,13 @@ export const MermaidBlock = memo(function MermaidBlock({
       <div
         ref={containerRef}
         style={containerStyle}
-        className={`c2p-mermaid-block c2p-mermaid-loading ${className || ""}`}
-      >
-        <div style={{ color: "#6c757d", fontSize: "14px" }}>
-          Loading diagram...
-        </div>
+      className={`c2p-mermaid-block c2p-mermaid-loading ${className || ""}`}
+    >
+      <div style={{ color: "#6c757d", fontSize: "14px" }}>
+        {t("mermaid.loading")}
       </div>
-    );
+    </div>
+  );
   }
 
   return (

@@ -81,10 +81,6 @@ export const socialLinksConfig = {
 
 // ---------- Footer Config ----------
 export const footerConfig = {
-  description: {
-    en: "Turn AI chats into share-worthy posters. Export ChatGPT, Claude, Gemini conversations as beautiful images.",
-    zh: "把 AI 聊天变成能直接发的海报图。将 ChatGPT、Claude、Gemini 对话导出为精美图片。",
-  },
   links: [
     {
       label: "Jinming Yang",
@@ -108,14 +104,6 @@ export const footerConfig = {
 // ---------- Banner Config ----------
 export const bannerConfig = {
   storageKey: `${siteConfig.name.toLowerCase().replace(/\s+/g, "-")}-banner`,
-  text: {
-    en: `🎉 ${siteConfig.name} is now open source!`,
-    zh: `🎉 ${siteConfig.name} 现已开源！`,
-  },
-  linkText: {
-    en: "Star us on GitHub",
-    zh: "在 GitHub 上 Star 我们",
-  },
 };
 
 // ---------- Legacy Exports (for backward compatibility) ----------
