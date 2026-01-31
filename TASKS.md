@@ -430,9 +430,7 @@ apps/browser-extension/postcss.config.cjs
 apps/browser-extension/eslint.config.mjs
 apps/browser-extension/src/entrypoints/content.tsx
 apps/browser-extension/src/entrypoints/styles/globals.css
-apps/browser-extension/src/components/App.tsx
-apps/browser-extension/src/components/FloatingButton.tsx
-apps/browser-extension/src/components/EditorPanel.tsx
+apps/browser-extension/src/components/app.tsx
 apps/browser-extension/public/icon-*.svg
 ```
 
@@ -465,7 +463,7 @@ apps/browser-extension/public/icon-*.svg
 
 **Files created:**
 ```
-apps/browser-extension/src/contexts/EditorContext.tsx
+packages/shared-ui/src/contexts/editor-context.tsx
 ```
 
 ### T5.4 - Extension State Management ✅
@@ -489,22 +487,25 @@ apps/web/next.config.mjs
 apps/web/postcss.config.cjs
 apps/web/eslint.config.mjs
 apps/web/src/app/layout.tsx
-apps/web/src/app/globals.css
-apps/web/src/app/page.tsx
-apps/web/src/app/manual/page.tsx
-apps/web/src/app/paste/page.tsx
-apps/web/src/app/editor/page.tsx
+apps/web/src/app/layout-client.tsx
+apps/web/src/app/[locale]/layout.tsx
+apps/web/src/app/[locale]/page.tsx
+apps/web/src/app/[locale]/import/page.tsx
+apps/web/src/app/[locale]/manual/page.tsx
+apps/web/src/app/[locale]/paste/page.tsx
+apps/web/src/app/[locale]/editor/page.tsx
+apps/web/src/app/[locale]/api/parse-share-link/route.ts
 ```
 
 ### T5.6 - Web Import Page ✅
-- [x] Create `/` or `/import` page
+- [x] Create `/<locale>/import` page
 - [x] Share link input field
 - [x] Parse button with loading state
 - [x] Error display with fallback options
 - [x] Links to Manual Builder and Paste Import
 
 ### T5.7 - Web Manual Builder ✅
-- [x] Create `/manual` page
+- [x] Create `/<locale>/manual` page
 - [x] Message list form (add/remove/reorder)
 - [x] Role selector (defaults to alternating)
 - [x] Markdown input per message
@@ -512,7 +513,7 @@ apps/web/src/app/editor/page.tsx
 - [x] Continue to Editor button
 
 ### T5.8 - Web Editor Page ✅
-- [x] Create `/editor` page
+- [x] Create `/<locale>/editor` page
 - [x] Message selection & page breaks
 - [x] Theme/decoration controls
 - [x] Export controls
@@ -520,7 +521,7 @@ apps/web/src/app/editor/page.tsx
 - [x] Back to Import link
 
 ### T5.9 - API Routes (Web) ✅
-- [x] Create `/api/parse-share-link` route
+- [x] Create `/<locale>/api/parse-share-link` route
 - [x] URL validation and error handling
 - [x] No data persistence (privacy)
 - [x] Logging: error codes, timing, provider
@@ -529,7 +530,7 @@ apps/web/src/app/editor/page.tsx
 
 **Files created:**
 ```
-apps/web/src/app/api/parse-share-link/route.ts
+apps/web/src/app/[locale]/api/parse-share-link/route.ts
 ```
 
 ---

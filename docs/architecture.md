@@ -46,6 +46,14 @@ apps/
   web/
     src/
       app/ (Next App Router)
+        [locale]/
+          page.tsx
+          docs/**
+          import/**
+          manual/**
+          paste/**
+          editor/**
+          api/**
       components/
       styles/
 packages/
@@ -61,6 +69,15 @@ configs/
 
 - packages/core-\* 为跨端复用的“真核心”。
 - apps 只做宿主差异：如何拿到输入、如何展示 UI、如何触发下载。
+
+### 文件命名与 i18n 约定（必须遵守）
+
+- **文件命名**：所有 `*.ts` / `*.tsx` / `*.js` / `*.jsx` / `*.d.ts` 使用 **kebab-case**（例如 `editor-panel.tsx`）。禁止 PascalCase 文件名。`index.ts` 允许保留。
+- **i18n 单一真源**：统一放在 `packages/shared-ui/src/i18n/`。
+  - `locales/en.ts` 为基准语言；其他语言文件必须严格对齐 key（由类型 `LocaleMessages` 强制）。
+  - React 组件使用 `useI18n()`；服务端组件/路由使用 `createTranslator(locale)`。
+  - 不允许硬编码 `"en" | "zh"`；统一从 shared-ui 的 `Locale` 类型和工具函数取。
+  - Web 端 App Router 使用 `app/[locale]/...`，API 同样挂在 `app/[locale]/api/**`。
 
 ---
 

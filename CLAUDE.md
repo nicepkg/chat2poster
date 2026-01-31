@@ -829,6 +829,24 @@ chat2poster/
 
 ---
 
+## 🧩 Engineering Rules (Must Follow)
+
+### File Naming
+
+- All `*.ts` / `*.tsx` / `*.js` / `*.jsx` / `*.d.ts` filenames must be **kebab-case** (e.g., `editor-panel.tsx`).
+- Do **not** create PascalCase/UpperCamel filenames.
+- `index.ts` is allowed when it is a barrel file.
+
+### i18n (Single Source of Truth)
+
+- All localization lives in `packages/shared-ui/src/i18n/`.
+- `locales/en.ts` is the source of truth; other locale files must match keys (enforced via `LocaleMessages`).
+- Client components use `useI18n()`; server components and API routes use `createTranslator(locale)`.
+- Do not hardcode `"en" | "zh"` anywhere; always import `Locale` and helpers from shared-ui.
+- Web App Router is localized: routes live under `app/[locale]/...` and API routes under `app/[locale]/api/**`.
+
+---
+
 ## 🧠 Memory System
 
 ### Three-Tier Architecture
