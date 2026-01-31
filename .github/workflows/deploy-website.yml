@@ -28,7 +28,6 @@ env:
   PROJECT_NAME: 'chat2poster'
   SITE_DOMAIN: 'chat2poster.xiaominglab.com'
   WEBSITE_DIR: 'apps/web'
-  BUILD_OUTPUT_DIR: '.open-next/assets'
   BUILD_COMMAND: 'pnpm dlx @opennextjs/cloudflare build --skipWranglerConfigCheck'
 
   # Comment marker (used to update existing PR comment instead of spamming)
@@ -52,6 +51,13 @@ jobs:
           NEXT_PUBLIC_GIT_SHA: ${{ github.sha }}
           SKIP_ENV_VALIDATION: true
 
+      - name: Verify build output
+        working-directory: ${{ env.WEBSITE_DIR }}
+        run: |
+          echo "Checking .open-next directory..."
+          ls -la .open-next/ || (echo "ERROR: .open-next directory not found!" && exit 1)
+          echo "Build output verified."
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v6
         with:
@@ -59,6 +65,7 @@ jobs:
           path: |
             ${{ env.WEBSITE_DIR }}/.open-next/
             ${{ env.WEBSITE_DIR }}/wrangler.jsonc
+          if-no-files-found: error
           retention-days: 1
 
   deploy:
