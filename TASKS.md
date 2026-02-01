@@ -70,29 +70,40 @@
 **Key interfaces (for other tracks to use immediately):**
 ```typescript
 // packages/core-schema/src/index.ts
+// Note: All types use Zod schemas with z.infer<> for type inference
+
+export type MessageRole = 'user' | 'assistant' | 'system'
+
 export interface Message {
-  id: string
-  role: 'user' | 'assistant' | 'system'
+  id: string  // UUID
+  role: MessageRole
   contentMarkdown: string
   order: number
+  contentMeta?: ContentMeta  // Optional metadata
 }
 
+export type SourceType = 'extension-current' | 'web-share-link' | 'web-manual' | 'web-paste'
+
 export interface Conversation {
-  id: string
-  sourceType: 'extension-current' | 'web-share-link' | 'web-manual' | 'web-paste'
+  id: string  // UUID
+  sourceType: SourceType
   messages: Message[]
   sourceMeta?: SourceMeta
 }
 
 export interface Selection {
+  conversationId: string
   selectedMessageIds: string[]
   pageBreaks: PageBreak[]
 }
 
+// Default values defined in EXPORT_DEFAULTS constant
 export interface ExportParams {
-  scale: 1 | 2 | 3
-  maxPageHeightPx: number
-  canvasWidthPx: number
+  scale: 1 | 2 | 3  // Default: 2
+  canvasPreset: 'square' | 'portrait' | 'story' | 'wide' | 'custom'
+  canvasWidthPx: number  // Default: 1080
+  maxPageHeightPx: number  // Default: 4096
+  outputMode: 'single' | 'multi-zip'
 }
 ```
 
@@ -212,9 +223,10 @@ packages/core-adapters/src/__tests__/share-link-adapters.test.ts
 - [x] Define theme token structure (colors, fonts, spacing) in `shared-ui`
 - [x] Create Light theme preset
 - [x] Create Dark theme preset
-- [ ] Create 2-3 additional presets (optional)
+- [x] Create Sunset gradient theme preset
 - [x] Implement theme CSS variable injection
 - [x] Export theme utilities
+- [x] Unified BACKGROUND_PRESETS with 12 preset options
 
 **Files created:**
 ```
@@ -222,9 +234,11 @@ packages/shared-ui/src/themes/index.ts
 packages/shared-ui/src/themes/registry.ts
 packages/shared-ui/src/themes/css-variables.ts
 packages/shared-ui/src/themes/shadows.ts
+packages/shared-ui/src/themes/backgrounds.ts
 packages/shared-ui/src/themes/presets/index.ts
 packages/shared-ui/src/themes/presets/light.ts
 packages/shared-ui/src/themes/presets/dark.ts
+packages/shared-ui/src/themes/presets/sunset.ts
 ```
 
 ### T3.2 - Core Renderer Setup ✅
@@ -464,6 +478,15 @@ apps/browser-extension/public/icon-*.svg
 **Files created:**
 ```
 packages/shared-ui/src/contexts/editor-context.tsx
+packages/shared-ui/src/constants/storage-keys.ts
+packages/shared-ui/src/components/editor/messages-tab.tsx
+packages/shared-ui/src/components/editor/theme-tab.tsx
+packages/shared-ui/src/components/editor/export-tab.tsx
+packages/shared-ui/src/components/editor/editor-panel.tsx
+packages/shared-ui/src/components/editor/editor-tabs.tsx
+packages/shared-ui/src/components/editor/editor-header.tsx
+packages/shared-ui/src/components/editor/editor-preview.tsx
+packages/shared-ui/src/components/editor/export-button.tsx
 ```
 
 ### T5.4 - Extension State Management ✅

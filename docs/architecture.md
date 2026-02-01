@@ -78,6 +78,10 @@ configs/
   - React 组件使用 `useI18n()`；服务端组件/路由使用 `createTranslator(locale)`。
   - 不允许硬编码 `"en" | "zh"`；统一从 shared-ui 的 `Locale` 类型和工具函数取。
   - Web 端 App Router 使用 `app/[locale]/...`，API 同样挂在 `app/[locale]/api/**`。
+- **常量单一真源**：
+  - Storage keys 统一定义在 `packages/shared-ui/src/constants/storage-keys.ts` 的 `STORAGE_KEYS` 中。
+  - 导出参数默认值统一定义在 `packages/core-schema/src/export.ts` 的 `EXPORT_DEFAULTS` 中。
+  - 禁止在代码中硬编码这些常量值。
 
 ---
 
@@ -86,7 +90,9 @@ configs/
 ### 3.1 Schema（packages/core-schema）
 
 - TypeScript 类型 + 运行时校验（建议 zod 或轻量自写校验）。
-- 统一输入输出：任何来源最终都转成 Conversation + Messages。
+- 统一输入输出：任何来源最终都转成 Conversation + Messages（使用 Zod 验证）。
+- 类型定义遵循 DRY 原则：MessageRole、ShadowLevel、ThemeMode 等枚举类型只定义一次，其他包通过导入复用。
+- 导出参数默认值统一定义在 EXPORT_DEFAULTS 常量中。
 - schema 变更必须向后兼容或有 version 字段（可选）。
 
 ### 3.2 Adapter 机制（packages/core-adapters）

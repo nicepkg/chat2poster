@@ -845,6 +845,12 @@ chat2poster/
 - Do not hardcode `"en" | "zh"` anywhere; always import `Locale` and helpers from shared-ui.
 - Web App Router is localized: routes live under `app/[locale]/...` and API routes under `app/[locale]/api/**`.
 
+### Constants (Single Source of Truth)
+
+- Storage keys: All sessionStorage/localStorage keys must be defined in `packages/shared-ui/src/constants/storage-keys.ts` (`STORAGE_KEYS`).
+- Export defaults: All export parameter defaults must use `EXPORT_DEFAULTS` from `@chat2poster/core-schema`.
+- Type aliases: Use types from `@chat2poster/core-schema` (e.g., `MessageRole`, `ThemeMode`, `ShadowLevel`) instead of hand-writing union types.
+
 ---
 
 ## 🧠 Memory System

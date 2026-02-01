@@ -109,19 +109,24 @@
 - id: string（theme key）
 - name: string
 - mode: enum（light|dark）
-- tokens: object（可序列化）
-  - fontFamily
-  - baseFontSize
-  - bubbleRadius
-  - colors（背景/文字/气泡/代码块等）
-  - codeTheme（shiki theme id）
-- decorationDefaults: object
-  - canvasPaddingPx
-  - canvasRadiusPx
-  - shadowLevel
-  - backgroundType（solid|gradient）
-  - backgroundValue
-  - macosBarEnabled
+- tokens: ThemeTokens（可序列化）
+  - fontFamily: string
+  - baseFontSizePx: number
+  - colors: ThemeColors
+    - background: string
+    - foreground: string
+    - userBubble: string
+    - assistantBubble: string
+    - border: string
+    - codeBlockBackground: string
+  - codeTheme: string（shiki theme id）
+- decorationDefaults: DecorationDefaults
+  - canvasPaddingPx: number
+  - canvasRadiusPx: number
+  - shadowLevel: enum（none|xs|sm|md|lg|xl）
+  - backgroundType: enum（solid|gradient|image）
+  - backgroundValue: string
+  - macosBarEnabled: boolean
 
 约束：
 
@@ -131,9 +136,10 @@
 
 - id: string
 - conversationId: string
-- params:
+- params: ExportParams
   - scale: 1|2|3（默认 2）
-  - canvasPreset: enum（例如 square/portrait/story/custom）
+  - canvasPreset: enum（square|portrait|story|wide|custom）
+  - canvasWidthPx: number（默认 1080）
   - maxPageHeightPx: number（默认 4096，范围 2000-10000）
   - outputMode: enum（single|multi-zip）
 - paginationResult（可选缓存）
