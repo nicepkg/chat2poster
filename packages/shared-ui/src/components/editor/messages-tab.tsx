@@ -40,22 +40,22 @@ export function MessagesTab({
     pageBreaks.find((pb) => pb.afterMessageId === messageId);
 
   return (
-    <div className={cn("flex h-full flex-col", className)}>
-      {/* Header */}
-      <div className="border-b px-4 py-3">
+    <div className={cn("c2p-messages-tab flex h-full flex-col", className)}>
+      {/* Header with selection controls */}
+      <div className="c2p-messages-header border-b px-4 py-3">
         <div className="flex items-center justify-between">
-          <span className="text-muted-foreground text-sm">
+          <span className="c2p-messages-count text-muted-foreground text-sm">
             {t("messages.selected", {
               selected: selectedIds.length,
               total: messages.length,
             })}
           </span>
-          <div className="flex gap-1">
+          <div className="c2p-messages-actions flex gap-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={onSelectAll}
-              className="text-primary h-7 px-2 text-xs"
+              className="c2p-select-all-btn text-primary h-7 px-2 text-xs"
             >
               {t("messages.selectAll")}
             </Button>
@@ -63,7 +63,7 @@ export function MessagesTab({
               variant="ghost"
               size="sm"
               onClick={onDeselectAll}
-              className="h-7 px-2 text-xs"
+              className="c2p-deselect-all-btn h-7 px-2 text-xs"
             >
               {t("messages.selectNone")}
             </Button>
@@ -71,8 +71,8 @@ export function MessagesTab({
         </div>
       </div>
 
-      {/* Message List */}
-      <ScrollArea className="flex-1">
+      {/* Scrollable message list */}
+      <ScrollArea className="c2p-messages-list flex-1">
         <div className="w-full space-y-1.5 px-2 py-2">
           {messages.map((message, index) => {
             const pageBreak = getPageBreakAfter(message.id);
@@ -80,7 +80,7 @@ export function MessagesTab({
             const isLast = index === messages.length - 1;
 
             return (
-              <div key={message.id}>
+              <div key={message.id} className="c2p-message-wrapper">
                 <motion.div
                   whileHover={{ scale: 1.005 }}
                   whileTap={{ scale: 0.995 }}
@@ -88,22 +88,22 @@ export function MessagesTab({
                 >
                   <label
                     className={cn(
-                      "group flex w-full cursor-pointer items-start gap-3 rounded-xl border-2 p-3 transition-all duration-200",
+                      "c2p-message-item group flex w-full cursor-pointer items-start gap-3 rounded-xl border-2 p-3 transition-all duration-200",
                       isSelected
-                        ? "border-primary/40 bg-primary/5 shadow-sm shadow-primary/5"
+                        ? "c2p-message-selected border-primary/40 bg-primary/5 shadow-sm shadow-primary/5"
                         : "border-transparent bg-muted/30 hover:border-border hover:bg-muted/50",
                     )}
                   >
                     <Checkbox
                       checked={isSelected}
                       onCheckedChange={() => onToggle(message.id)}
-                      className="mt-0.5 shrink-0"
+                      className="c2p-message-checkbox mt-0.5 shrink-0"
                     />
-                    <div className="min-w-0 flex-1 overflow-hidden">
-                      <div className="mb-1.5 flex items-center gap-2">
+                    <div className="c2p-message-content min-w-0 flex-1 overflow-hidden">
+                      <div className="c2p-message-role mb-1.5 flex items-center gap-2">
                         <div
                           className={cn(
-                            "flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
+                            "c2p-role-icon flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
                             message.role === "user"
                               ? "bg-primary/10"
                               : "bg-secondary/10",
@@ -117,7 +117,7 @@ export function MessagesTab({
                         </div>
                         <span
                           className={cn(
-                            "text-xs font-medium",
+                            "c2p-role-label text-xs font-medium",
                             message.role === "user"
                               ? "text-primary"
                               : "text-secondary",
@@ -130,12 +130,12 @@ export function MessagesTab({
                               : t("role.system")}
                         </span>
                       </div>
-                      <p className="text-muted-foreground line-clamp-2 text-xs leading-relaxed">
+                      <p className="c2p-message-preview text-muted-foreground line-clamp-2 text-xs leading-relaxed">
                         {message.contentMarkdown}
                       </p>
                     </div>
 
-                    {/* Page break button */}
+                    {/* Page break button - appears on hover */}
                     {!isLast && !pageBreak && (
                       <Button
                         variant="ghost"
@@ -144,7 +144,7 @@ export function MessagesTab({
                           e.preventDefault();
                           onAddPageBreak(message.id);
                         }}
-                        className="text-muted-foreground hover:text-primary h-6 w-6 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+                        className="c2p-pagebreak-btn text-muted-foreground hover:text-primary h-6 w-6 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
                       >
                         <Scissors className="h-3.5 w-3.5" />
                       </Button>
@@ -152,17 +152,17 @@ export function MessagesTab({
                   </label>
                 </motion.div>
 
-                {/* Page break indicator */}
+                {/* Page break indicator between messages */}
                 <AnimatePresence>
                   {pageBreak && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="flex items-center gap-2 px-3 py-2"
+                      className="c2p-pagebreak-indicator flex items-center gap-2 px-3 py-2"
                     >
                       <div className="bg-secondary/30 h-px flex-1" />
-                      <span className="text-secondary flex items-center gap-1 text-xs font-medium">
+                      <span className="c2p-pagebreak-label text-secondary flex items-center gap-1 text-xs font-medium">
                         <Scissors className="h-3 w-3" />
                         {t("messages.pageBreak")}
                       </span>
@@ -170,7 +170,7 @@ export function MessagesTab({
                         variant="ghost"
                         size="icon-sm"
                         onClick={() => onRemovePageBreak(pageBreak.id)}
-                        className="text-muted-foreground hover:text-destructive h-5 w-5"
+                        className="c2p-pagebreak-remove text-muted-foreground hover:text-destructive h-5 w-5"
                       >
                         <X className="h-3 w-3" />
                       </Button>

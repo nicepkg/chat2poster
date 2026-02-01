@@ -53,7 +53,7 @@ export const PreviewCanvas = forwardRef<HTMLDivElement, PreviewCanvasProps>(
       <motion.div
         ref={ref}
         layout
-        className={cn("mx-auto", className)}
+        className={cn("c2p-canvas mx-auto", className)}
         style={{
           maxWidth: width,
           borderRadius,
@@ -64,7 +64,7 @@ export const PreviewCanvas = forwardRef<HTMLDivElement, PreviewCanvasProps>(
         {/* Paper - the actual content card */}
         <div
           className={cn(
-            "overflow-hidden",
+            "c2p-paper overflow-hidden",
             isDarkBackground ? "bg-zinc-900" : "bg-white",
           )}
           style={{
@@ -77,7 +77,7 @@ export const PreviewCanvas = forwardRef<HTMLDivElement, PreviewCanvasProps>(
             {showMacOSBar && (
               <div
                 className={cn(
-                  "px-4 pt-4",
+                  "c2p-paper-bar px-4 pt-4",
                   isDarkBackground ? "bg-zinc-900" : "bg-white",
                 )}
               >
@@ -87,7 +87,7 @@ export const PreviewCanvas = forwardRef<HTMLDivElement, PreviewCanvasProps>(
           </AnimatePresence>
 
           {/* Messages */}
-          <div className="space-y-4 p-4">
+          <div className="c2p-paper-content space-y-4 p-4">
             <AnimatePresence>
               {messages.map((msg) => (
                 <MessageBubble
@@ -104,7 +104,7 @@ export const PreviewCanvas = forwardRef<HTMLDivElement, PreviewCanvasProps>(
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-12 text-center"
+                className="c2p-paper-empty flex flex-col items-center justify-center py-12 text-center"
               >
                 <MessageSquare
                   className={cn(

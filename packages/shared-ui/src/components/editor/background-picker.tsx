@@ -32,13 +32,13 @@ export function BackgroundPicker({
   const { t } = useI18n();
   const resolvedLabel = label ?? t("theme.background");
   return (
-    <div className={cn("space-y-3", className)}>
+    <div className={cn("c2p-bg-picker space-y-3", className)}>
       {resolvedLabel && (
-        <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+        <Label className="c2p-bg-picker-label text-muted-foreground text-xs uppercase tracking-wide">
           {resolvedLabel}
         </Label>
       )}
-      <div className="grid grid-cols-4 gap-2">
+      <div className="c2p-bg-grid grid grid-cols-4 gap-2">
         {presets.map((preset) => {
           const isSelected = value === preset.value;
           return (
@@ -48,9 +48,9 @@ export function BackgroundPicker({
               whileTap={{ scale: 0.95 }}
               onClick={() => onChange(preset.value, preset.type)}
               className={cn(
-                "relative aspect-square rounded-lg border-2 transition-all",
+                "c2p-bg-option relative aspect-square rounded-lg border-2 transition-all",
                 isSelected
-                  ? "border-primary ring-primary/20 ring-2"
+                  ? "c2p-bg-option-selected border-primary ring-primary/20 ring-2"
                   : "border-transparent hover:border-border",
               )}
               style={{ background: preset.value }}
@@ -60,7 +60,7 @@ export function BackgroundPicker({
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute inset-0 flex items-center justify-center rounded-md bg-black/20"
+                  className="c2p-bg-option-check absolute inset-0 flex items-center justify-center rounded-md bg-black/20"
                 >
                   <Check className="h-4 w-4 text-white drop-shadow" />
                 </motion.div>

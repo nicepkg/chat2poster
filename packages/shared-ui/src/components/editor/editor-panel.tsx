@@ -170,38 +170,38 @@ export function EditorPanel({
   return (
     <div
       className={cn(
-        "fixed inset-y-0 right-0 z-50 flex w-96 flex-col bg-background shadow-2xl",
+        "c2p-panel fixed inset-y-0 right-0 z-50 flex w-96 flex-col bg-background shadow-2xl",
         className,
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border px-4 py-3">
-        <div className="flex items-center gap-2">
+      <div className="c2p-panel-header flex items-center justify-between border-b border-border px-4 py-3">
+        <div className="c2p-panel-title flex items-center gap-2">
           <h2 className="text-lg font-semibold text-foreground">Chat2Poster</h2>
           {editor.conversation?.sourceMeta?.provider && (
-            <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+            <span className="c2p-panel-provider rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
               {editor.conversation.sourceMeta.provider}
             </span>
           )}
         </div>
         <button
           onClick={onClose}
-          className="rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          className="c2p-panel-close rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
           <CloseIcon />
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-border">
+      <div className="c2p-panel-tabs flex border-b border-border">
         {(["messages", "theme", "export"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={cn(
-              "flex-1 px-4 py-2 text-sm font-medium capitalize transition-colors",
+              `c2p-panel-tab c2p-panel-tab-${tab} flex-1 px-4 py-2 text-sm font-medium capitalize transition-colors`,
               activeTab === tab
-                ? "border-b-2 border-primary text-primary"
+                ? "c2p-panel-tab-active border-b-2 border-primary text-primary"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
@@ -215,19 +215,19 @@ export function EditorPanel({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="c2p-panel-content flex-1 overflow-y-auto">
         {runtime.isParsing ? (
-          <div className="flex h-full items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
+          <div className="c2p-panel-loading flex h-full items-center justify-center">
+            <div className="c2p-panel-spinner h-8 w-8 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
           </div>
         ) : runtime.error ? (
-          <div className="p-4">
+          <div className="c2p-panel-error p-4">
             <div className="rounded-lg bg-destructive/10 p-4 text-destructive">
               <p className="font-medium">{t("editor.panel.errorTitle")}</p>
               <p className="mt-1 text-sm">{runtime.error}</p>
               <button
                 onClick={() => void handleParseConversation()}
-                className="mt-3 rounded bg-destructive/20 px-3 py-1.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/30"
+                className="c2p-panel-retry mt-3 rounded bg-destructive/20 px-3 py-1.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/30"
               >
                 {t("editor.panel.retry")}
               </button>
@@ -262,22 +262,24 @@ export function EditorPanel({
       </div>
 
       {/* Footer */}
-      <div className="border-t border-border p-4">
-        <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
-          <span>
+      <div className="c2p-panel-footer border-t border-border p-4">
+        <div className="c2p-panel-stats mb-2 flex items-center justify-between text-xs text-muted-foreground">
+          <span className="c2p-panel-selected-count">
             {t("editor.panel.selectedCount", {
               selected: selectedCount,
               total: totalCount,
             })}
           </span>
           {pageCount > 1 && (
-            <span>{t("editor.panel.pagesCount", { count: pageCount })}</span>
+            <span className="c2p-panel-page-count">
+              {t("editor.panel.pagesCount", { count: pageCount })}
+            </span>
           )}
         </div>
         <button
           onClick={() => void handleExport()}
           disabled={selectedCount === 0 || runtime.isExporting}
-          className="w-full rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="c2p-panel-export-btn w-full rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {runtime.isExporting ? (
             <span className="flex items-center justify-center gap-2">

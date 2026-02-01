@@ -215,7 +215,7 @@ function EditorContent() {
           transition={{ delay: 0.2 }}
           className="flex-1 overflow-hidden"
         >
-          <EditorPreview canvasRef={canvasRef} showCheckerboard />
+          <EditorPreview canvasRef={canvasRef} />
         </motion.div>
       </div>
 

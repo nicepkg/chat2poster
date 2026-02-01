@@ -14,11 +14,11 @@ export function MacOSBar({ className }: MacOSBarProps) {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className={cn("flex gap-2", className)}
+      className={cn("c2p-macos-bar flex gap-2", className)}
     >
-      <div className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-      <div className="h-3 w-3 rounded-full bg-[#febc2e]" />
-      <div className="h-3 w-3 rounded-full bg-[#28c840]" />
+      <div className="c2p-traffic-light c2p-traffic-light-close h-3 w-3 rounded-full bg-[#ff5f57]" />
+      <div className="c2p-traffic-light c2p-traffic-light-minimize h-3 w-3 rounded-full bg-[#febc2e]" />
+      <div className="c2p-traffic-light c2p-traffic-light-maximize h-3 w-3 rounded-full bg-[#28c840]" />
     </motion.div>
   );
 }

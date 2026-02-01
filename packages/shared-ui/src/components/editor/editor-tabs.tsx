@@ -42,12 +42,15 @@ export function EditorTabs({
   return (
     <Tabs
       defaultValue={defaultTab}
-      className={cn("flex h-full flex-col", className)}
+      className={cn("c2p-editor-tabs flex h-full flex-col", className)}
     >
-      <TabsList className="m-2 grid w-auto grid-cols-3">
+      <TabsList className="c2p-tabs-list m-2 grid w-auto grid-cols-3">
         <TabsTrigger
           value="messages"
-          className={cn("gap-1.5", showLabels ? "text-xs" : "")}
+          className={cn(
+            "c2p-tab-messages gap-1.5",
+            showLabels ? "text-xs" : "",
+          )}
         >
           {showIcons && <MessageSquare className="h-3.5 w-3.5" />}
           {showLabels && (
@@ -58,7 +61,7 @@ export function EditorTabs({
         </TabsTrigger>
         <TabsTrigger
           value="theme"
-          className={cn("gap-1.5", showLabels ? "text-xs" : "")}
+          className={cn("c2p-tab-theme gap-1.5", showLabels ? "text-xs" : "")}
         >
           {showIcons && <Palette className="h-3.5 w-3.5" />}
           {showLabels && (
@@ -67,7 +70,7 @@ export function EditorTabs({
         </TabsTrigger>
         <TabsTrigger
           value="export"
-          className={cn("gap-1.5", showLabels ? "text-xs" : "")}
+          className={cn("c2p-tab-export gap-1.5", showLabels ? "text-xs" : "")}
         >
           {showIcons && <Settings2 className="h-3.5 w-3.5" />}
           {showLabels && (
@@ -76,7 +79,10 @@ export function EditorTabs({
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="messages" className="mt-0 min-h-0 flex-1">
+      <TabsContent
+        value="messages"
+        className="c2p-tab-content-messages mt-0 min-h-0 flex-1"
+      >
         <MessagesTab
           messages={messages}
           selectedIds={selectedIds}
@@ -89,7 +95,10 @@ export function EditorTabs({
         />
       </TabsContent>
 
-      <TabsContent value="theme" className="mt-0 flex-1 overflow-auto">
+      <TabsContent
+        value="theme"
+        className="c2p-tab-content-theme mt-0 flex-1 overflow-auto"
+      >
         <ThemeTab
           selectedThemeId={editor.selectedTheme.id}
           decoration={editor.decoration}
@@ -99,7 +108,10 @@ export function EditorTabs({
         />
       </TabsContent>
 
-      <TabsContent value="export" className="mt-0 flex-1 overflow-auto">
+      <TabsContent
+        value="export"
+        className="c2p-tab-content-export mt-0 flex-1 overflow-auto"
+      >
         <ExportTab
           exportParams={editor.exportParams}
           autoPagination={editor.autoPagination}

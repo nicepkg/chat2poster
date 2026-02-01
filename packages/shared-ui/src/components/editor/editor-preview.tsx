@@ -53,14 +53,20 @@ export function EditorPreview({
   const userBubbleBg = selectedTheme.tokens.colors.userBubble;
   const userBubbleFg = selectedTheme.tokens.colors.userBubbleForeground;
   const assistantBubbleBg = selectedTheme.tokens.colors.assistantBubble;
-  const assistantBubbleFg = selectedTheme.tokens.colors.assistantBubbleForeground;
+  const assistantBubbleFg =
+    selectedTheme.tokens.colors.assistantBubbleForeground;
 
   // Get shadow style for window
   const shadowStyle =
     SHADOW_STYLES[decoration.shadowLevel] ?? SHADOW_STYLES.none;
 
   return (
-    <Card className={cn("c2p-preview-container bg-card/50 h-full overflow-hidden", className)}>
+    <Card
+      className={cn(
+        "c2p-preview-container bg-card/50 h-full overflow-hidden",
+        className,
+      )}
+    >
       <CardContent className="flex h-full flex-col p-0">
         {/* Preview Header */}
         <div className="c2p-preview-header border-b px-4 py-3">
@@ -88,7 +94,7 @@ export function EditorPreview({
           <div
             className={cn(
               "c2p-window mx-auto overflow-hidden",
-              isWindowDark ? "bg-zinc-900" : "bg-white"
+              isWindowDark ? "bg-zinc-900" : "bg-white",
             )}
             style={{
               maxWidth: exportParams.canvasWidthPx,
@@ -105,7 +111,7 @@ export function EditorPreview({
                   exit={{ opacity: 0, y: -10 }}
                   className={cn(
                     "c2p-window-bar px-4 pt-4",
-                    isWindowDark ? "bg-zinc-900" : "bg-white"
+                    isWindowDark ? "bg-zinc-900" : "bg-white",
                   )}
                 >
                   <MacOSBar />
@@ -129,9 +135,13 @@ export function EditorPreview({
                     className="c2p-message rounded-xl p-4"
                     style={{
                       backgroundColor:
-                        message.role === "user" ? userBubbleBg : assistantBubbleBg,
+                        message.role === "user"
+                          ? userBubbleBg
+                          : assistantBubbleBg,
                       color:
-                        message.role === "user" ? userBubbleFg : assistantBubbleFg,
+                        message.role === "user"
+                          ? userBubbleFg
+                          : assistantBubbleFg,
                     }}
                   >
                     {/* Role indicator */}
@@ -165,12 +175,8 @@ export function EditorPreview({
                   animate={{ opacity: 1 }}
                   className="c2p-empty-state flex flex-col items-center justify-center py-12 text-center"
                 >
-                  <MessageSquare
-                    className="mb-4 h-12 w-12 opacity-30"
-                  />
-                  <p className="text-sm opacity-60">
-                    {t("preview.empty")}
-                  </p>
+                  <MessageSquare className="mb-4 h-12 w-12 opacity-30" />
+                  <p className="text-sm opacity-60">{t("preview.empty")}</p>
                 </motion.div>
               )}
             </div>

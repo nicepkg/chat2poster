@@ -59,9 +59,11 @@ export function ExportButton({
       onClick={handleExport}
       disabled={disabled || isExporting}
       className={cn(
-        "group h-10 px-5 transition-all duration-200",
+        "c2p-export-btn group h-10 px-5 transition-all duration-200",
         "hover:-translate-y-0.5 hover:shadow-lg",
         "active:translate-y-0 active:shadow-sm",
+        isExporting && "c2p-export-btn-loading",
+        exportSuccess && "c2p-export-btn-success",
         className,
       )}
     >
@@ -72,7 +74,7 @@ export function ExportButton({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex items-center gap-2"
+            className="c2p-export-btn-state-loading flex items-center gap-2"
           >
             <Loader2 className="h-4 w-4 animate-spin" />
             {t("exportButton.exporting")}
@@ -84,7 +86,7 @@ export function ExportButton({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="flex items-center gap-2 text-green-500"
+            className="c2p-export-btn-state-success flex items-center gap-2 text-green-500"
           >
             <Check className="h-4 w-4" />
             {t("exportButton.done")}
@@ -95,7 +97,7 @@ export function ExportButton({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex items-center gap-2"
+            className="c2p-export-btn-state-idle flex items-center gap-2"
           >
             <Download className="h-4 w-4" />
             {buttonText}

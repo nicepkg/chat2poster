@@ -22,7 +22,7 @@ export function FloatingButton({
     <button
       onClick={onClick}
       className={cn(
-        "fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl active:scale-95",
+        "c2p-floating-btn fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl active:scale-95",
         className,
       )}
       title={t("floatingButton.title")}

@@ -27,7 +27,7 @@ export function MessageBubble({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       className={cn(
-        "rounded-xl p-4",
+        `c2p-bubble c2p-bubble-${role} rounded-xl p-4`,
         isDarkBackground
           ? role === "user"
             ? "bg-white/10 text-white"
@@ -38,13 +38,13 @@ export function MessageBubble({
         className,
       )}
     >
-      <div className="mb-2 flex items-center gap-2">
+      <div className="c2p-bubble-header mb-2 flex items-center gap-2">
         {role === "user" ? (
-          <User className="h-3.5 w-3.5 opacity-60" />
+          <User className="c2p-bubble-icon h-3.5 w-3.5 opacity-60" />
         ) : (
-          <Bot className="h-3.5 w-3.5 opacity-60" />
+          <Bot className="c2p-bubble-icon h-3.5 w-3.5 opacity-60" />
         )}
-        <span className="text-xs font-medium uppercase tracking-wide opacity-60">
+        <span className="c2p-bubble-role text-xs font-medium uppercase tracking-wide opacity-60">
           {role === "user"
             ? t("role.user")
             : role === "assistant"
@@ -52,7 +52,7 @@ export function MessageBubble({
               : t("role.system")}
         </span>
       </div>
-      <div className="prose prose-sm max-w-none dark:prose-invert">
+      <div className="c2p-bubble-content prose prose-sm max-w-none dark:prose-invert">
         {children}
       </div>
     </motion.div>

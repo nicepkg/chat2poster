@@ -1,13 +1,11 @@
 import type { Theme } from "@chat2poster/core-schema";
+import { darkTheme } from "./dark";
+import { lightTheme } from "./light";
+import { sunsetTheme } from "./sunset";
 
 export { lightTheme } from "./light";
 export { darkTheme } from "./dark";
 export { sunsetTheme } from "./sunset";
-
-// Re-import for array construction
-import { darkTheme } from "./dark";
-import { lightTheme } from "./light";
-import { sunsetTheme } from "./sunset";
 
 /**
  * All built-in theme presets
