@@ -3,11 +3,12 @@
 import * as React from "react";
 import { motion } from "framer-motion";
 import { User, Bot } from "lucide-react";
+import type { MessageRole } from "@chat2poster/core-schema";
 import { cn } from "~/utils/common";
 import { useI18n } from "~/i18n";
 
 export interface MessageBubbleProps {
-  role: "user" | "assistant" | "system";
+  role: MessageRole;
   children: React.ReactNode;
   isDarkBackground?: boolean;
   className?: string;

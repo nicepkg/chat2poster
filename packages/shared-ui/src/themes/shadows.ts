@@ -1,3 +1,5 @@
+import type { ShadowLevel } from "@chat2poster/core-schema";
+
 /**
  * Shadow styles using OKLCH color space for consistent, harmonious shadows.
  * Based on CLAUDE.md design system specifications.
@@ -7,7 +9,7 @@
  * Shadow levels from none to extra-large.
  * Uses layered shadows with OKLCH colors for depth and warmth.
  */
-export const SHADOW_STYLES = {
+export const SHADOW_STYLES: Record<ShadowLevel, string> = {
   /** No shadow */
   none: "none",
 
@@ -25,7 +27,7 @@ export const SHADOW_STYLES = {
 
   /** Extra large - floating elements, modals */
   xl: "0 20px 25px oklch(0.2 0.02 260 / 0.08), 0 8px 10px oklch(0.2 0.02 260 / 0.04)",
-} as const;
+};
 
 /**
  * Glow effects for emphasis and focus states.
@@ -47,7 +49,8 @@ export const GLOW_STYLES = {
   error: "0 0 20px oklch(0.6 0.25 25 / 0.25)",
 } as const;
 
-export type ShadowLevel = keyof typeof SHADOW_STYLES;
+// Re-export ShadowLevel from core-schema for convenience
+export type { ShadowLevel } from "@chat2poster/core-schema";
 export type GlowType = keyof typeof GLOW_STYLES;
 
 /**

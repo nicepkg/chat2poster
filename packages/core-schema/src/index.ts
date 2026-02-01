@@ -58,6 +58,7 @@ export {
 
 // Adapter types
 export {
+  AdapterInputType,
   DOMInput,
   ShareLinkInput,
   ManualInput,

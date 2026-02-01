@@ -1,12 +1,20 @@
 import { z } from "zod";
 import { Conversation } from "./conversation";
+import { MessageRole } from "./message";
+
+/**
+ * Adapter input type - the discriminator for adapter inputs
+ * Single source of truth for input type values
+ */
+export const AdapterInputType = z.enum(["dom", "share-link", "manual", "paste"]);
+export type AdapterInputType = z.infer<typeof AdapterInputType>;
 
 /**
  * Input type for DOM-based parsing (extension)
  */
 export const DOMInput = z
   .object({
-    type: z.literal("dom"),
+    type: z.literal(AdapterInputType.enum.dom),
     document: z.custom<Document>(),
     url: z.string().url(),
   })
@@ -18,7 +26,7 @@ export type DOMInput = z.infer<typeof DOMInput>;
  */
 export const ShareLinkInput = z
   .object({
-    type: z.literal("share-link"),
+    type: z.literal(AdapterInputType.enum["share-link"]),
     url: z.string().url(),
   })
   .strict();
@@ -29,10 +37,10 @@ export type ShareLinkInput = z.infer<typeof ShareLinkInput>;
  */
 export const ManualInput = z
   .object({
-    type: z.literal("manual"),
+    type: z.literal(AdapterInputType.enum.manual),
     messages: z.array(
       z.object({
-        role: z.enum(["user", "assistant", "system"]),
+        role: MessageRole,
         content: z.string(),
       })
     ),
@@ -45,7 +53,7 @@ export type ManualInput = z.infer<typeof ManualInput>;
  */
 export const PasteTextInput = z
   .object({
-    type: z.literal("paste"),
+    type: z.literal(AdapterInputType.enum.paste),
     text: z.string(),
     format: z.enum(["plain", "markdown"]).default("plain"),
   })
@@ -103,9 +111,7 @@ export const AdapterMeta = z
     id: z.string(),
     version: z.string(),
     name: z.string(),
-    supportedInputTypes: z.array(
-      z.enum(["dom", "share-link", "manual", "paste"])
-    ),
+    supportedInputTypes: z.array(AdapterInputType),
   })
   .strict();
 export type AdapterMeta = z.infer<typeof AdapterMeta>;

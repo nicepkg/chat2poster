@@ -49,9 +49,7 @@ export function EditorPreview({
     decoration.backgroundValue === "#09090b";
 
   // Get shadow style
-  const shadowStyle =
-    SHADOW_STYLES[decoration.shadowLevel as keyof typeof SHADOW_STYLES] ??
-    SHADOW_STYLES.none;
+  const shadowStyle = SHADOW_STYLES[decoration.shadowLevel] ?? SHADOW_STYLES.none;
 
   // Checkerboard pattern classes
   const checkerboardClasses = showCheckerboard

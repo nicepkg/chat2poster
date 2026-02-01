@@ -54,7 +54,7 @@ export type BackgroundType = z.infer<typeof BackgroundType>;
 /**
  * Shadow level preset
  */
-export const ShadowLevel = z.enum(["none", "sm", "md", "lg", "xl"]);
+export const ShadowLevel = z.enum(["none", "xs", "sm", "md", "lg", "xl"]);
 export type ShadowLevel = z.infer<typeof ShadowLevel>;
 
 /**
