@@ -1,7 +1,6 @@
 import { defaultLocale } from "@chat2poster/shared-ui/i18n/core";
 import type { Metadata } from "next";
 import { Head } from "nextra/components";
-import "nextra-theme-docs/style.css";
 import "../styles/globals.css";
 import { siteConfig } from "~/lib/site-info";
 import { RootLayoutClient } from "./layout-client";

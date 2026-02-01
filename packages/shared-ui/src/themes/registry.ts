@@ -1,5 +1,5 @@
 import type { Theme } from "@chat2poster/core-schema";
-import { lightTheme, darkTheme } from "./presets";
+import { lightTheme, darkTheme, sunsetTheme } from "./presets";
 
 /**
  * Theme registry - stores all available themes
@@ -44,3 +44,4 @@ export function getDefaultTheme(): Theme {
 // Register built-in themes
 registerTheme(lightTheme);
 registerTheme(darkTheme);
+registerTheme(sunsetTheme);

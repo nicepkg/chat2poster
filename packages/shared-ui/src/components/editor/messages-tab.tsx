@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Scissors, X, User, Bot } from "lucide-react";
-import type { Message } from "@chat2poster/core-schema";
+import type { Message, PageBreak } from "@chat2poster/core-schema";
 import { cn } from "~/utils/common";
 import { useI18n } from "~/i18n";
 import { Button } from "../ui/button";
@@ -13,7 +13,7 @@ import { ScrollArea } from "../ui/scroll-area";
 export interface MessagesTabProps {
   messages: Message[];
   selectedIds: string[];
-  pageBreaks: { id: string; afterMessageId: string }[];
+  pageBreaks: Pick<PageBreak, "id" | "afterMessageId">[];
   onToggle: (id: string) => void;
   onSelectAll: () => void;
   onDeselectAll: () => void;

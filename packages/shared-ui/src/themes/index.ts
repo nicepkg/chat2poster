@@ -3,7 +3,10 @@
  */
 
 // Presets
-export { lightTheme, darkTheme } from "./presets";
+export { lightTheme, darkTheme, sunsetTheme, THEME_PRESETS } from "./presets";
+
+// Backgrounds
+export { BACKGROUND_PRESETS, type BackgroundPreset } from "./backgrounds";
 
 // Registry
 export {
@@ -30,7 +33,6 @@ export {
   GLOW_STYLES,
   getShadowStyle,
   getGlowStyle,
-  type ShadowLevel as ShadowStyleLevel,
   type GlowType,
 } from "./shadows";
 

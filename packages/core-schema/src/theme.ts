@@ -88,17 +88,9 @@ export type Theme = z.infer<typeof Theme>;
 
 /**
  * Decoration settings for export (overrides theme defaults)
+ * Same structure as DecorationDefaults - DRY principle
  */
-export const Decoration = z
-  .object({
-    canvasPaddingPx: z.number().nonnegative(),
-    canvasRadiusPx: z.number().nonnegative(),
-    shadowLevel: ShadowLevel,
-    backgroundType: BackgroundType,
-    backgroundValue: z.string(),
-    macosBarEnabled: z.boolean(),
-  })
-  .strict();
+export const Decoration = DecorationDefaults;
 export type Decoration = z.infer<typeof Decoration>;
 
 /**

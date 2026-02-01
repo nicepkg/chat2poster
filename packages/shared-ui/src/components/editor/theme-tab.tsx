@@ -16,11 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import {
-  BackgroundPicker,
-  DEFAULT_BACKGROUND_PRESETS,
-  type BackgroundPreset,
-} from "./background-picker";
+import { BackgroundPicker, type BackgroundPreset } from "./background-picker";
+import { BACKGROUND_PRESETS } from "~/themes/backgrounds";
 
 export interface ThemeTabProps {
   selectedThemeId: string;
@@ -36,7 +33,7 @@ export function ThemeTab({
   selectedThemeId,
   decoration,
   themes = [],
-  backgroundPresets = DEFAULT_BACKGROUND_PRESETS,
+  backgroundPresets = BACKGROUND_PRESETS,
   onThemeChange,
   onDecorationChange,
   className,

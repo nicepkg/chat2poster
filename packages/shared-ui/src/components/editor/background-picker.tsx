@@ -6,29 +6,13 @@ import { Check } from "lucide-react";
 import { cn } from "~/utils/common";
 import { useI18n } from "~/i18n";
 import { Label } from "../ui/label";
+import {
+  BACKGROUND_PRESETS,
+  type BackgroundPreset,
+} from "~/themes/backgrounds";
 
-export interface BackgroundPreset {
-  id: string;
-  label: string;
-  value: string;
-  type: "solid" | "gradient";
-}
-
-export const DEFAULT_BACKGROUND_PRESETS: BackgroundPreset[] = [
-  { id: "white", label: "White", value: "#ffffff", type: "solid" },
-  { id: "slate", label: "Slate", value: "#f8fafc", type: "solid" },
-  { id: "amber", label: "Amber", value: "#fef3c7", type: "solid" },
-  { id: "blue", label: "Blue", value: "#dbeafe", type: "solid" },
-  { id: "green", label: "Green", value: "#dcfce7", type: "solid" },
-  { id: "fuchsia", label: "Fuchsia", value: "#fae8ff", type: "solid" },
-  { id: "dark", label: "Dark", value: "#1e1e2e", type: "solid" },
-  {
-    id: "gradient-indigo",
-    label: "Indigo",
-    value: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    type: "gradient",
-  },
-];
+// Re-export for backward compatibility
+export type { BackgroundPreset };
 
 export interface BackgroundPickerProps {
   value: string;
@@ -41,7 +25,7 @@ export interface BackgroundPickerProps {
 export function BackgroundPicker({
   value,
   onChange,
-  presets = DEFAULT_BACKGROUND_PRESETS,
+  presets = BACKGROUND_PRESETS,
   label,
   className,
 }: BackgroundPickerProps) {
