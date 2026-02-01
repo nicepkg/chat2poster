@@ -819,13 +819,38 @@ chat2poster/
 │   ├── core-export/       # SnapDOM export + ZIP packaging
 │   └── shared-ui/         # Shared UI components (Radix/Shadcn)
 ├── apps/
-│   ├── browser-extension/     # Browser extension
-│   └── web/        # Website
+│   ├── browser-extension/     # Browser extension (WXT)
+│   └── web/                   # Website (Next.js)
 ├── configs/               # Shared configs (eslint, etc.)
 ├── docs/                  # PRD, architecture, specs
 ├── memories/              # Session & long-term memory
+├── turbo.json             # Turborepo task configuration
 └── TASKS.md               # Task board for parallel AI work
 ```
+
+### Build Toolchain
+
+**Package Manager:** pnpm (workspace protocol)
+**Task Runner:** Turborepo (parallel builds, caching)
+**Bundler:** tsup (packages), Next.js (web), WXT/Vite (extension)
+
+```bash
+# Common commands (all use Turborepo under the hood)
+pnpm build              # Build all packages and apps
+pnpm build:packages     # Build packages only
+pnpm build:web          # Build web app
+pnpm build:extension    # Build browser extension
+pnpm dev:web            # Dev server for web
+pnpm dev:extension      # Dev server for extension
+pnpm lint               # Lint all packages
+pnpm typecheck          # Type check all packages
+pnpm test               # Run all tests
+```
+
+**Turborepo Benefits:**
+- Task dependency graph (packages build before apps)
+- Local caching (repeat builds are instant)
+- Parallel execution (independent tasks run concurrently)
 
 ---
 

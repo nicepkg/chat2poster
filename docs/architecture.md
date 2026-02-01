@@ -13,8 +13,38 @@
 
 ## 假设
 
-- 代码库为 monorepo 或至少支持共享 package（建议）。
+- 代码库为 monorepo（pnpm workspace + Turborepo）。
 - 扩展与官网复用同一套渲染组件与导出逻辑。
+
+## 构建工具链
+
+| 工具 | 用途 |
+|------|------|
+| **pnpm** | 包管理器，使用 workspace 协议管理 monorepo |
+| **Turborepo** | 任务运行器，提供并行构建、缓存、任务依赖图 |
+| **tsup** | packages 打包（输出 ESM + DTS） |
+| **Next.js** | web 应用构建 |
+| **WXT + Vite** | 浏览器扩展构建 |
+
+### 常用命令
+
+```bash
+pnpm build              # 构建所有包和应用（Turbo 管理依赖顺序）
+pnpm build:packages     # 仅构建 packages/*
+pnpm build:web          # 构建 web 应用
+pnpm build:extension    # 构建浏览器扩展
+pnpm dev:web            # 启动 web 开发服务器
+pnpm dev:extension      # 启动扩展开发服务器
+pnpm lint               # Lint 所有包
+pnpm typecheck          # 类型检查所有包
+pnpm test               # 运行所有测试
+```
+
+### Turborepo 配置
+
+- `turbo.json`：根级任务定义（build、lint、typecheck、test）
+- `apps/*/turbo.json`：应用级输出配置（继承根配置）
+- 缓存目录：`.turbo/`
 
 ## 依赖
 
@@ -201,9 +231,14 @@ configs/
 - 官网：share link 输入 -> 解析 -> 进入 Editor -> 导出触发（mock 导出）
 - 扩展：解析 DOM -> 生成消息列表 -> 选择 -> 导出（mock）
 
-CI：
+CI（使用 Turborepo）：
 
-- lint/typecheck/test 必跑
+```bash
+pnpm turbo run lint typecheck  # 并行执行，有缓存
+pnpm turbo run test            # 测试
+```
+
+- lint/typecheck/test 必跑（Turbo 自动并行 + 缓存加速）
 - 适配器契约测试必须跑（防止新增 adapter 破坏 registry）
 
 ---

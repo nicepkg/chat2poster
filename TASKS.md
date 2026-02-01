@@ -631,6 +631,38 @@ When a track needs something from another track:
 
 ---
 
+## Build Toolchain
+
+This monorepo uses **pnpm + Turborepo** for package management and task orchestration.
+
+### Common Commands
+
+```bash
+# Development
+pnpm dev:web            # Start web dev server
+pnpm dev:extension      # Start extension dev server
+pnpm dev:packages       # Watch mode for all packages
+
+# Building (Turbo manages dependency order and caching)
+pnpm build              # Build everything
+pnpm build:packages     # Build packages only
+pnpm build:web          # Build web app
+pnpm build:extension    # Build browser extension
+
+# Quality
+pnpm lint               # Lint all packages
+pnpm typecheck          # Type check all packages
+pnpm test               # Run all tests
+```
+
+### Turborepo Benefits
+
+- **Parallel execution**: Independent tasks run concurrently
+- **Caching**: Repeat builds skip unchanged packages (shows "FULL TURBO")
+- **Task graph**: Packages build before apps automatically
+
+---
+
 ## Quick Start for Each AI
 
 ### AI-1 Start Command
