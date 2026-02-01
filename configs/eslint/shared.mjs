@@ -85,7 +85,7 @@ export const appTsRules = {
     },
   ],
   "@typescript-eslint/prefer-nullish-coalescing": "off",
-  "@typescript-eslint/no-unnecessary-condition": "warn",
+  "@typescript-eslint/no-unnecessary-condition": "off",
 };
 
 export const lintOptionsConfig = {
