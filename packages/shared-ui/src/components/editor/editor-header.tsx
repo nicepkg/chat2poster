@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles } from "lucide-react";
-import { cn } from "~/utils/common";
+import * as React from "react";
 import { useI18n } from "~/i18n";
+import { cn } from "~/utils/common";
 
 export interface EditorHeaderProps {
   /** Page title */
@@ -50,7 +50,7 @@ export function EditorHeader({
       animate={{ opacity: 1, y: 0 }}
       className={cn(
         "bg-background/80 sticky top-0 z-50 border-b backdrop-blur-lg",
-        className
+        className,
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">

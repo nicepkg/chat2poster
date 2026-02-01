@@ -1,15 +1,15 @@
 "use client";
 
+import type { Conversation } from "@chat2poster/core-schema";
 import * as React from "react";
 import { useState, useCallback, useEffect } from "react";
-import type { Conversation } from "@chat2poster/core-schema";
-import { cn } from "~/utils/common";
-import { generateUUID } from "~/utils/uuid";
-import { useEditor } from "~/contexts/editor-context";
-import { useI18n } from "~/i18n";
+import { ExportTab } from "./export-tab";
 import { MessagesTab } from "./messages-tab";
 import { ThemeTab } from "./theme-tab";
-import { ExportTab } from "./export-tab";
+import { useEditor } from "~/contexts/editor-context";
+import { useI18n } from "~/i18n";
+import { cn } from "~/utils/common";
+import { generateUUID } from "~/utils/uuid";
 
 function CloseIcon() {
   return (
@@ -151,7 +151,8 @@ export function EditorPanel({
     } catch (err) {
       runtimeDispatch({
         type: "SET_ERROR",
-        payload: err instanceof Error ? err.message : t("editor.panel.exportError"),
+        payload:
+          err instanceof Error ? err.message : t("editor.panel.exportError"),
       });
     } finally {
       runtimeDispatch({ type: "SET_EXPORTING", payload: false });
@@ -170,7 +171,7 @@ export function EditorPanel({
     <div
       className={cn(
         "fixed inset-y-0 right-0 z-50 flex w-96 flex-col bg-background shadow-2xl",
-        className
+        className,
       )}
     >
       {/* Header */}
@@ -201,7 +202,7 @@ export function EditorPanel({
               "flex-1 px-4 py-2 text-sm font-medium capitalize transition-colors",
               activeTab === tab
                 ? "border-b-2 border-primary text-primary"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             {tab === "messages"

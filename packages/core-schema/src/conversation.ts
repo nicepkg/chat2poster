@@ -50,7 +50,7 @@ export const Conversation = z
       // CONV-001: Message order must be consistent
       return conv.messages.every((msg, idx) => msg.order === idx);
     },
-    { message: "Message order must be sequential starting from 0" }
+    { message: "Message order must be sequential starting from 0" },
   )
   .refine(
     (conv) => {
@@ -60,7 +60,7 @@ export const Conversation = z
       }
       return true;
     },
-    { message: "web-share-link source type requires sourceMeta.shareUrl" }
+    { message: "web-share-link source type requires sourceMeta.shareUrl" },
   );
 export type Conversation = z.infer<typeof Conversation>;
 
@@ -69,7 +69,7 @@ export type Conversation = z.infer<typeof Conversation>;
  */
 export function createConversation(
   partial: Pick<Conversation, "id" | "sourceType" | "messages"> &
-    Partial<Conversation>
+    Partial<Conversation>,
 ): Conversation {
   return Conversation.parse({
     createdAt: new Date().toISOString(),

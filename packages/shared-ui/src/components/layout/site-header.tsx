@@ -2,11 +2,11 @@
 
 import { Github } from "lucide-react";
 import * as React from "react";
+import { cn } from "../../utils";
 import { Button } from "../ui/button";
-import { ThemeToggle } from "./theme-toggle";
 import { LocaleToggle } from "./locale-toggle";
 import { MobileNav, type NavItem } from "./mobile-nav";
-import { cn } from "../../utils";
+import { ThemeToggle } from "./theme-toggle";
 import { useI18n } from "~/i18n";
 import type { Locale } from "~/i18n/core";
 
@@ -112,9 +112,7 @@ export function SiteHeader({
 
         {/* Right: Actions */}
         <div className="hidden md:flex items-center gap-2">
-          {showLocaleToggle && (
-            <LocaleToggle onLocaleChange={onLocaleChange} />
-          )}
+          {showLocaleToggle && <LocaleToggle onLocaleChange={onLocaleChange} />}
           {showThemeToggle && <ThemeToggle />}
           {githubUrl && (
             <Button

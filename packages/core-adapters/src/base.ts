@@ -14,6 +14,7 @@ import type {
   SourceType,
 } from "@chat2poster/core-schema";
 import { createConversation, createMessage } from "@chat2poster/core-schema";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Configuration for creating an adapter
@@ -47,17 +48,7 @@ export interface RawMessage {
  * Generate a UUID v4
  */
 export function generateId(): string {
-  // Use crypto.randomUUID if available
-  if (typeof crypto !== "undefined" && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
-
-  // Fallback implementation
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
+  return uuidv4();
 }
 
 /**
@@ -75,7 +66,7 @@ export function buildMessages(rawMessages: RawMessage[]): Message[] {
         containsImage:
           raw.content.includes("![") || raw.content.includes("<img"),
       },
-    })
+    }),
   );
 }
 
@@ -84,7 +75,7 @@ export function buildMessages(rawMessages: RawMessage[]): Message[] {
  */
 export function buildConversation(
   rawMessages: RawMessage[],
-  options: ConversationOptions
+  options: ConversationOptions,
 ): Conversation {
   const messages = buildMessages(rawMessages);
   const now = new Date().toISOString();

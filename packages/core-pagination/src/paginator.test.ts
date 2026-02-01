@@ -1,3 +1,4 @@
+import type { Message, Selection } from "@chat2poster/core-schema";
 import { describe, it, expect } from "vitest";
 import {
   paginate,
@@ -6,10 +7,13 @@ import {
   getPageHeights,
   getEstimatedTotalHeight,
 } from "./paginator";
-import type { Message, Selection } from "@chat2poster/core-schema";
 
 // Helper to create test messages
-function createTestMessage(id: string, content: string, order: number): Message {
+function createTestMessage(
+  id: string,
+  content: string,
+  order: number,
+): Message {
   return {
     id,
     role: "assistant",
@@ -22,7 +26,7 @@ function createTestMessage(id: string, content: string, order: number): Message 
 function createTestSelection(
   conversationId: string,
   messageIds: string[],
-  pageBreaks: { id: string; afterMessageId: string }[] = []
+  pageBreaks: { id: string; afterMessageId: string }[] = [],
 ): Selection {
   return {
     conversationId,
@@ -67,7 +71,7 @@ describe("paginate", () => {
     const selection = createTestSelection(
       "conv-1",
       ["msg-1", "msg-2", "msg-3"],
-      [{ id: "pb-1", afterMessageId: "msg-1" }]
+      [{ id: "pb-1", afterMessageId: "msg-1" }],
     );
 
     const result = paginate(messages, selection);
@@ -89,7 +93,7 @@ describe("paginate", () => {
       [
         { id: "pb-1", afterMessageId: "msg-1" },
         { id: "pb-2", afterMessageId: "msg-2" },
-      ]
+      ],
     );
 
     const result = paginate(messages, selection);

@@ -20,7 +20,7 @@ describe("ChatGPTShareLinkAdapter", () => {
         chatGPTShareLinkAdapter.canHandle({
           type: "share-link",
           url: "https://chatgpt.com/share/abc123",
-        })
+        }),
       ).toBe(true);
     });
 
@@ -29,7 +29,7 @@ describe("ChatGPTShareLinkAdapter", () => {
         chatGPTShareLinkAdapter.canHandle({
           type: "share-link",
           url: "https://chatgpt.com/s/t_abc123",
-        })
+        }),
       ).toBe(true);
     });
 
@@ -38,7 +38,7 @@ describe("ChatGPTShareLinkAdapter", () => {
         chatGPTShareLinkAdapter.canHandle({
           type: "share-link",
           url: "https://chat.openai.com/share/abc123",
-        })
+        }),
       ).toBe(true);
     });
 
@@ -47,7 +47,7 @@ describe("ChatGPTShareLinkAdapter", () => {
         chatGPTShareLinkAdapter.canHandle({
           type: "share-link",
           url: "https://chatgpt.com/c/abc123",
-        })
+        }),
       ).toBe(false);
     });
 
@@ -56,7 +56,7 @@ describe("ChatGPTShareLinkAdapter", () => {
         chatGPTShareLinkAdapter.canHandle({
           type: "manual",
           messages: [{ role: "user", content: "test" }],
-        })
+        }),
       ).toBe(false);
     });
   });
@@ -83,7 +83,7 @@ describe("ClaudeShareLinkAdapter", () => {
         claudeShareLinkAdapter.canHandle({
           type: "share-link",
           url: "https://claude.ai/share/2b37ff69-0fd4-4e9c-8508-e1e4894f2069",
-        })
+        }),
       ).toBe(true);
     });
 
@@ -92,7 +92,7 @@ describe("ClaudeShareLinkAdapter", () => {
         claudeShareLinkAdapter.canHandle({
           type: "share-link",
           url: "https://claude.ai/chat/abc123",
-        })
+        }),
       ).toBe(false);
     });
 
@@ -101,7 +101,7 @@ describe("ClaudeShareLinkAdapter", () => {
         claudeShareLinkAdapter.canHandle({
           type: "share-link",
           url: "https://chatgpt.com/share/abc123",
-        })
+        }),
       ).toBe(false);
     });
   });
@@ -128,7 +128,7 @@ describe("GeminiShareLinkAdapter", () => {
         geminiShareLinkAdapter.canHandle({
           type: "share-link",
           url: "https://gemini.google.com/share/abc123",
-        })
+        }),
       ).toBe(true);
     });
 
@@ -137,7 +137,7 @@ describe("GeminiShareLinkAdapter", () => {
         geminiShareLinkAdapter.canHandle({
           type: "share-link",
           url: "https://gemini.google.com/app/abc123",
-        })
+        }),
       ).toBe(false);
     });
 
@@ -146,7 +146,7 @@ describe("GeminiShareLinkAdapter", () => {
         geminiShareLinkAdapter.canHandle({
           type: "share-link",
           url: "https://chatgpt.com/share/abc123",
-        })
+        }),
       ).toBe(false);
     });
   });
@@ -215,13 +215,13 @@ describe("Share link adapter registration", () => {
       chatGPTShareLinkAdapter.canHandle({
         type: "share-link",
         url: "https://chatgpt.com/share/test",
-      })
+      }),
     ).toBe(true);
     expect(
       claudeShareLinkAdapter.canHandle({
         type: "share-link",
         url: "https://chatgpt.com/share/test",
-      })
+      }),
     ).toBe(false);
 
     // Claude
@@ -229,13 +229,13 @@ describe("Share link adapter registration", () => {
       claudeShareLinkAdapter.canHandle({
         type: "share-link",
         url: "https://claude.ai/share/abc-123",
-      })
+      }),
     ).toBe(true);
     expect(
       chatGPTShareLinkAdapter.canHandle({
         type: "share-link",
         url: "https://claude.ai/share/abc-123",
-      })
+      }),
     ).toBe(false);
 
     // Gemini
@@ -243,13 +243,13 @@ describe("Share link adapter registration", () => {
       geminiShareLinkAdapter.canHandle({
         type: "share-link",
         url: "https://gemini.google.com/share/xyz",
-      })
+      }),
     ).toBe(true);
     expect(
       chatGPTShareLinkAdapter.canHandle({
         type: "share-link",
         url: "https://gemini.google.com/share/xyz",
-      })
+      }),
     ).toBe(false);
   });
 });

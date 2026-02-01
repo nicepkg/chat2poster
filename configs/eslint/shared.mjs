@@ -31,7 +31,9 @@ export const appBaseConfig = {
     prettier: eslintPluginPrettier,
   },
   rules: {
+    "@typescript-eslint/only-throw-error": "off",
     "@typescript-eslint/ban-ts-comment": "off",
+    '@typescript-eslint/no-unnecessary-condition': 'off',
     "import/no-anonymous-default-export": "warn",
     "import/order": [
       "warn",
@@ -57,6 +59,11 @@ export const appBaseConfig = {
 
 export const appTsRules = {
   ...baseTsRules,
+  "@typescript-eslint/only-throw-error": "off",
+  "@typescript-eslint/prefer-nullish-coalescing": "off",
+  "@typescript-eslint/no-floating-promises": "off",
+  "@typescript-eslint/no-misused-promises": "off",
+  "@typescript-eslint/no-empty-object-type": "off",
   "@typescript-eslint/ban-ts-comment": "off",
   "@typescript-eslint/triple-slash-reference": "off",
   "@typescript-eslint/array-type": "off",

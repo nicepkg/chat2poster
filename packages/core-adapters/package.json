@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@chat2poster/core-schema": "workspace:*",
+    "uuid": "^13.0.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

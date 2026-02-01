@@ -1,12 +1,12 @@
 "use client";
 
-import { memo, useMemo } from "react";
 import type { Message, Selection, PageBreak } from "@chat2poster/core-schema";
+import { memo, useMemo } from "react";
+import { ConversationHeader } from "./conversation-header";
+import { MessageItem } from "./message-item";
+import { PageBreakIndicator } from "./page-break-indicator";
 import type { Theme } from "~/themes";
 import { cssVar } from "~/themes";
-import { MessageItem } from "./message-item";
-import { ConversationHeader } from "./conversation-header";
-import { PageBreakIndicator } from "./page-break-indicator";
 
 export interface ConversationViewProps {
   /** All messages in the conversation */

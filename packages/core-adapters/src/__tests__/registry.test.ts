@@ -2,8 +2,13 @@
  * Registry Tests
  */
 
+import type {
+  Adapter,
+  AdapterInput,
+  Conversation,
+} from "@chat2poster/core-schema";
 import { describe, it, expect, beforeEach } from "vitest";
-import type { Adapter, AdapterInput, Conversation } from "@chat2poster/core-schema";
+import { generateId } from "../base";
 import {
   registerAdapter,
   unregisterAdapter,
@@ -12,7 +17,6 @@ import {
   parseWithAdapters,
   clearAdapters,
 } from "../registry";
-import { generateId } from "../base";
 
 // Mock adapter for testing
 function createMockAdapter(config: {

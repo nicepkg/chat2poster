@@ -1,4 +1,9 @@
-import type { Message, Selection, PaginationResult, PageBreak } from "@chat2poster/core-schema";
+import type {
+  Message,
+  Selection,
+  PaginationResult,
+  PageBreak,
+} from "@chat2poster/core-schema";
 import {
   estimateMessageHeight,
   type HeightEstimationConfig,
@@ -42,7 +47,7 @@ interface PageBuilder {
  */
 function getSelectedMessages(
   allMessages: Message[],
-  selectedIds: string[]
+  selectedIds: string[],
 ): Message[] {
   const messageMap = new Map(allMessages.map((m) => [m.id, m]));
   const result: Message[] = [];
@@ -64,7 +69,7 @@ function getSelectedMessages(
 function applyManualBreaks(
   messages: Message[],
   pageBreaks: PageBreak[],
-  _config: PaginationConfig
+  _config: PaginationConfig,
 ): string[][] {
   if (messages.length === 0) {
     return [];
@@ -104,7 +109,7 @@ function applyManualBreaks(
  */
 function autoPaginate(
   messages: Message[],
-  config: PaginationConfig
+  config: PaginationConfig,
 ): string[][] {
   if (messages.length === 0) {
     return [];
@@ -138,7 +143,10 @@ function autoPaginate(
 
     // Handle case where single message exceeds max height
     // We still put it on its own page (can't split a message)
-    if (msgHeight > config.maxPageHeightPx && currentPage.messageIds.length === 1) {
+    if (
+      msgHeight > config.maxPageHeightPx &&
+      currentPage.messageIds.length === 1
+    ) {
       pages.push(currentPage.messageIds);
       currentPage = {
         messageIds: [],
@@ -160,7 +168,7 @@ function autoPaginate(
  */
 export function needsPagination(
   messages: Message[],
-  config: Partial<PaginationConfig> = {}
+  config: Partial<PaginationConfig> = {},
 ): boolean {
   const fullConfig: PaginationConfig = {
     ...DEFAULT_PAGINATION_CONFIG,
@@ -186,7 +194,7 @@ export function needsPagination(
  */
 export function getEstimatedTotalHeight(
   messages: Message[],
-  config: Partial<PaginationConfig> = {}
+  config: Partial<PaginationConfig> = {},
 ): number {
   const fullConfig: PaginationConfig = {
     ...DEFAULT_PAGINATION_CONFIG,
@@ -199,7 +207,7 @@ export function getEstimatedTotalHeight(
 
   return messages.reduce(
     (total, msg) => total + estimateMessageHeight(msg, fullConfig.heightConfig),
-    0
+    0,
   );
 }
 
@@ -214,7 +222,7 @@ export function getEstimatedTotalHeight(
 export function paginate(
   allMessages: Message[],
   selection: Selection,
-  config: Partial<PaginationConfig> = {}
+  config: Partial<PaginationConfig> = {},
 ): PaginationResult {
   const fullConfig: PaginationConfig = {
     ...DEFAULT_PAGINATION_CONFIG,
@@ -226,7 +234,10 @@ export function paginate(
   };
 
   // Get selected messages in order
-  const selectedMessages = getSelectedMessages(allMessages, selection.selectedMessageIds);
+  const selectedMessages = getSelectedMessages(
+    allMessages,
+    selection.selectedMessageIds,
+  );
 
   if (selectedMessages.length === 0) {
     return {
@@ -242,7 +253,11 @@ export function paginate(
 
   if (hasManualBreaks) {
     // Use manual breaks (respects user intent even if pages are too tall)
-    pages = applyManualBreaks(selectedMessages, selection.pageBreaks, fullConfig);
+    pages = applyManualBreaks(
+      selectedMessages,
+      selection.pageBreaks,
+      fullConfig,
+    );
   } else if (fullConfig.autoEnabled) {
     // Apply auto pagination
     pages = autoPaginate(selectedMessages, fullConfig);
@@ -263,7 +278,7 @@ export function paginate(
  */
 export function suggestPageBreaks(
   messages: Message[],
-  config: Partial<PaginationConfig> = {}
+  config: Partial<PaginationConfig> = {},
 ): PageBreak[] {
   const fullConfig: PaginationConfig = {
     ...DEFAULT_PAGINATION_CONFIG,
@@ -308,7 +323,7 @@ export function suggestPageBreaks(
 export function getPageHeights(
   allMessages: Message[],
   paginationResult: PaginationResult,
-  config: Partial<PaginationConfig> = {}
+  config: Partial<PaginationConfig> = {},
 ): number[] {
   const fullConfig: PaginationConfig = {
     ...DEFAULT_PAGINATION_CONFIG,

@@ -1,6 +1,7 @@
 "use client";
 
 import { Languages } from "lucide-react";
+import { cn } from "../../utils";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -8,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { cn } from "../../utils";
 import { useI18n } from "~/i18n";
 import { localeLabels, locales, type Locale } from "~/i18n/core";
 
@@ -29,7 +29,7 @@ export function LocaleToggle({ className, onLocaleChange }: LocaleToggleProps) {
           className={cn(
             "h-9 w-9 rounded-xl transition-all duration-200",
             "text-muted-foreground hover:text-foreground hover:bg-muted/80",
-            className
+            className,
           )}
           aria-label={t("siteHeader.switchLanguage")}
         >
@@ -43,7 +43,7 @@ export function LocaleToggle({ className, onLocaleChange }: LocaleToggleProps) {
             onClick={() => onLocaleChange?.(loc)}
             className={cn(
               "cursor-pointer",
-              locale === loc && "bg-muted font-medium"
+              locale === loc && "bg-muted font-medium",
             )}
           >
             {localeLabels[loc]}

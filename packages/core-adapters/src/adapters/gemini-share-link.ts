@@ -82,7 +82,7 @@ export class GeminiShareLinkAdapter extends BaseShareLinkAdapter {
 
     throw createAppError(
       "E-PARSE-005",
-      `Gemini share pages load content dynamically via JavaScript. Server-side extraction found no messages. ${lastError?.message || "Try using the browser extension instead."}`
+      `Gemini share pages load content dynamically via JavaScript. Server-side extraction found no messages. ${lastError?.message || "Try using the browser extension instead."}`,
     );
   }
 
@@ -110,7 +110,7 @@ export class GeminiShareLinkAdapter extends BaseShareLinkAdapter {
    * Extract share ID from URL
    */
   private extractShareId(url: string): string {
-    const match = url.match(/\/share\/([a-zA-Z0-9]+)/);
+    const match = /\/share\/([a-zA-Z0-9]+)/.exec(url);
     return match?.[1] || "";
   }
 
@@ -138,12 +138,12 @@ export class GeminiShareLinkAdapter extends BaseShareLinkAdapter {
     const initCallbacks = html.match(/AF_initDataCallback\([^)]+\)/g);
     if (initCallbacks) {
       for (const callback of initCallbacks) {
-        const dataMatch = callback.match(
-          /data:\s*(\[[\s\S]*?\])(?:\s*,\s*sideChannel)?/
+        const dataMatch = /data:\s*(\[[\s\S]*?\])(?:\s*,\s*sideChannel)?/.exec(
+          callback,
         );
         if (dataMatch?.[1]) {
           try {
-            const data = JSON.parse(dataMatch[1]);
+            const data = JSON.parse(dataMatch[1]) as unknown[];
             const messages = this.parseAfInitData(data);
             if (messages.length > 0) {
               return messages;
@@ -156,7 +156,7 @@ export class GeminiShareLinkAdapter extends BaseShareLinkAdapter {
     }
 
     // Strategy 2: Look for WIZ_global_data
-    const wizMatch = html.match(/WIZ_global_data\s*=\s*\{[^}]+\}/);
+    const wizMatch = /WIZ_global_data\s*=\s*\{[^}]+\}/.exec(html);
     if (wizMatch) {
       // WIZ_global_data typically contains metadata, not conversation content
       // But it might have references to where data is loaded from
@@ -174,7 +174,7 @@ export class GeminiShareLinkAdapter extends BaseShareLinkAdapter {
       for (const match of matches) {
         if (!match[1]) continue;
         try {
-          const data = JSON.parse(match[1]);
+          const data = JSON.parse(match[1]) as unknown;
           if (Array.isArray(data) && data.length > 0) {
             const messages = this.parseGeminiArrayData(data);
             if (messages.length > 0) {
@@ -272,7 +272,7 @@ export class GeminiShareLinkAdapter extends BaseShareLinkAdapter {
           // Gemini API responses often have a security prefix
           const jsonText = text.replace(/^\)\]\}'\n/, "");
           try {
-            const data = JSON.parse(jsonText);
+            const data = JSON.parse(jsonText) as unknown;
             const messages = this.parseGeminiApiResponse(data);
             if (messages.length > 0) {
               return messages;

@@ -30,10 +30,10 @@ export const Selection = z
     (sel) => {
       // PB-001: pageBreak.afterMessageId must be in selectedMessageIds
       return sel.pageBreaks.every((pb) =>
-        sel.selectedMessageIds.includes(pb.afterMessageId)
+        sel.selectedMessageIds.includes(pb.afterMessageId),
       );
     },
-    { message: "Page break afterMessageId must be in selectedMessageIds" }
+    { message: "Page break afterMessageId must be in selectedMessageIds" },
   )
   .refine(
     (sel) => {
@@ -41,7 +41,7 @@ export const Selection = z
       const afterIds = sel.pageBreaks.map((pb) => pb.afterMessageId);
       return afterIds.length === new Set(afterIds).size;
     },
-    { message: "Duplicate page breaks on same message not allowed" }
+    { message: "Duplicate page breaks on same message not allowed" },
   );
 export type Selection = z.infer<typeof Selection>;
 
@@ -50,7 +50,7 @@ export type Selection = z.infer<typeof Selection>;
  */
 export function createSelection(
   partial: Pick<Selection, "conversationId" | "selectedMessageIds"> &
-    Partial<Selection>
+    Partial<Selection>,
 ): Selection {
   return Selection.parse({
     pageBreaks: [],
@@ -64,7 +64,7 @@ export function createSelection(
  */
 export function createFullSelection(
   conversationId: string,
-  messageIds: string[]
+  messageIds: string[],
 ): Selection {
   return createSelection({
     conversationId,

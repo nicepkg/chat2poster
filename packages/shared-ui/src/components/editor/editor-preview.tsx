@@ -1,16 +1,16 @@
 "use client";
 
-import * as React from "react";
-import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, User, Bot } from "lucide-react";
-import { cn } from "~/utils/common";
-import { useEditor } from "~/contexts/editor-context";
-import { useI18n } from "~/i18n";
-import { SHADOW_STYLES } from "~/themes/shadows";
+import { useRef } from "react";
+import * as React from "react";
 import { MarkdownRenderer } from "../renderer";
 import { Card, CardContent } from "../ui/card";
 import { MacOSBar } from "./mac-os-bar";
+import { useEditor } from "~/contexts/editor-context";
+import { useI18n } from "~/i18n";
+import { SHADOW_STYLES } from "~/themes/shadows";
+import { cn } from "~/utils/common";
 
 export interface EditorPreviewProps {
   /** Show checkerboard background pattern */
@@ -49,17 +49,8 @@ export function EditorPreview({
     decoration.backgroundValue === "#09090b";
 
   // Get shadow style
-  const shadowStyle = SHADOW_STYLES[decoration.shadowLevel] ?? SHADOW_STYLES.none;
-
-  // Checkerboard pattern classes
-  const checkerboardClasses = showCheckerboard
-    ? cn(
-        "bg-[linear-gradient(45deg,#f0f0f0_25%,transparent_25%),linear-gradient(-45deg,#f0f0f0_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#f0f0f0_75%),linear-gradient(-45deg,transparent_75%,#f0f0f0_75%)]",
-        "bg-[length:20px_20px]",
-        "bg-[position:0_0,0_10px,10px_-10px,-10px_0px]",
-        "dark:bg-[linear-gradient(45deg,#1a1a1a_25%,transparent_25%),linear-gradient(-45deg,#1a1a1a_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#1a1a1a_75%),linear-gradient(-45deg,transparent_75%,#1a1a1a_75%)]"
-      )
-    : "";
+  const shadowStyle =
+    SHADOW_STYLES[decoration.shadowLevel] ?? SHADOW_STYLES.none;
 
   return (
     <Card className={cn("bg-card/50 h-full overflow-hidden", className)}>
@@ -76,111 +67,113 @@ export function EditorPreview({
           </div>
         </div>
 
-        {/* Preview Area */}
-        <div
-          className={cn("flex-1 overflow-auto p-8", checkerboardClasses)}
+        {/* Paper - the actual content card  Desktop/Canvas surface with background*/}
+        <motion.div
+          ref={canvasRef as React.RefObject<HTMLDivElement>}
+          layout
+          className={cn(
+            "mx-auto overflow-hidden",
+            isDarkBackground ? "bg-zinc-900" : "bg-white",
+          )}
+          style={{
+            background: decoration.backgroundValue,
+            maxWidth: exportParams.canvasWidthPx,
+            borderRadius: decoration.canvasRadiusPx,
+            boxShadow: shadowStyle,
+            margin: decoration.canvasPaddingPx,
+          }}
         >
-          <motion.div
-            ref={canvasRef as React.RefObject<HTMLDivElement>}
-            layout
-            className="mx-auto"
-            style={{
-              maxWidth: exportParams.canvasWidthPx,
-              borderRadius: decoration.canvasRadiusPx,
-              padding: decoration.canvasPaddingPx,
-              background: decoration.backgroundValue,
-              boxShadow: shadowStyle,
-            }}
-          >
-            {/* macOS Bar */}
+          {/* macOS Bar */}
+          <AnimatePresence>
+            {decoration.macosBarEnabled && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className={cn(
+                  "px-4 pt-4",
+                  isDarkBackground ? "bg-zinc-900" : "bg-white",
+                )}
+              >
+                <MacOSBar />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Messages */}
+          <div className="space-y-4 p-4">
             <AnimatePresence>
-              {decoration.macosBarEnabled && (
+              {selectedMessages.map((message, index) => (
                 <motion.div
-                  initial={{ opacity: 0, y: -10 }}
+                  key={message.id}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="mb-4"
+                  transition={{ delay: index * 0.05 }}
+                  className={cn(
+                    "rounded-xl p-4",
+                    isDarkBackground
+                      ? message.role === "user"
+                        ? "bg-white/10 text-white"
+                        : "bg-white/5 text-white/90"
+                      : message.role === "user"
+                        ? "bg-primary/10 text-foreground"
+                        : "bg-muted/50 text-foreground",
+                  )}
                 >
-                  <MacOSBar />
+                  {/* Role indicator */}
+                  <div className="mb-2 flex items-center gap-2">
+                    {message.role === "user" ? (
+                      <User className="h-3.5 w-3.5 opacity-60" />
+                    ) : (
+                      <Bot className="h-3.5 w-3.5 opacity-60" />
+                    )}
+                    <span className="text-xs font-medium uppercase tracking-wide opacity-60">
+                      {message.role === "user"
+                        ? t("role.user")
+                        : message.role === "assistant"
+                          ? t("role.assistant")
+                          : t("role.system")}
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <div className="prose prose-sm max-w-none dark:prose-invert">
+                    <MarkdownRenderer content={message.contentMarkdown} />
+                  </div>
                 </motion.div>
-              )}
+              ))}
             </AnimatePresence>
 
-            {/* Messages */}
-            <div className="space-y-4">
-              <AnimatePresence>
-                {selectedMessages.map((message, index) => (
-                  <motion.div
-                    key={message.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ delay: index * 0.05 }}
-                    className={cn(
-                      "rounded-xl p-4",
-                      isDarkBackground
-                        ? message.role === "user"
-                          ? "bg-white/10 text-white"
-                          : "bg-white/5 text-white/90"
-                        : message.role === "user"
-                          ? "bg-primary/10 text-foreground"
-                          : "bg-muted/50 text-foreground"
-                    )}
-                  >
-                    {/* Role indicator */}
-                    <div className="mb-2 flex items-center gap-2">
-                      {message.role === "user" ? (
-                        <User className="h-3.5 w-3.5 opacity-60" />
-                      ) : (
-                        <Bot className="h-3.5 w-3.5 opacity-60" />
-                      )}
-                      <span className="text-xs font-medium uppercase tracking-wide opacity-60">
-                        {message.role === "user"
-                          ? t("role.user")
-                          : message.role === "assistant"
-                            ? t("role.assistant")
-                            : t("role.system")}
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="prose prose-sm max-w-none dark:prose-invert">
-                      <MarkdownRenderer content={message.contentMarkdown} />
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              {/* Empty State */}
-              {selectedMessages.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex flex-col items-center justify-center py-12 text-center"
+            {/* Empty State */}
+            {selectedMessages.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex flex-col items-center justify-center py-12 text-center"
+              >
+                <MessageSquare
+                  className={cn(
+                    "mb-4 h-12 w-12",
+                    isDarkBackground
+                      ? "text-white/30"
+                      : "text-muted-foreground/30",
+                  )}
+                />
+                <p
+                  className={cn(
+                    "text-sm",
+                    isDarkBackground
+                      ? "text-white/60"
+                      : "text-muted-foreground",
+                  )}
                 >
-                  <MessageSquare
-                    className={cn(
-                      "mb-4 h-12 w-12",
-                      isDarkBackground
-                        ? "text-white/30"
-                        : "text-muted-foreground/30"
-                    )}
-                  />
-                  <p
-                    className={cn(
-                      "text-sm",
-                      isDarkBackground
-                        ? "text-white/60"
-                        : "text-muted-foreground"
-                    )}
-                  >
-                    {t("preview.empty")}
-                  </p>
-                </motion.div>
-              )}
-            </div>
-          </motion.div>
-        </div>
+                  {t("preview.empty")}
+                </p>
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
       </CardContent>
     </Card>
   );

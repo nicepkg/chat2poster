@@ -71,7 +71,7 @@ export class ChatGPTDOMAdapter extends BaseDOMAdapter {
     if (messages.length === 0) {
       throw createAppError(
         "E-PARSE-005",
-        "No messages found. ChatGPT DOM structure may have changed."
+        "No messages found. ChatGPT DOM structure may have changed.",
       );
     }
 
@@ -357,7 +357,7 @@ export class ChatGPTDOMAdapter extends BaseDOMAdapter {
     if (code) {
       const classList = Array.from(code.classList);
       const langClass = classList.find(
-        (c) => c.startsWith("language-") || c.startsWith("hljs-")
+        (c) => c.startsWith("language-") || c.startsWith("hljs-"),
       );
       if (langClass) {
         return langClass.replace(/^(language-|hljs-)/, "");
@@ -366,10 +366,10 @@ export class ChatGPTDOMAdapter extends BaseDOMAdapter {
 
     // Check for language label in header
     const header = preElement.querySelector(
-      ".bg-gray-700, .code-header, [class*='header']"
+      ".bg-gray-700, .code-header, [class*='header']",
     );
-    if (header) {
-      const text = header.textContent?.trim().toLowerCase() || "";
+    if (header?.textContent) {
+      const text = header.textContent.trim().toLowerCase();
       if (text && !text.includes("copy")) {
         return text;
       }

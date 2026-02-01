@@ -31,15 +31,15 @@
 
 // Internal imports for registerBuiltinAdapters
 import {
-  registerAdapter as _registerAdapter,
-  getAdapter as _getAdapter,
-} from "./registry";
-import {
   chatGPTDOMAdapter as _chatGPTDOMAdapter,
   chatGPTShareLinkAdapter as _chatGPTShareLinkAdapter,
   claudeShareLinkAdapter as _claudeShareLinkAdapter,
   geminiShareLinkAdapter as _geminiShareLinkAdapter,
 } from "./adapters";
+import {
+  registerAdapter as _registerAdapter,
+  getAdapter as _getAdapter,
+} from "./registry";
 
 // Registry functions
 export {

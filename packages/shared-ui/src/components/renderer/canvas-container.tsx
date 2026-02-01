@@ -1,10 +1,10 @@
 "use client";
 
-import { memo, forwardRef } from "react";
 import type { Decoration } from "@chat2poster/core-schema";
+import { memo, forwardRef } from "react";
+import { DecorationFrame } from "./decoration-frame";
 import type { Theme } from "~/themes";
 import { applyThemeToElement } from "~/themes";
-import { DecorationFrame } from "./decoration-frame";
 
 export interface CanvasContainerProps {
   /** Theme to apply */
@@ -28,15 +28,8 @@ export interface CanvasContainerProps {
  */
 export const CanvasContainer = memo(
   forwardRef<HTMLDivElement, CanvasContainerProps>(function CanvasContainer(
-    {
-      theme,
-      decoration,
-      widthPx,
-      children,
-      macosBarTitle,
-      className,
-    },
-    ref
+    { theme, decoration, widthPx, children, macosBarTitle, className },
+    ref,
   ) {
     const containerStyle: React.CSSProperties = {
       width: `${widthPx}px`,
@@ -64,13 +57,10 @@ export const CanvasContainer = memo(
         data-theme-id={theme.id}
         data-theme-mode={theme.mode}
       >
-        <DecorationFrame
-          decoration={decoration}
-          macosBarTitle={macosBarTitle}
-        >
+        <DecorationFrame decoration={decoration} macosBarTitle={macosBarTitle}>
           {children}
         </DecorationFrame>
       </div>
     );
-  })
+  }),
 );

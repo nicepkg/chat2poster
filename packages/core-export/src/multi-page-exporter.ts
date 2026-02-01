@@ -41,7 +41,9 @@ export interface MultiPageExportResult {
 /**
  * A function that renders a specific page and returns the element to export
  */
-export type PageRenderer = (pageIndex: number) => Promise<HTMLElement> | HTMLElement;
+export type PageRenderer = (
+  pageIndex: number,
+) => Promise<HTMLElement> | HTMLElement;
 
 /**
  * Export multiple pages
@@ -53,7 +55,7 @@ export type PageRenderer = (pageIndex: number) => Promise<HTMLElement> | HTMLEle
 export async function exportPages(
   pageCount: number,
   renderPage: PageRenderer,
-  options: MultiPageExportOptions = {}
+  options: MultiPageExportOptions = {},
 ): Promise<MultiPageExportResult> {
   const pages: ExportResult[] = [];
   const { onProgress, abortSignal, ...exportOptions } = options;
@@ -98,13 +100,9 @@ export async function exportPages(
  */
 export async function exportElements(
   elements: HTMLElement[],
-  options: MultiPageExportOptions = {}
+  options: MultiPageExportOptions = {},
 ): Promise<MultiPageExportResult> {
-  return exportPages(
-    elements.length,
-    (index) => elements[index]!,
-    options
-  );
+  return exportPages(elements.length, (index) => elements[index]!, options);
 }
 
 /**

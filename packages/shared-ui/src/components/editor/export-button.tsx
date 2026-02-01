@@ -1,12 +1,12 @@
 "use client";
 
-import * as React from "react";
-import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Download, Loader2, Check } from "lucide-react";
-import { cn } from "~/utils/common";
-import { useI18n } from "~/i18n";
+import * as React from "react";
+import { useState, useCallback } from "react";
 import { Button } from "../ui/button";
+import { useI18n } from "~/i18n";
+import { cn } from "~/utils/common";
 
 export interface ExportButtonProps {
   /** Number of pages to export (shows count if > 1) */
@@ -62,7 +62,7 @@ export function ExportButton({
         "group h-10 px-5 transition-all duration-200",
         "hover:-translate-y-0.5 hover:shadow-lg",
         "active:translate-y-0 active:shadow-sm",
-        className
+        className,
       )}
     >
       <AnimatePresence mode="wait">

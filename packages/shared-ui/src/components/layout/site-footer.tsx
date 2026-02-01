@@ -62,11 +62,18 @@ export function SiteFooter({
         <div
           className={cn(
             "grid grid-cols-1 gap-8",
-            hasSections ? "lg:grid-cols-12 lg:gap-12" : "md:grid-cols-2 lg:gap-12"
+            hasSections
+              ? "lg:grid-cols-12 lg:gap-12"
+              : "md:grid-cols-2 lg:gap-12",
           )}
         >
           {/* Brand column */}
-          <div className={cn("flex flex-col gap-4", hasSections && "lg:col-span-4")}>
+          <div
+            className={cn(
+              "flex flex-col gap-4",
+              hasSections && "lg:col-span-4",
+            )}
+          >
             {logo && <div>{logo}</div>}
             {description && (
               <p className="text-muted-foreground max-w-sm text-sm leading-relaxed">
@@ -89,7 +96,9 @@ export function SiteFooter({
                         <a
                           href={link.href}
                           target={link.external ? "_blank" : undefined}
-                          rel={link.external ? "noopener noreferrer" : undefined}
+                          rel={
+                            link.external ? "noopener noreferrer" : undefined
+                          }
                           className="text-muted-foreground hover:text-primary text-sm transition-colors"
                         >
                           {link.label}
@@ -131,7 +140,7 @@ export function SiteFooter({
                       className={cn(
                         "text-muted-foreground hover:text-foreground",
                         "hover:bg-muted/50 rounded-full p-2",
-                        "transition-all duration-200 hover:scale-110"
+                        "transition-all duration-200 hover:scale-110",
                       )}
                       title={social.label}
                       aria-label={social.label}
@@ -157,7 +166,7 @@ export function SiteFooter({
                 className={cn(
                   "text-muted-foreground hover:text-foreground",
                   "hover:bg-muted/50 rounded-full p-2",
-                  "transition-all duration-200 hover:scale-110"
+                  "transition-all duration-200 hover:scale-110",
                 )}
                 title={social.label}
                 aria-label={social.label}

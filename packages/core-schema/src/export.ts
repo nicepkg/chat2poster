@@ -49,8 +49,17 @@ export const ExportParams = z
   .object({
     scale: ExportScale.default(EXPORT_DEFAULTS.SCALE),
     canvasPreset: CanvasPreset.default(EXPORT_DEFAULTS.CANVAS_PRESET),
-    canvasWidthPx: z.number().int().positive().default(EXPORT_DEFAULTS.CANVAS_WIDTH_PX),
-    maxPageHeightPx: z.number().int().min(2000).max(10000).default(EXPORT_DEFAULTS.MAX_PAGE_HEIGHT_PX),
+    canvasWidthPx: z
+      .number()
+      .int()
+      .positive()
+      .default(EXPORT_DEFAULTS.CANVAS_WIDTH_PX),
+    maxPageHeightPx: z
+      .number()
+      .int()
+      .min(2000)
+      .max(10000)
+      .default(EXPORT_DEFAULTS.MAX_PAGE_HEIGHT_PX),
     outputMode: OutputMode.default(EXPORT_DEFAULTS.OUTPUT_MODE),
   })
   .strict();
@@ -118,7 +127,7 @@ export const ExportJob = z
       }
       return true;
     },
-    { message: "multi-zip mode requires more than 1 page" }
+    { message: "multi-zip mode requires more than 1 page" },
   )
   .refine(
     (job) => {
@@ -128,7 +137,7 @@ export const ExportJob = z
       }
       return true;
     },
-    { message: "Failed export job must include error details" }
+    { message: "Failed export job must include error details" },
   );
 export type ExportJob = z.infer<typeof ExportJob>;
 
@@ -136,7 +145,7 @@ export type ExportJob = z.infer<typeof ExportJob>;
  * Create a new export job
  */
 export function createExportJob(
-  partial: Pick<ExportJob, "id" | "conversationId"> & Partial<ExportJob>
+  partial: Pick<ExportJob, "id" | "conversationId"> & Partial<ExportJob>,
 ): ExportJob {
   const now = new Date().toISOString();
   return ExportJob.parse({

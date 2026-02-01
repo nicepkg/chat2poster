@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  generatePageFilename,
-  generateZipFilename,
-} from "./zip-packager";
+import { generatePageFilename, generateZipFilename } from "./zip-packager";
 
 describe("generatePageFilename", () => {
   it("should generate filename with correct padding for single digit", () => {

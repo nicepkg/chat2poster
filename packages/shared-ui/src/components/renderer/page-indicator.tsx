@@ -35,7 +35,12 @@ export const PageIndicator = memo(function PageIndicator({
       case "bottom-right":
         return { ...base, bottom: "8px", right: "8px" };
       case "bottom-center":
-        return { ...base, bottom: "8px", left: "50%", transform: "translateX(-50%)" };
+        return {
+          ...base,
+          bottom: "8px",
+          left: "50%",
+          transform: "translateX(-50%)",
+        };
       default:
         return { ...base, bottom: "8px", right: "8px" };
     }
@@ -67,7 +72,10 @@ export const PageIndicator = memo(function PageIndicator({
   const style = variant === "badge" ? badgeStyle : textStyle;
 
   return (
-    <div style={style} className={`c2p-page-indicator c2p-page-indicator-${variant}`}>
+    <div
+      style={style}
+      className={`c2p-page-indicator c2p-page-indicator-${variant}`}
+    >
       {currentPage} / {totalPages}
     </div>
   );

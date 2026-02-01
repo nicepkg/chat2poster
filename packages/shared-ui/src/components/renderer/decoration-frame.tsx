@@ -1,9 +1,9 @@
 "use client";
 
-import { memo } from "react";
 import type { Decoration, ShadowLevel } from "@chat2poster/core-schema";
-import { cssVar } from "~/themes";
+import { memo } from "react";
 import { RendererMacOSBar } from "./renderer-mac-os-bar";
+import { cssVar } from "~/themes";
 
 export interface DecorationFrameProps {
   /** Decoration settings */
@@ -68,7 +68,8 @@ export const DecorationFrame = memo(function DecorationFrame({
   const outerStyle: React.CSSProperties = {
     background: getBackgroundValue(decoration),
     backgroundSize: decoration.backgroundType === "image" ? "cover" : undefined,
-    backgroundPosition: decoration.backgroundType === "image" ? "center" : undefined,
+    backgroundPosition:
+      decoration.backgroundType === "image" ? "center" : undefined,
     padding: `${decoration.canvasPaddingPx}px`,
     ...style,
   };
@@ -85,7 +86,10 @@ export const DecorationFrame = memo(function DecorationFrame({
   };
 
   return (
-    <div style={outerStyle} className={`c2p-decoration-frame ${className || ""}`}>
+    <div
+      style={outerStyle}
+      className={`c2p-decoration-frame ${className || ""}`}
+    >
       <div style={innerStyle} className="c2p-decoration-inner">
         {decoration.macosBarEnabled && (
           <RendererMacOSBar title={macosBarTitle} />

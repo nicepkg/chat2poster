@@ -40,7 +40,10 @@ export const DEFAULT_HEIGHT_CONFIG: HeightEstimationConfig = {
 /**
  * Count code blocks in markdown content
  */
-function countCodeBlocks(markdown: string): { count: number; totalLines: number } {
+function countCodeBlocks(markdown: string): {
+  count: number;
+  totalLines: number;
+} {
   const codeBlockRegex = /```[\s\S]*?```/g;
   const matches = markdown.match(codeBlockRegex) || [];
   let totalLines = 0;
@@ -93,7 +96,7 @@ function getTextContent(markdown: string): string {
  */
 export function estimateMessageHeight(
   message: Message,
-  config: HeightEstimationConfig = DEFAULT_HEIGHT_CONFIG
+  config: HeightEstimationConfig = DEFAULT_HEIGHT_CONFIG,
 ): number {
   // If pre-computed height exists, use it
   if (message.contentMeta?.approxHeightPx) {
@@ -132,9 +135,12 @@ export function estimateMessageHeight(
  */
 export function estimateMessagesHeight(
   messages: Message[],
-  config: HeightEstimationConfig = DEFAULT_HEIGHT_CONFIG
+  config: HeightEstimationConfig = DEFAULT_HEIGHT_CONFIG,
 ): number {
-  return messages.reduce((total, msg) => total + estimateMessageHeight(msg, config), 0);
+  return messages.reduce(
+    (total, msg) => total + estimateMessageHeight(msg, config),
+    0,
+  );
 }
 
 /**
@@ -142,7 +148,7 @@ export function estimateMessagesHeight(
  */
 export function estimateMessagesHeightWithBreakdown(
   messages: Message[],
-  config: HeightEstimationConfig = DEFAULT_HEIGHT_CONFIG
+  config: HeightEstimationConfig = DEFAULT_HEIGHT_CONFIG,
 ): Map<string, number> {
   const result = new Map<string, number>();
   for (const msg of messages) {

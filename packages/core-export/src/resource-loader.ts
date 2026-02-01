@@ -7,7 +7,7 @@
  * Uses the Font Loading API
  */
 export async function waitForFonts(timeoutMs = 5000): Promise<boolean> {
-  if (typeof document === "undefined" || !document.fonts) {
+  if (typeof document === "undefined") {
     // Not in browser environment
     return true;
   }
@@ -16,7 +16,7 @@ export async function waitForFonts(timeoutMs = 5000): Promise<boolean> {
     await Promise.race([
       document.fonts.ready,
       new Promise<void>((_, reject) =>
-        setTimeout(() => reject(new Error("Font loading timeout")), timeoutMs)
+        setTimeout(() => reject(new Error("Font loading timeout")), timeoutMs),
       ),
     ]);
     return true;
@@ -35,7 +35,10 @@ function isImageLoaded(img: HTMLImageElement): boolean {
 /**
  * Wait for a single image to load
  */
-function waitForImage(img: HTMLImageElement, timeoutMs: number): Promise<boolean> {
+function waitForImage(
+  img: HTMLImageElement,
+  timeoutMs: number,
+): Promise<boolean> {
   return new Promise((resolve) => {
     if (isImageLoaded(img)) {
       resolve(true);
@@ -56,7 +59,7 @@ function waitForImage(img: HTMLImageElement, timeoutMs: number): Promise<boolean
         cleanup();
         resolve(true);
       },
-      { once: true }
+      { once: true },
     );
 
     img.addEventListener(
@@ -65,7 +68,7 @@ function waitForImage(img: HTMLImageElement, timeoutMs: number): Promise<boolean
         cleanup();
         resolve(false);
       },
-      { once: true }
+      { once: true },
     );
   });
 }
@@ -75,11 +78,11 @@ function waitForImage(img: HTMLImageElement, timeoutMs: number): Promise<boolean
  */
 export async function waitForImages(
   container: HTMLElement,
-  timeoutMs = 10000
+  timeoutMs = 10000,
 ): Promise<{ loaded: number; failed: number }> {
   const images = container.querySelectorAll("img");
   const results = await Promise.all(
-    Array.from(images).map((img) => waitForImage(img, timeoutMs))
+    Array.from(images).map((img) => waitForImage(img, timeoutMs)),
   );
 
   const loaded = results.filter((r) => r).length;
@@ -93,8 +96,12 @@ export async function waitForImages(
  */
 export async function waitForResources(
   container: HTMLElement,
-  options: { fontTimeout?: number; imageTimeout?: number } = {}
-): Promise<{ fontsReady: boolean; imagesLoaded: number; imagesFailed: number }> {
+  options: { fontTimeout?: number; imageTimeout?: number } = {},
+): Promise<{
+  fontsReady: boolean;
+  imagesLoaded: number;
+  imagesFailed: number;
+}> {
   const { fontTimeout = 5000, imageTimeout = 10000 } = options;
 
   const [fontsReady, imageResult] = await Promise.all([
@@ -124,7 +131,7 @@ export function getImageUrls(container: HTMLElement): string[] {
  */
 export async function preloadImages(
   urls: string[],
-  timeoutMs = 10000
+  timeoutMs = 10000,
 ): Promise<{ loaded: string[]; failed: string[] }> {
   const results = await Promise.all(
     urls.map(async (url) => {
@@ -137,7 +144,7 @@ export async function preloadImages(
       } catch {
         return { url, loaded: false };
       }
-    })
+    }),
   );
 
   return {

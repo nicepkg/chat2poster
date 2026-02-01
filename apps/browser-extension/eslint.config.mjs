@@ -13,7 +13,7 @@ const configDir = getConfigDir(import.meta.url);
 
 export default defineConfig(
   globalIgnores(["dist/**", ".output/**", ".wxt/**", ...appIgnores]),
-  appBaseConfig,
+  { ...appBaseConfig },
   createTypeScriptConfig({
     files: ["**/*.{ts,tsx}"],
     configDir,

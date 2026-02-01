@@ -1,10 +1,10 @@
 "use client";
 
 import { memo, useState, useEffect, useCallback } from "react";
-import { highlightCode } from "~/utils/shiki";
-import { cssVar } from "~/themes";
-import { useI18n } from "~/i18n";
 import type { BundledTheme } from "shiki";
+import { useI18n } from "~/i18n";
+import { cssVar } from "~/themes";
+import { highlightCode } from "~/utils/shiki";
 
 export interface CodeBlockProps {
   code: string;
@@ -118,7 +118,9 @@ export const CodeBlock = memo(function CodeBlock({
       {(showLanguageLabel || showCopyButton) && (
         <div style={headerStyle} className="c2p-code-block-header">
           {showLanguageLabel && (
-            <span className="c2p-code-block-language">{language || "text"}</span>
+            <span className="c2p-code-block-language">
+              {language || "text"}
+            </span>
           )}
           {showCopyButton && (
             <button

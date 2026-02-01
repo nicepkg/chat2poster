@@ -92,13 +92,14 @@ export interface ExportResult {
 /**
  * Get SnapDOM module
  */
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- dynamic import requires typeof import()
 async function getSnapDOM(): Promise<typeof import("@zumer/snapdom")> {
   try {
     return await import("@zumer/snapdom");
   } catch {
     throw createAppError(
       "E-EXPORT-002",
-      "SnapDOM library not available. Ensure @zumer/snapdom is installed."
+      "SnapDOM library not available. Ensure @zumer/snapdom is installed.",
     );
   }
 }
@@ -109,7 +110,7 @@ async function getSnapDOM(): Promise<typeof import("@zumer/snapdom")> {
 async function elementToCanvas(
   element: HTMLElement,
   scale: number,
-  backgroundColor?: string
+  backgroundColor?: string,
 ): Promise<HTMLCanvasElement> {
   const { snapdom } = await getSnapDOM();
 
@@ -128,7 +129,7 @@ async function elementToCanvas(
 function canvasToBlob(
   canvas: HTMLCanvasElement,
   format: ExportFormat,
-  quality?: number
+  quality?: number,
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const mimeType = format === "jpeg" ? "image/jpeg" : "image/png";
@@ -141,7 +142,7 @@ function canvasToBlob(
         }
       },
       mimeType,
-      quality
+      quality,
     );
   });
 }
@@ -152,7 +153,7 @@ function canvasToBlob(
 function canvasToDataUrl(
   canvas: HTMLCanvasElement,
   format: ExportFormat,
-  quality?: number
+  quality?: number,
 ): string {
   const mimeType = format === "jpeg" ? "image/jpeg" : "image/png";
   return canvas.toDataURL(mimeType, quality);
@@ -163,7 +164,7 @@ function canvasToDataUrl(
  */
 export async function exportToPng(
   element: HTMLElement,
-  options: Partial<ExportOptions> = {}
+  options: Partial<ExportOptions> = {},
 ): Promise<ExportResult> {
   const opts: ExportOptions = {
     ...DEFAULT_EXPORT_OPTIONS,
@@ -179,7 +180,7 @@ export async function exportToPng(
  */
 export async function exportToJpeg(
   element: HTMLElement,
-  options: Partial<ExportOptions> = {}
+  options: Partial<ExportOptions> = {},
 ): Promise<ExportResult> {
   const opts: ExportOptions = {
     ...DEFAULT_EXPORT_OPTIONS,
@@ -195,7 +196,7 @@ export async function exportToJpeg(
  */
 export async function exportElement(
   element: HTMLElement,
-  options: ExportOptions
+  options: ExportOptions,
 ): Promise<ExportResult> {
   // Wait for resources if requested
   let resourceStatus = {
@@ -212,13 +213,16 @@ export async function exportElement(
 
     // Check for critical failures
     if (!resourceStatus.fontsReady) {
-      throw createAppError("E-EXPORT-003", "Fonts failed to load within timeout");
+      throw createAppError(
+        "E-EXPORT-003",
+        "Fonts failed to load within timeout",
+      );
     }
 
     if (resourceStatus.imagesFailed > 0) {
       // Log warning but don't fail - images might be optional
       console.warn(
-        `${resourceStatus.imagesFailed} image(s) failed to load, proceeding with export`
+        `${resourceStatus.imagesFailed} image(s) failed to load, proceeding with export`,
       );
     }
   }
@@ -226,7 +230,11 @@ export async function exportElement(
   // Export using SnapDOM
   let canvas: HTMLCanvasElement;
   try {
-    canvas = await elementToCanvas(element, options.scale, options.backgroundColor);
+    canvas = await elementToCanvas(
+      element,
+      options.scale,
+      options.backgroundColor,
+    );
   } catch (error) {
     const detail = error instanceof Error ? error.message : "Unknown error";
     throw createAppError("E-EXPORT-002", `SnapDOM render failed: ${detail}`);
@@ -271,7 +279,7 @@ export function isCanvasSizeValid(width: number, height: number): boolean {
  */
 export function validateExportParams(
   element: HTMLElement,
-  options: ExportOptions
+  options: ExportOptions,
 ): { valid: boolean; error?: AppError } {
   const rect = element.getBoundingClientRect();
   const scaledWidth = rect.width * options.scale;
@@ -282,7 +290,7 @@ export function validateExportParams(
       valid: false,
       error: createAppError(
         "E-EXPORT-007",
-        `Canvas size ${scaledWidth}x${scaledHeight} exceeds browser limits`
+        `Canvas size ${scaledWidth}x${scaledHeight} exceeds browser limits`,
       ),
     };
   }

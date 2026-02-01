@@ -107,7 +107,7 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
 
     throw createAppError(
       "E-PARSE-005",
-      `ChatGPT share pages load content dynamically via JavaScript. Server-side extraction found no messages. ${lastError?.message || "Try using the browser extension instead."}`
+      `ChatGPT share pages load content dynamically via JavaScript. Server-side extraction found no messages. ${lastError?.message || "Try using the browser extension instead."}`,
     );
   }
 
@@ -123,7 +123,7 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
    * Extract conversation ID from URL
    */
   private extractConversationId(url: string): string {
-    const match = url.match(/\/(share|s)\/([a-zA-Z0-9_-]+)/);
+    const match = /\/(share|s)\/([a-zA-Z0-9_-]+)/.exec(url);
     return match?.[2] || "";
   }
 
@@ -148,13 +148,16 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
     const html = await response.text();
 
     // Strategy 1: Look for __NEXT_DATA__ script
-    const nextDataMatch = html.match(
-      /<script id="__NEXT_DATA__"[^>]*>([^<]+)<\/script>/
-    );
+    const nextDataMatch =
+      /<script id="__NEXT_DATA__"[^>]*>([^<]+)<\/script>/.exec(html);
     if (nextDataMatch?.[1]) {
       try {
-        const data = JSON.parse(nextDataMatch[1]);
-        const shareData = data?.props?.pageProps?.serverResponse?.data;
+        const data = JSON.parse(nextDataMatch[1]) as {
+          props?: {
+            pageProps?: { serverResponse?: { data?: ChatGPTShareData } };
+          };
+        };
+        const shareData = data.props?.pageProps?.serverResponse?.data;
         if (shareData) {
           return this.parseShareData(shareData);
         }
@@ -186,15 +189,15 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
 
     // Strategy 3: Parse embedded JSON in script tags
     const jsonScripts = html.match(
-      /<script[^>]*type="application\/json"[^>]*>([^<]+)<\/script>/g
+      /<script[^>]*type="application\/json"[^>]*>([^<]+)<\/script>/g,
     );
     if (jsonScripts) {
       for (const script of jsonScripts) {
-        const jsonMatch = script.match(/>([^<]+)</);
+        const jsonMatch = />([^<]+)</.exec(script);
         if (jsonMatch?.[1]) {
           try {
-            const data = JSON.parse(jsonMatch[1]);
-            if (data.mapping || data.linear_conversation) {
+            const data = JSON.parse(jsonMatch[1]) as ChatGPTShareData;
+            if (data.mapping ?? data.linear_conversation) {
               return this.parseShareData(data);
             }
           } catch {
@@ -215,9 +218,11 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
       const match = html.match(pattern);
       if (match?.[1]) {
         try {
-          const data = JSON.parse(match[1]);
-          const shareData = data.data || data;
-          if (shareData.mapping || shareData.linear_conversation) {
+          const data = JSON.parse(match[1]) as {
+            data?: ChatGPTShareData;
+          } & ChatGPTShareData;
+          const shareData: ChatGPTShareData = data.data ?? data;
+          if (shareData.mapping ?? shareData.linear_conversation) {
             return this.parseShareData(shareData);
           }
         } catch {
@@ -255,14 +260,14 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
         throw new Error(`API returned ${response.status}`);
       }
 
-      const data = await response.json();
-      if (data && (data.mapping || data.linear_conversation)) {
+      const data = (await response.json()) as ChatGPTShareData;
+      if (data.mapping ?? data.linear_conversation) {
         return this.parseShareData(data);
       }
     } catch (error) {
       // API access may be restricted
       throw new Error(
-        `API access failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `API access failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
 
@@ -280,13 +285,13 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
       for (const item of data.linear_conversation) {
         if (!item.message) continue;
 
-        const role = item.message.author?.role;
+        const role = item.message.author.role;
         if (role !== "user" && role !== "assistant") continue;
 
         const content = this.extractMessageContent(item.message.content);
         if (content.trim()) {
           messages.push({
-            role: role as "user" | "assistant",
+            role: role,
             content,
           });
         }
@@ -302,13 +307,13 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
       for (const node of orderedMessages) {
         if (!node.message) continue;
 
-        const role = node.message.author?.role;
+        const role = node.message.author.role;
         if (role !== "user" && role !== "assistant") continue;
 
         const content = this.extractMessageContent(node.message.content);
         if (content.trim()) {
           messages.push({
-            role: role as "user" | "assistant",
+            role: role,
             content,
           });
         }
@@ -322,7 +327,7 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
    * Build ordered message list from mapping tree
    */
   private buildMessageOrder(
-    mapping: NonNullable<ChatGPTShareData["mapping"]>
+    mapping: NonNullable<ChatGPTShareData["mapping"]>,
   ): Array<(typeof mapping)[string]> {
     const ordered: Array<(typeof mapping)[string]> = [];
 
@@ -400,22 +405,16 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
 
   /**
    * Decode JavaScript string literal escapes
-   * Uses Function to properly evaluate JS string escapes like \" and \\n
+   * Manually handles common escape sequences like \" and \\n
    */
   private decodeJsStringLiteral(str: string): string {
-    try {
-      // Use Function to evaluate the JavaScript string literal properly
-      // This handles all escape sequences correctly
-      return new Function('return "' + str + '"')() as string;
-    } catch {
-      // Fallback to manual decoding if Function fails
-      return str
-        .replace(/\\"/g, '"')
-        .replace(/\\n/g, "\n")
-        .replace(/\\r/g, "\r")
-        .replace(/\\t/g, "\t")
-        .replace(/\\\\/g, "\\");
-    }
+    // Manual decoding of JavaScript escape sequences
+    return str
+      .replace(/\\"/g, '"')
+      .replace(/\\n/g, "\n")
+      .replace(/\\r/g, "\r")
+      .replace(/\\t/g, "\t")
+      .replace(/\\\\/g, "\\");
   }
 
   /**
@@ -445,7 +444,7 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
           const contextStart = Math.max(0, i - 15);
           const context = data.slice(contextStart, i);
           const hasPostContext = context.some(
-            (x) => x === "post" || x === "attachments" || x === "posted_at"
+            (x) => x === "post" || x === "attachments" || x === "posted_at",
           );
           if (hasPostContext) {
             messages.push({ role: "user", content: text });
@@ -541,7 +540,7 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
 
         // Look for array references pointing to content
         if (Array.isArray(item) && item.length === 1) {
-          const ref = item[0];
+          const ref = (item as unknown[])[0];
           if (typeof ref === "number" && ref < data.length) {
             const content = data[ref];
 
@@ -549,14 +548,14 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
               typeof content === "string" &&
               content.length > 100 &&
               !content.startsWith("http") &&
-              !content.match(/^[a-f0-9-]{36}$/) &&
+              !/^[a-f0-9-]{36}$/.exec(content) &&
               !content.includes("custom instructions") &&
               !content.includes("no longer available")
             ) {
               // Skip ChatGPT's internal thinking/reasoning
               if (
-                content.match(
-                  /^(I'm |It seems|I'll |The files|However|Sparse|If that|I need)/i
+                /^(I'm |It seems|I'll |The files|However|Sparse|If that|I need)/i.exec(
+                  content,
                 )
               ) {
                 continue;

@@ -1,3 +1,4 @@
+import type { Message } from "@chat2poster/core-schema";
 import { describe, it, expect } from "vitest";
 import {
   estimateMessageHeight,
@@ -5,12 +6,11 @@ import {
   analyzeContentMeta,
   DEFAULT_HEIGHT_CONFIG,
 } from "./height-estimation";
-import type { Message } from "@chat2poster/core-schema";
 
 // Helper to create a test message
 function createTestMessage(
   contentMarkdown: string,
-  overrides: Partial<Message> = {}
+  overrides: Partial<Message> = {},
 ): Message {
   return {
     id: crypto.randomUUID(),
@@ -40,7 +40,7 @@ describe("estimateMessageHeight", () => {
   it("should estimate higher for longer text", () => {
     const shortMsg = createTestMessage("Short message.");
     const longMsg = createTestMessage(
-      "This is a much longer message that spans multiple lines. ".repeat(10)
+      "This is a much longer message that spans multiple lines. ".repeat(10),
     );
 
     const shortHeight = estimateMessageHeight(shortMsg);
@@ -73,7 +73,7 @@ Some text after.
   it("should account for images", () => {
     const msgWithoutImage = createTestMessage("No image here.");
     const msgWithImage = createTestMessage(
-      "Here is an image: ![alt text](https://example.com/image.png)"
+      "Here is an image: ![alt text](https://example.com/image.png)",
     );
 
     const heightWithoutImage = estimateMessageHeight(msgWithoutImage);
@@ -81,7 +81,7 @@ Some text after.
 
     expect(heightWithImage).toBeGreaterThan(heightWithoutImage);
     expect(heightWithImage - heightWithoutImage).toBeGreaterThanOrEqual(
-      DEFAULT_HEIGHT_CONFIG.imageHeightPx - DEFAULT_HEIGHT_CONFIG.lineHeightPx
+      DEFAULT_HEIGHT_CONFIG.imageHeightPx - DEFAULT_HEIGHT_CONFIG.lineHeightPx,
     );
   });
 
@@ -114,16 +114,16 @@ def hello():
     // Should account for both code blocks
     expect(height).toBeGreaterThan(
       DEFAULT_HEIGHT_CONFIG.baseMessageHeightPx +
-        DEFAULT_HEIGHT_CONFIG.codeBlockHeightPx * 2
+        DEFAULT_HEIGHT_CONFIG.codeBlockHeightPx * 2,
     );
   });
 
   it("should handle inline code without over-estimating", () => {
     const msgWithInlineCode = createTestMessage(
-      "Use `const` and `let` for variables."
+      "Use `const` and `let` for variables.",
     );
     const msgWithoutInlineCode = createTestMessage(
-      "Use const and let for variables."
+      "Use const and let for variables.",
     );
 
     const heightWith = estimateMessageHeight(msgWithInlineCode);
@@ -150,7 +150,7 @@ describe("estimateMessagesHeight", () => {
     const totalHeight = estimateMessagesHeight(messages);
     const individualSum = messages.reduce(
       (sum, msg) => sum + estimateMessageHeight(msg),
-      0
+      0,
     );
 
     expect(totalHeight).toBe(individualSum);

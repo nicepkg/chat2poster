@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "~/utils/common";
 import { useI18n } from "~/i18n";
+import { cn } from "~/utils/common";
 
 export interface FloatingButtonProps {
   onClick: () => void;
@@ -23,7 +23,7 @@ export function FloatingButton({
       onClick={onClick}
       className={cn(
         "fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl active:scale-95",
-        className
+        className,
       )}
       title={t("floatingButton.title")}
     >

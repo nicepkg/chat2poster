@@ -39,7 +39,7 @@ export type Message = z.infer<typeof Message>;
  */
 export function createMessage(
   partial: Pick<Message, "id" | "role" | "contentMarkdown" | "order"> &
-    Partial<Message>
+    Partial<Message>,
 ): Message {
   return Message.parse({
     createdAt: new Date().toISOString(),

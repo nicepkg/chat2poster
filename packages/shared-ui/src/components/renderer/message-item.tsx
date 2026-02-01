@@ -1,15 +1,15 @@
 "use client";
 
+import type { Message } from "@chat2poster/core-schema";
 import { memo, useMemo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
-import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import type { Message } from "@chat2poster/core-schema";
+import remarkGfm from "remark-gfm";
+import type { BundledTheme } from "shiki";
+import { CodeBlock } from "./code-block";
+import { MessageAvatar } from "./message-avatar";
 import type { Theme } from "~/themes";
 import { cssVar } from "~/themes";
-import { MessageAvatar } from "./message-avatar";
-import { CodeBlock } from "./code-block";
-import type { BundledTheme } from "shiki";
 
 export interface MessageItemProps {
   message: Message;
@@ -130,9 +130,7 @@ export const MessageItem = memo(function MessageItem({
           loading="lazy"
         />
       ),
-      p: ({ children }) => (
-        <p style={{ margin: "0 0 12px 0" }}>{children}</p>
-      ),
+      p: ({ children }) => <p style={{ margin: "0 0 12px 0" }}>{children}</p>,
       ul: ({ children }) => (
         <ul style={{ margin: "0 0 12px 0", paddingLeft: "24px" }}>
           {children}
@@ -211,7 +209,7 @@ export const MessageItem = memo(function MessageItem({
         </td>
       ),
     }),
-    [codeTheme]
+    [codeTheme],
   );
 
   return (

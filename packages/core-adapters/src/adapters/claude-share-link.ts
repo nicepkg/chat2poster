@@ -55,9 +55,7 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
   readonly name = "Claude Share Link Parser";
   readonly provider: Provider = "claude";
 
-  readonly urlPatterns = [
-    /^https?:\/\/claude\.ai\/share\/[a-f0-9-]+$/i,
-  ];
+  readonly urlPatterns = [/^https?:\/\/claude\.ai\/share\/[a-f0-9-]+$/i];
 
   /**
    * Fetch share link and extract messages
@@ -87,7 +85,7 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
 
     throw createAppError(
       "E-PARSE-005",
-      `Claude share pages are protected by Cloudflare and require browser authentication. Server-side extraction is not possible. ${lastError?.message || "Try using the browser extension instead."}`
+      `Claude share pages are protected by Cloudflare and require browser authentication. Server-side extraction is not possible. ${lastError?.message || "Try using the browser extension instead."}`,
     );
   }
 
@@ -95,7 +93,7 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
    * Extract share ID from URL
    */
   private extractShareId(url: string): string {
-    const match = url.match(/\/share\/([a-f0-9-]+)/i);
+    const match = /\/share\/([a-f0-9-]+)/i.exec(url);
     return match?.[1] || "";
   }
 
@@ -117,7 +115,7 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
       // Claude often returns 403 due to Cloudflare protection
       if (response.status === 403) {
         throw new Error(
-          "Cloudflare protection detected. Browser-based extraction required."
+          "Cloudflare protection detected. Browser-based extraction required.",
         );
       }
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -131,18 +129,19 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
       html.includes("cf-challenge-running")
     ) {
       throw new Error(
-        "Cloudflare challenge detected. Browser-based extraction required."
+        "Cloudflare challenge detected. Browser-based extraction required.",
       );
     }
 
     // Strategy 1: Look for __NEXT_DATA__ or similar hydration script
-    const nextDataMatch = html.match(
-      /<script id="__NEXT_DATA__"[^>]*>([^<]+)<\/script>/
-    );
+    const nextDataMatch =
+      /<script id="__NEXT_DATA__"[^>]*>([^<]+)<\/script>/.exec(html);
     if (nextDataMatch?.[1]) {
       try {
-        const data = JSON.parse(nextDataMatch[1]);
-        const shareData = data?.props?.pageProps?.sharedConversation;
+        const data = JSON.parse(nextDataMatch[1]) as {
+          props?: { pageProps?: { sharedConversation?: ClaudeShareData } };
+        };
+        const shareData = data.props?.pageProps?.sharedConversation;
         if (shareData) {
           return this.parseShareData(shareData);
         }
@@ -173,7 +172,7 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
               .replace(/&gt;/g, ">")
               .replace(/&#39;/g, "'");
           }
-          const data = JSON.parse(jsonStr);
+          const data = JSON.parse(jsonStr) as ClaudeShareData;
           return this.parseShareData(data);
         } catch {
           // Continue
@@ -194,7 +193,8 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
         const messages: RawMessage[] = [];
         for (const match of matches) {
           const roleText = match[1] ?? "";
-          const role = roleText.toLowerCase() === "human" ? "user" : "assistant";
+          const role =
+            roleText.toLowerCase() === "human" ? "user" : "assistant";
           const contentText = match[2] ?? match[1] ?? "";
           const content = this.stripHtml(contentText);
           if (content.trim()) {
@@ -235,13 +235,11 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
         throw new Error(`API returned ${response.status}`);
       }
 
-      const data = await response.json();
-      if (data) {
-        return this.parseShareData(data);
-      }
+      const data = (await response.json()) as ClaudeShareData;
+      return this.parseShareData(data);
     } catch (error) {
       throw new Error(
-        `API access failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `API access failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
 
@@ -258,7 +256,7 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
     if (data.chat_messages && Array.isArray(data.chat_messages)) {
       for (const msg of data.chat_messages) {
         const role = msg.sender === "human" ? "user" : "assistant";
-        if (msg.text?.trim()) {
+        if (msg.text.trim()) {
           messages.push({
             role,
             content: msg.text,

@@ -78,9 +78,18 @@ export const RendererMacOSBar = memo(function RendererMacOSBar({
     <div style={containerStyle} className="c2p-macos-bar">
       {showButtons && (
         <div style={buttonsStyle} className="c2p-macos-buttons">
-          <span style={closeButtonStyle} className="c2p-macos-button c2p-macos-close" />
-          <span style={minimizeButtonStyle} className="c2p-macos-button c2p-macos-minimize" />
-          <span style={maximizeButtonStyle} className="c2p-macos-button c2p-macos-maximize" />
+          <span
+            style={closeButtonStyle}
+            className="c2p-macos-button c2p-macos-close"
+          />
+          <span
+            style={minimizeButtonStyle}
+            className="c2p-macos-button c2p-macos-minimize"
+          />
+          <span
+            style={maximizeButtonStyle}
+            className="c2p-macos-button c2p-macos-maximize"
+          />
         </div>
       )}
       {title && (

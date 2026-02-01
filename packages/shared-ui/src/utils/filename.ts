@@ -20,7 +20,7 @@ export interface ExportFilenameOptions {
  * generateExportFilename({ prefix: "chatgpt" }) // "chatgpt-2024-01-31-143022.png"
  */
 export function generateExportFilename(
-  options: ExportFilenameOptions = {}
+  options: ExportFilenameOptions = {},
 ): string {
   const {
     prefix = "chat2poster",

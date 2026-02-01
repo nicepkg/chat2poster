@@ -1,14 +1,10 @@
 "use client";
 
-import * as React from "react";
+import type { Decoration, Theme } from "@chat2poster/core-schema";
 import { motion } from "framer-motion";
 import { Monitor } from "lucide-react";
-import type { Decoration, Theme } from "@chat2poster/core-schema";
-import { cn } from "~/utils/common";
-import { useI18n } from "~/i18n";
+import * as React from "react";
 import { Label } from "../ui/label";
-import { Slider } from "../ui/slider";
-import { Switch } from "../ui/switch";
 import {
   Select,
   SelectContent,
@@ -16,8 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Slider } from "../ui/slider";
+import { Switch } from "../ui/switch";
 import { BackgroundPicker, type BackgroundPreset } from "./background-picker";
+import { useI18n } from "~/i18n";
 import { BACKGROUND_PRESETS } from "~/themes/backgrounds";
+import { cn } from "~/utils/common";
 
 export interface ThemeTabProps {
   selectedThemeId: string;

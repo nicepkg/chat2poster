@@ -1,15 +1,15 @@
 "use client";
 
-import * as React from "react";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
-import { cn } from "~/utils/common";
-import { useI18n } from "~/i18n";
+import * as React from "react";
 import { Label } from "../ui/label";
+import { useI18n } from "~/i18n";
 import {
   BACKGROUND_PRESETS,
   type BackgroundPreset,
 } from "~/themes/backgrounds";
+import { cn } from "~/utils/common";
 
 // Re-export for backward compatibility
 export type { BackgroundPreset };

@@ -3,8 +3,8 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
-import { Button } from "../ui/button";
 import { cn } from "../../utils";
+import { Button } from "../ui/button";
 
 export interface ThemeToggleProps {
   className?: string;

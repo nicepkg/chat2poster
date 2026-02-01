@@ -1,14 +1,14 @@
 "use client";
 
-import * as React from "react";
 import { MessageSquare, Palette, Settings2 } from "lucide-react";
-import { cn } from "~/utils/common";
-import { useEditor, THEME_PRESETS } from "~/contexts/editor-context";
-import { useI18n } from "~/i18n";
+import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { ExportTab } from "./export-tab";
 import { MessagesTab } from "./messages-tab";
 import { ThemeTab } from "./theme-tab";
-import { ExportTab } from "./export-tab";
+import { useEditor, THEME_PRESETS } from "~/contexts/editor-context";
+import { useI18n } from "~/i18n";
+import { cn } from "~/utils/common";
 
 export interface EditorTabsProps {
   /** Default active tab */
@@ -51,7 +51,9 @@ export function EditorTabs({
         >
           {showIcons && <MessageSquare className="h-3.5 w-3.5" />}
           {showLabels && (
-            <span className="hidden sm:inline">{t("editor.tabs.messages")}</span>
+            <span className="hidden sm:inline">
+              {t("editor.tabs.messages")}
+            </span>
           )}
         </TabsTrigger>
         <TabsTrigger
@@ -74,7 +76,7 @@ export function EditorTabs({
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="messages" className="mt-0 flex-1 overflow-hidden">
+      <TabsContent value="messages" className="mt-0 min-h-0 flex-1">
         <MessagesTab
           messages={messages}
           selectedIds={selectedIds}

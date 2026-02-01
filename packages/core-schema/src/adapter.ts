@@ -1,12 +1,17 @@
 import { z } from "zod";
-import { Conversation } from "./conversation";
+import { type Conversation } from "./conversation";
 import { MessageRole } from "./message";
 
 /**
  * Adapter input type - the discriminator for adapter inputs
  * Single source of truth for input type values
  */
-export const AdapterInputType = z.enum(["dom", "share-link", "manual", "paste"]);
+export const AdapterInputType = z.enum([
+  "dom",
+  "share-link",
+  "manual",
+  "paste",
+]);
 export type AdapterInputType = z.infer<typeof AdapterInputType>;
 
 /**
@@ -42,7 +47,7 @@ export const ManualInput = z
       z.object({
         role: MessageRole,
         content: z.string(),
-      })
+      }),
     ),
   })
   .strict();

@@ -72,10 +72,7 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
 /**
  * Create an application error
  */
-export function createAppError(
-  code: ErrorCode,
-  detail?: string
-): AppError {
+export function createAppError(code: ErrorCode, detail?: string): AppError {
   return AppError.parse({
     code,
     message: ERROR_MESSAGES[code],

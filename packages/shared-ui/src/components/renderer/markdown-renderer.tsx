@@ -2,11 +2,11 @@
 
 import { memo, useMemo, useEffect, useState, useCallback } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
-import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 import type { BundledTheme } from "shiki";
-import { highlightCode } from "~/utils/shiki";
 import { MermaidBlock } from "./mermaid-block";
+import { highlightCode } from "~/utils/shiki";
 
 export interface MarkdownRendererProps {
   content: string;
@@ -129,11 +129,13 @@ export const MarkdownRenderer = memo(function MarkdownRenderer({
       tr: ({ children }) => <tr className="c2p-tr">{children}</tr>,
       th: ({ children }) => <th className="c2p-th">{children}</th>,
       td: ({ children }) => <td className="c2p-td">{children}</td>,
-      strong: ({ children }) => <strong className="c2p-strong">{children}</strong>,
+      strong: ({ children }) => (
+        <strong className="c2p-strong">{children}</strong>
+      ),
       em: ({ children }) => <em className="c2p-em">{children}</em>,
       del: ({ children }) => <del className="c2p-del">{children}</del>,
     }),
-    [codeTheme, defaultLanguage, showCopyButton, showLanguageLabel]
+    [codeTheme, defaultLanguage, showCopyButton, showLanguageLabel],
   );
 
   return (
@@ -210,7 +212,9 @@ const ShikiCodeBlock = memo(function ShikiCodeBlock({
       {(showLanguageLabel || showCopyButton) && (
         <div className="c2p-code-block-header">
           {showLanguageLabel && (
-            <span className="c2p-code-block-language">{language || "text"}</span>
+            <span className="c2p-code-block-language">
+              {language || "text"}
+            </span>
           )}
           {showCopyButton && (
             <button

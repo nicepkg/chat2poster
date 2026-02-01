@@ -17,7 +17,9 @@ describe("ExportJobManager", () => {
     });
 
     it("should accept initial params", () => {
-      const manager = createExportJobManager(TEST_CONVERSATION_ID, { scale: 3 });
+      const manager = createExportJobManager(TEST_CONVERSATION_ID, {
+        scale: 3,
+      });
       expect(manager.getJob().params.scale).toBe(3);
     });
   });
@@ -258,7 +260,12 @@ describe("ExportJobManager", () => {
     it("should set pagination result", () => {
       const manager = createExportJobManager(TEST_CONVERSATION_ID);
       const paginationResult = {
-        pages: [["f47ac10b-58cc-4372-a567-0e02b2c3d479", "a1b2c3d4-e5f6-4789-abcd-ef0123456789"]],
+        pages: [
+          [
+            "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "a1b2c3d4-e5f6-4789-abcd-ef0123456789",
+          ],
+        ],
         totalPages: 1,
       };
 

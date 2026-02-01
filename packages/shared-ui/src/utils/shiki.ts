@@ -76,7 +76,7 @@ export function getHighlighter(): Highlighter | null {
 export async function highlightCode(
   code: string,
   language: string,
-  theme: BundledTheme = "github-dark"
+  theme: BundledTheme = "github-dark",
 ): Promise<string> {
   const hl = await initHighlighter();
 
@@ -104,7 +104,7 @@ export async function highlightCode(
 export function highlightCodeSync(
   code: string,
   language: string,
-  theme: BundledTheme = "github-dark"
+  theme: BundledTheme = "github-dark",
 ): string {
   if (!highlighter) {
     return escapeHtml(code);

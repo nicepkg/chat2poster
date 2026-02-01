@@ -1,14 +1,14 @@
 "use client";
 
-import * as React from "react";
+import type { Message, PageBreak } from "@chat2poster/core-schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { Scissors, X, User, Bot } from "lucide-react";
-import type { Message, PageBreak } from "@chat2poster/core-schema";
-import { cn } from "~/utils/common";
-import { useI18n } from "~/i18n";
+import * as React from "react";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { ScrollArea } from "../ui/scroll-area";
+import { useI18n } from "~/i18n";
+import { cn } from "~/utils/common";
 
 type MessageId = Message["id"];
 
@@ -72,8 +72,8 @@ export function MessagesTab({
       </div>
 
       {/* Message List */}
-      <ScrollArea className="flex-1 px-2 py-2">
-        <div className="space-y-1.5">
+      <ScrollArea className="flex-1">
+        <div className="w-full space-y-1.5 px-2 py-2">
           {messages.map((message, index) => {
             const pageBreak = getPageBreakAfter(message.id);
             const isSelected = selectedIds.includes(message.id);
@@ -82,29 +82,39 @@ export function MessagesTab({
             return (
               <div key={message.id}>
                 <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
+                  whileHover={{ scale: 1.005 }}
+                  whileTap={{ scale: 0.995 }}
+                  className="w-full"
                 >
                   <label
                     className={cn(
-                      "group flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-all duration-200",
+                      "group flex w-full cursor-pointer items-start gap-3 rounded-xl border-2 p-3 transition-all duration-200",
                       isSelected
-                        ? "border-primary/30 bg-primary/5"
-                        : "border-transparent hover:border-border hover:bg-muted/50",
+                        ? "border-primary/40 bg-primary/5 shadow-sm shadow-primary/5"
+                        : "border-transparent bg-muted/30 hover:border-border hover:bg-muted/50",
                     )}
                   >
                     <Checkbox
                       checked={isSelected}
                       onCheckedChange={() => onToggle(message.id)}
-                      className="mt-0.5"
+                      className="mt-0.5 shrink-0"
                     />
-                    <div className="min-w-0 flex-1">
-                    <div className="mb-1 flex items-center gap-2">
-                      {message.role === "user" ? (
-                        <User className="text-primary h-3.5 w-3.5" />
-                      ) : (
-                        <Bot className="text-secondary h-3.5 w-3.5" />
-                        )}
+                    <div className="min-w-0 flex-1 overflow-hidden">
+                      <div className="mb-1.5 flex items-center gap-2">
+                        <div
+                          className={cn(
+                            "flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
+                            message.role === "user"
+                              ? "bg-primary/10"
+                              : "bg-secondary/10",
+                          )}
+                        >
+                          {message.role === "user" ? (
+                            <User className="text-primary h-3 w-3" />
+                          ) : (
+                            <Bot className="text-secondary h-3 w-3" />
+                          )}
+                        </div>
                         <span
                           className={cn(
                             "text-xs font-medium",
@@ -120,7 +130,7 @@ export function MessagesTab({
                               : t("role.system")}
                         </span>
                       </div>
-                      <p className="text-muted-foreground line-clamp-2 text-xs">
+                      <p className="text-muted-foreground line-clamp-2 text-xs leading-relaxed">
                         {message.contentMarkdown}
                       </p>
                     </div>
@@ -134,7 +144,7 @@ export function MessagesTab({
                           e.preventDefault();
                           onAddPageBreak(message.id);
                         }}
-                        className="text-muted-foreground hover:text-primary h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                        className="text-muted-foreground hover:text-primary h-6 w-6 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
                       >
                         <Scissors className="h-3.5 w-3.5" />
                       </Button>

@@ -29,7 +29,10 @@ export type ExportJobEventType =
  * Event data for different event types
  */
 export interface ExportJobEventData {
-  "status-change": { previousStatus: ExportJobStatus; currentStatus: ExportJobStatus };
+  "status-change": {
+    previousStatus: ExportJobStatus;
+    currentStatus: ExportJobStatus;
+  };
   "progress-update": { current: number; total: number; percentage: number };
   "page-complete": { pageIndex: number; result: ExportResult };
   complete: { result: MultiPageExportResult | ExportResult; zip?: ZipResult };
@@ -41,7 +44,7 @@ export interface ExportJobEventData {
  * Event listener type
  */
 export type ExportJobEventListener<T extends ExportJobEventType> = (
-  data: ExportJobEventData[T]
+  data: ExportJobEventData[T],
 ) => void;
 
 /**
@@ -50,8 +53,10 @@ export type ExportJobEventListener<T extends ExportJobEventType> = (
 export class ExportJobManager {
   private job: ExportJob;
   private abortController: AbortController | null = null;
-  private listeners =
-    new Map<ExportJobEventType, Set<ExportJobEventListener<ExportJobEventType>>>();
+  private listeners = new Map<
+    ExportJobEventType,
+    Set<ExportJobEventListener<ExportJobEventType>>
+  >();
 
   constructor(conversationId: string, params?: Partial<ExportParams>) {
     // Only include params if provided, otherwise let createExportJob use defaults
@@ -120,7 +125,7 @@ export class ExportJobManager {
     if (!this.canStart()) {
       throw createAppError(
         "E-EXPORT-002",
-        `Cannot start job in status: ${this.job.status}`
+        `Cannot start job in status: ${this.job.status}`,
       );
     }
 
@@ -172,7 +177,10 @@ export class ExportJobManager {
   /**
    * Mark job as successful
    */
-  complete(result: MultiPageExportResult | ExportResult, zip?: ZipResult): void {
+  complete(
+    result: MultiPageExportResult | ExportResult,
+    zip?: ZipResult,
+  ): void {
     if (!this.isRunning()) {
       return;
     }
@@ -248,7 +256,10 @@ export class ExportJobManager {
    */
   reset(): void {
     if (!this.isComplete()) {
-      throw createAppError("E-EXPORT-002", "Cannot reset job that is not complete");
+      throw createAppError(
+        "E-EXPORT-002",
+        "Cannot reset job that is not complete",
+      );
     }
 
     const previousStatus = this.job.status;
@@ -276,7 +287,7 @@ export class ExportJobManager {
    */
   on<T extends ExportJobEventType>(
     event: T,
-    listener: ExportJobEventListener<T>
+    listener: ExportJobEventListener<T>,
   ): () => void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
@@ -296,7 +307,7 @@ export class ExportJobManager {
    */
   off<T extends ExportJobEventType>(
     event: T,
-    listener: ExportJobEventListener<T>
+    listener: ExportJobEventListener<T>,
   ): void {
     const listeners = this.listeners.get(event);
     if (listeners) {
@@ -309,7 +320,7 @@ export class ExportJobManager {
    */
   private emit<T extends ExportJobEventType>(
     event: T,
-    data: ExportJobEventData[T]
+    data: ExportJobEventData[T],
   ): void {
     const listeners = this.listeners.get(event);
     if (listeners) {
@@ -317,7 +328,10 @@ export class ExportJobManager {
         try {
           listener(data);
         } catch (error) {
-          console.error(`Error in export job event listener (${event}):`, error);
+          console.error(
+            `Error in export job event listener (${event}):`,
+            error,
+          );
         }
       }
     }
@@ -336,7 +350,7 @@ export class ExportJobManager {
  */
 export function createExportJobManager(
   conversationId: string,
-  params?: Partial<ExportParams>
+  params?: Partial<ExportParams>,
 ): ExportJobManager {
   return new ExportJobManager(conversationId, params);
 }

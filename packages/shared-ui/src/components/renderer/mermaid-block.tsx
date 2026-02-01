@@ -1,7 +1,7 @@
 "use client";
 
-import { memo, useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
+import { memo, useEffect, useRef, useState } from "react";
 import { useI18n } from "~/i18n";
 
 // Initialize mermaid
@@ -48,7 +48,9 @@ export const MermaidBlock = memo(function MermaidBlock({
         setError(null);
       } catch (err) {
         console.error("Mermaid rendering error:", err);
-        setError(err instanceof Error ? err.message : "Failed to render diagram");
+        setError(
+          err instanceof Error ? err.message : "Failed to render diagram",
+        );
         setSvg("");
       }
     };
@@ -113,13 +115,13 @@ export const MermaidBlock = memo(function MermaidBlock({
       <div
         ref={containerRef}
         style={containerStyle}
-      className={`c2p-mermaid-block c2p-mermaid-loading ${className || ""}`}
-    >
-      <div style={{ color: "#6c757d", fontSize: "14px" }}>
-        {t("mermaid.loading")}
+        className={`c2p-mermaid-block c2p-mermaid-loading ${className || ""}`}
+      >
+        <div style={{ color: "#6c757d", fontSize: "14px" }}>
+          {t("mermaid.loading")}
+        </div>
       </div>
-    </div>
-  );
+    );
   }
 
   return (

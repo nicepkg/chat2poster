@@ -2,6 +2,7 @@
 
 import { Menu } from "lucide-react";
 import * as React from "react";
+import { cn } from "../../utils";
 import { Button } from "../ui/button";
 import {
   Sheet,
@@ -10,7 +11,6 @@ import {
   SheetTitle,
   SheetClose,
 } from "../ui/sheet";
-import { cn } from "../../utils";
 
 export interface NavItem {
   label: string;

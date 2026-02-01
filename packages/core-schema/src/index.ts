@@ -6,12 +6,7 @@
  */
 
 // Message types
-export {
-  MessageRole,
-  ContentMeta,
-  Message,
-  createMessage,
-} from "./message";
+export { MessageRole, ContentMeta, Message, createMessage } from "./message";
 
 // Conversation types
 export {

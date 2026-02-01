@@ -77,7 +77,7 @@ export function applyThemeToElement(theme: Theme, element: HTMLElement): void {
  */
 export function createThemeStyleElement(
   theme: Theme,
-  selector = ":host"
+  selector = ":host",
 ): HTMLStyleElement {
   const style = document.createElement("style");
   style.textContent = themeToCSSString(theme, selector);

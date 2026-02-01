@@ -5,8 +5,8 @@ export { darkTheme } from "./dark";
 export { sunsetTheme } from "./sunset";
 
 // Re-import for array construction
-import { lightTheme } from "./light";
 import { darkTheme } from "./dark";
+import { lightTheme } from "./light";
 import { sunsetTheme } from "./sunset";
 
 /**

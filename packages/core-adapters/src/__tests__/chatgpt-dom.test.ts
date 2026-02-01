@@ -2,10 +2,10 @@
  * ChatGPT DOM Adapter Tests
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
-import { JSDOM } from "jsdom";
-import { ChatGPTDOMAdapter } from "../adapters/chatgpt-dom";
 import type { DOMInput } from "@chat2poster/core-schema";
+import { JSDOM } from "jsdom";
+import { describe, it, expect, beforeEach } from "vitest";
+import { ChatGPTDOMAdapter } from "../adapters/chatgpt-dom";
 
 // Helper to create a DOM from HTML
 function createDOM(html: string): Document {
@@ -216,7 +216,9 @@ describe("ChatGPTDOMAdapter", () => {
 
       const msg = conversation.messages[0];
       expect(msg).toBeDefined();
-      expect(msg!.contentMarkdown).toContain("[this link](https://example.com)");
+      expect(msg!.contentMarkdown).toContain(
+        "[this link](https://example.com)",
+      );
     });
 
     it("should handle headers", async () => {

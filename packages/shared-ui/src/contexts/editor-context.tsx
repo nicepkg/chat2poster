@@ -1,14 +1,6 @@
 "use client";
 
 import {
-  createContext,
-  useContext,
-  useReducer,
-  useCallback,
-  useEffect,
-  type ReactNode,
-} from "react";
-import {
   EXPORT_DEFAULTS,
   type Conversation,
   type Selection,
@@ -17,9 +9,17 @@ import {
   type PageBreak,
   type Theme,
 } from "@chat2poster/core-schema";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useCallback,
+  useEffect,
+  type ReactNode,
+} from "react";
+import { STORAGE_KEYS } from "~/constants";
 import { THEME_PRESETS, BACKGROUND_PRESETS } from "~/themes";
 import { generateUUID } from "~/utils/uuid";
-import { STORAGE_KEYS } from "~/constants";
 
 // Re-export for backward compatibility
 export { THEME_PRESETS, BACKGROUND_PRESETS };
@@ -151,7 +151,7 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
       // Avoid duplicates
       if (
         state.selection.pageBreaks.some(
-          (pb) => pb.afterMessageId === action.payload.afterMessageId
+          (pb) => pb.afterMessageId === action.payload.afterMessageId,
         )
       ) {
         return state;
@@ -172,7 +172,7 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
         selection: {
           ...state.selection,
           pageBreaks: state.selection.pageBreaks.filter(
-            (pb) => pb.id !== action.payload
+            (pb) => pb.id !== action.payload,
           ),
         },
       };
@@ -209,7 +209,7 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
 
 function runtimeReducer(
   state: RuntimeState,
-  action: RuntimeAction
+  action: RuntimeAction,
 ): RuntimeState {
   switch (action.type) {
     case "SET_LOADING":
@@ -279,21 +279,26 @@ function savePreferences(prefs: StoredPreferences): void {
 
 // Provider
 export function EditorProvider({ children }: { children: ReactNode }) {
-  const [editor, dispatch] = useReducer(editorReducer, initialEditorState, () => {
-    const prefs = loadPreferences();
-    const theme = THEME_PRESETS.find((t) => t.id === prefs.themeId) ?? THEME_PRESETS[0]!;
-    return {
-      ...initialEditorState,
-      selectedTheme: theme,
-      decoration: prefs.decoration ?? theme.decorationDefaults,
-      exportParams: prefs.exportParams ?? defaultExportParams,
-      autoPagination: prefs.autoPagination ?? false,
-    };
-  });
+  const [editor, dispatch] = useReducer(
+    editorReducer,
+    initialEditorState,
+    () => {
+      const prefs = loadPreferences();
+      const theme =
+        THEME_PRESETS.find((t) => t.id === prefs.themeId) ?? THEME_PRESETS[0]!;
+      return {
+        ...initialEditorState,
+        selectedTheme: theme,
+        decoration: prefs.decoration ?? theme.decorationDefaults,
+        exportParams: prefs.exportParams ?? defaultExportParams,
+        autoPagination: prefs.autoPagination ?? false,
+      };
+    },
+  );
 
   const [runtime, runtimeDispatch] = useReducer(
     runtimeReducer,
-    initialRuntimeState
+    initialRuntimeState,
   );
 
   // Save preferences when they change
@@ -313,53 +318,54 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 
   // Actions
   const toggleMessage = useCallback(
-    (messageId: string) => dispatch({ type: "TOGGLE_MESSAGE", payload: messageId }),
-    []
+    (messageId: string) =>
+      dispatch({ type: "TOGGLE_MESSAGE", payload: messageId }),
+    [],
   );
 
   const selectAllMessages = useCallback(
     () => dispatch({ type: "SELECT_ALL_MESSAGES" }),
-    []
+    [],
   );
 
   const deselectAllMessages = useCallback(
     () => dispatch({ type: "DESELECT_ALL_MESSAGES" }),
-    []
+    [],
   );
 
   const addPageBreak = useCallback(
     (afterMessageId: string) =>
       dispatch({ type: "ADD_PAGE_BREAK", payload: { afterMessageId } }),
-    []
+    [],
   );
 
   const removePageBreak = useCallback(
     (pageBreakId: string) =>
       dispatch({ type: "REMOVE_PAGE_BREAK", payload: pageBreakId }),
-    []
+    [],
   );
 
   const setTheme = useCallback(
     (theme: Theme) => dispatch({ type: "SET_THEME", payload: theme }),
-    []
+    [],
   );
 
   const setDecoration = useCallback(
     (decoration: Partial<Decoration>) =>
       dispatch({ type: "SET_DECORATION", payload: decoration }),
-    []
+    [],
   );
 
   const setExportParams = useCallback(
     (params: Partial<ExportParams>) =>
       dispatch({ type: "SET_EXPORT_PARAMS", payload: params }),
-    []
+    [],
   );
 
   const setAutoPagination = useCallback(
     (enabled: boolean) =>
       dispatch({ type: "SET_AUTO_PAGINATION", payload: enabled }),
-    []
+    [],
   );
 
   const value: EditorContextValue = {

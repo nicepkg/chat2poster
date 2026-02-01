@@ -61,7 +61,8 @@ export const PageBreakIndicator = memo(function PageBreakIndicator({
     lineHeight: 1,
   };
 
-  const displayLabel = label || (pageNumber ? `Page ${pageNumber + 1} starts here` : "Page break");
+  const displayLabel =
+    label || (pageNumber ? `Page ${pageNumber + 1} starts here` : "Page break");
 
   return (
     <div style={containerStyle} className="c2p-page-break">

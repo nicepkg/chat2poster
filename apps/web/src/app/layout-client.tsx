@@ -18,6 +18,7 @@ import {
   stripLocaleFromPath,
   type Locale,
 } from "@chat2poster/shared-ui/i18n/core";
+import { Agentation } from "agentation";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { ThemeProvider } from "~/components/theme-provider";
@@ -86,6 +87,7 @@ export function RootLayoutClient({ children }: { children: React.ReactNode }) {
           {children}
         </LayoutFrame>
       </ThemeProvider>
+      {process.env.NODE_ENV === "development" && <Agentation />}
     </I18nProvider>
   );
 }

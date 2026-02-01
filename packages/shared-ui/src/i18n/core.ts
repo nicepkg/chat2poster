@@ -75,7 +75,10 @@ export function getMessage(
   params?: Record<string, string | number>,
 ) {
   const selected = messages[locale] ?? messages[defaultLocale];
-  return formatMessage(selected[key] ?? messages[defaultLocale][key] ?? key, params);
+  return formatMessage(
+    selected[key] ?? messages[defaultLocale][key] ?? key,
+    params,
+  );
 }
 
 export function createTranslator(locale?: string) {

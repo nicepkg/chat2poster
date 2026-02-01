@@ -1,13 +1,9 @@
 "use client";
 
-import * as React from "react";
 import type { ExportParams } from "@chat2poster/core-schema";
-import { cn } from "~/utils/common";
-import { useI18n } from "~/i18n";
+import * as React from "react";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Slider } from "../ui/slider";
-import { Switch } from "../ui/switch";
 import {
   Select,
   SelectContent,
@@ -15,6 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Slider } from "../ui/slider";
+import { Switch } from "../ui/switch";
+import { useI18n } from "~/i18n";
+import { cn } from "~/utils/common";
 
 export interface ExportTabProps {
   exportParams: ExportParams;
@@ -53,9 +53,7 @@ export function ExportTab({
             </Button>
           ))}
         </div>
-        <p className="text-muted-foreground text-xs">
-          {t("export.scaleHint")}
-        </p>
+        <p className="text-muted-foreground text-xs">{t("export.scaleHint")}</p>
       </div>
 
       {/* Canvas Width */}

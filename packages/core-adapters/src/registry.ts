@@ -17,7 +17,7 @@ import { createAppError } from "@chat2poster/core-schema";
 /**
  * Internal adapter storage
  */
-const adapters: Map<string, Adapter> = new Map();
+const adapters = new Map<string, Adapter>();
 
 /**
  * Register an adapter with the registry
@@ -27,7 +27,7 @@ const adapters: Map<string, Adapter> = new Map();
 export function registerAdapter(adapter: Adapter): void {
   if (adapters.has(adapter.id)) {
     throw new Error(
-      `Adapter with id "${adapter.id}" is already registered. Use unregisterAdapter first if you need to replace it.`
+      `Adapter with id "${adapter.id}" is already registered. Use unregisterAdapter first if you need to replace it.`,
     );
   }
   adapters.set(adapter.id, adapter);
@@ -77,7 +77,7 @@ export function getAdaptersMeta(): AdapterMeta[] {
  * This is a heuristic based on canHandle testing
  */
 function getSupportedInputTypes(
-  adapter: Adapter
+  adapter: Adapter,
 ): ("dom" | "share-link" | "manual" | "paste")[] {
   const types: ("dom" | "share-link" | "manual" | "paste")[] = [];
 
@@ -151,7 +151,7 @@ export interface ParseResult {
  * @throws AppError if no adapter can handle the input
  */
 export async function parseWithAdapters(
-  input: AdapterInput
+  input: AdapterInput,
 ): Promise<ParseResult> {
   // Find adapters that can handle this input
   const compatibleAdapters = getAdapters().filter((adapter) => {
@@ -165,7 +165,7 @@ export async function parseWithAdapters(
   if (compatibleAdapters.length === 0) {
     throw createAppError(
       "E-PARSE-001",
-      `No adapter found for input type "${input.type}"`
+      `No adapter found for input type "${input.type}"`,
     );
   }
 
@@ -193,7 +193,7 @@ export async function parseWithAdapters(
 
   throw createAppError(
     "E-PARSE-002",
-    lastError?.message ?? "All compatible adapters failed to parse input"
+    lastError?.message ?? "All compatible adapters failed to parse input",
   );
 }
 

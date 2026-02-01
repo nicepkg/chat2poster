@@ -2,8 +2,8 @@
  * ZIP packaging for multi-page exports
  */
 
-import { zipSync, strToU8 } from "fflate";
 import { createAppError } from "@chat2poster/core-schema";
+import { zipSync, strToU8 } from "fflate";
 import type { MultiPageExportResult } from "./multi-page-exporter";
 
 /**
@@ -62,7 +62,7 @@ export function generatePageFilename(
   index: number,
   totalPages: number,
   baseName = "page",
-  extension = "png"
+  extension = "png",
 ): string {
   const paddedNumber = padPageNumber(index, totalPages);
   return `${baseName}_${paddedNumber}.${extension}`;
@@ -82,7 +82,7 @@ async function blobToUint8Array(blob: Blob): Promise<Uint8Array> {
 function createMetadataContent(
   exportResult: MultiPageExportResult,
   filenames: string[],
-  options: ZipOptions
+  options: ZipOptions,
 ): string {
   const metadata = {
     version: "1.0",
@@ -108,7 +108,7 @@ function createMetadataContent(
  */
 export async function packageAsZip(
   exportResult: MultiPageExportResult,
-  options: Partial<ZipOptions> = {}
+  options: Partial<ZipOptions> = {},
 ): Promise<ZipResult> {
   const opts: ZipOptions = { ...DEFAULT_ZIP_OPTIONS, ...options };
 
@@ -129,7 +129,7 @@ export async function packageAsZip(
         i,
         exportResult.totalPages,
         opts.baseFilename,
-        page.meta.format
+        page.meta.format,
       );
       filenames.push(filename);
 
@@ -140,7 +140,11 @@ export async function packageAsZip(
 
     // Add metadata if requested
     if (opts.includeMetadata) {
-      const metadataContent = createMetadataContent(exportResult, filenames, opts);
+      const metadataContent = createMetadataContent(
+        exportResult,
+        filenames,
+        opts,
+      );
       const metadataFilename = "metadata.json";
       files[metadataFilename] = strToU8(metadataContent);
       filenames.push(metadataFilename);
@@ -149,7 +153,17 @@ export async function packageAsZip(
 
     // Create ZIP with fflate
     // Cast compressionLevel to valid range (0-9)
-    const level = (opts.compressionLevel ?? 6) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+    const level = (opts.compressionLevel ?? 6) as
+      | 0
+      | 1
+      | 2
+      | 3
+      | 4
+      | 5
+      | 6
+      | 7
+      | 8
+      | 9;
     const zipped = zipSync(files, {
       level,
     });
@@ -181,10 +195,7 @@ export async function packageAsZip(
 /**
  * Generate a suggested filename for the ZIP file
  */
-export function generateZipFilename(
-  title?: string,
-  date?: Date
-): string {
+export function generateZipFilename(title?: string, date?: Date): string {
   const dateStr = (date || new Date()).toISOString().split("T")[0];
   const sanitizedTitle = title
     ? title
@@ -226,9 +237,6 @@ export function downloadZip(zipResult: ZipResult, filename: string): void {
 /**
  * Download a single image
  */
-export function downloadImage(
-  blob: Blob,
-  filename = "export.png"
-): void {
+export function downloadImage(blob: Blob, filename = "export.png"): void {
   triggerDownload(blob, filename);
 }
