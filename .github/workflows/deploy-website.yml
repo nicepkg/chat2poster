@@ -28,7 +28,8 @@ env:
   PROJECT_NAME: 'chat2poster'
   SITE_DOMAIN: 'chat2poster.xiaominglab.com'
   WEBSITE_DIR: 'apps/web'
-  BUILD_COMMAND: 'pnpm dlx @opennextjs/cloudflare build --skipWranglerConfigCheck'
+  TURBO_TELEMETRY_DISABLED: 1
+  TURBO_CACHE_DIR: .turbo
 
   # Comment marker (used to update existing PR comment instead of spamming)
   PREVIEW_COMMENT_MARKER: '<!-- CF_PAGES_PREVIEW_COMMENT -->'
@@ -43,9 +44,16 @@ jobs:
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
 
-      - name: Build website
-        working-directory: ${{ env.WEBSITE_DIR }}
-        run: ${{ env.BUILD_COMMAND }}
+      - name: Cache turbo
+        uses: actions/cache@v5
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ hashFiles('turbo.json', 'pnpm-lock.yaml', '**/package.json', '**/tsconfig*.json') }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - name: Build website with Turbo
+        run: pnpm turbo run build:cf --filter=@chat2poster/web
         env:
           NEXT_PUBLIC_SITE_URL: https://${{ env.SITE_DOMAIN }}
           NEXT_PUBLIC_GIT_SHA: ${{ github.sha }}
@@ -84,7 +92,6 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
         with:
           install-dependencies: 'false'
-          setup-cache: 'false'
 
       - name: Download build artifact
         uses: actions/download-artifact@v7
@@ -116,7 +123,6 @@ jobs:
         uses: ./.github/actions/setup-node-pnpm
         with:
           install-dependencies: 'false'
-          setup-cache: 'false'
 
       - name: Download build artifact
         uses: actions/download-artifact@v7

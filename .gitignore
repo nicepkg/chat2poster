@@ -22,6 +22,7 @@ node_modules
 # Build outputs
 .next
 .open-next
+.wxt
 out
 .out
 dist

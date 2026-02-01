@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "build:cf": {
+      "outputs": [".open-next/**", ".next/**", "!.next/cache/**"]
+    }
+  }
+}

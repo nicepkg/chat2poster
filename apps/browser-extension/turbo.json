@@ -1,0 +1,17 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": ["dist/**"]
+    },
+    "build:firefox": {
+      "outputs": ["dist/**"]
+    },
+    "zip": {
+      "outputs": ["dist/**/*.zip", ".output/**/*.zip"]
+    },
+    "zip:firefox": {
+      "outputs": ["dist/**/*.zip", ".output/**/*.zip"]
+    }
+  }
+}
