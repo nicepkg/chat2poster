@@ -1,10 +1,10 @@
 import type { Theme } from "@chat2poster/core-schema";
 
 /**
- * Dark theme preset - "Midnight"
+ * Dark theme preset
  *
- * A sleek dark theme with vibrant accents for excellent contrast.
- * All text uses light colors for perfect readability on dark backgrounds.
+ * Sleek dark theme with excellent contrast.
+ * User and Assistant bubbles use the same colors for visual consistency.
  */
 export const darkTheme: Theme = {
   id: "dark",
@@ -19,19 +19,18 @@ export const darkTheme: Theme = {
     messagePadding: 16,
     messageGap: 12,
     colors: {
-      // Window background - deep dark
+      // Window background
       background: "#0a0a0a",
-      // Primary text - bright white for excellent contrast
-      foreground: "#f5f5f5",
+      // Primary text
+      foreground: "#fafafa",
       // Muted
       muted: "#1c1c1e",
       mutedForeground: "#a1a1aa",
-      // User bubble - vibrant blue
-      userBubble: "#2563eb",
-      userBubbleForeground: "#ffffff",
-      // Assistant bubble - dark gray with light text
+      // Message bubbles - same color for both user and assistant
+      userBubble: "#27272a",
+      userBubbleForeground: "#fafafa",
       assistantBubble: "#27272a",
-      assistantBubbleForeground: "#f5f5f5",
+      assistantBubbleForeground: "#fafafa",
       // System
       systemBubble: "#422006",
       systemBubbleForeground: "#fcd34d",

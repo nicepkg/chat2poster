@@ -1,10 +1,10 @@
 import type { Theme } from "@chat2poster/core-schema";
 
 /**
- * Light theme preset - "Daylight"
+ * Light theme preset
  *
- * A clean, professional light theme with excellent contrast.
- * User messages use a warm accent, assistant uses neutral.
+ * Clean, professional light theme.
+ * User and Assistant bubbles use the same colors for visual consistency.
  */
 export const lightTheme: Theme = {
   id: "light",
@@ -19,17 +19,16 @@ export const lightTheme: Theme = {
     messagePadding: 16,
     messageGap: 12,
     colors: {
-      // Window background - clean white
+      // Window background
       background: "#ffffff",
-      // Primary text - dark gray
+      // Primary text
       foreground: "#1a1a1a",
       // Muted
       muted: "#f4f4f5",
       mutedForeground: "#71717a",
-      // User bubble - vibrant blue
-      userBubble: "#3b82f6",
-      userBubbleForeground: "#ffffff",
-      // Assistant bubble - light neutral
+      // Message bubbles - same color for both user and assistant
+      userBubble: "#f4f4f5",
+      userBubbleForeground: "#18181b",
       assistantBubble: "#f4f4f5",
       assistantBubbleForeground: "#18181b",
       // System

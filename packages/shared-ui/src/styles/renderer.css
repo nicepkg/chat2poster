@@ -11,7 +11,7 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.6;
-  color: #1f2937;
+  color: inherit; /* Inherit from parent for theme support */
   word-wrap: break-word;
 }
 
@@ -136,69 +136,62 @@
 }
 
 /* ============================================================================
-   Inline Code
+   Inline Code - Uses CSS variables from theme
    ============================================================================ */
 
 .c2p-inline-code {
   padding: 2px 6px;
-  background-color: #f3f4f6;
-  border-radius: 4px;
-  font-size: 0.875em;
+  background-color: var(--c2p-code-bg, #f3f4f6);
+  border-radius: 5px;
+  font-size: 0.85em;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-  color: #db2777;
+  color: var(--c2p-code-fg, #db2777);
 }
 
 /* ============================================================================
-   Code Blocks
+   Code Blocks - Uses CSS variables from theme
    ============================================================================ */
 
 .c2p-code-block {
   position: relative;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  font-size: 14px;
-  line-height: 1.5;
-  margin: 16px 0;
-  background-color: #1f2937;
-}
-
-.c2p-code-block-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  background-color: #374151;
-  border-bottom: 1px solid #4b5563;
-  color: #9ca3af;
-  font-size: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 12px 0;
+  background-color: var(--c2p-code-bg, #1f2937);
+  color: var(--c2p-code-fg, #e5e7eb);
+  border: 1px solid var(--c2p-border, #374151);
 }
 
 .c2p-code-block-language {
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  text-transform: lowercase;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.05em;
 }
 
 .c2p-code-block-copy {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #9ca3af;
+  color: var(--c2p-muted-fg, #9ca3af);
   padding: 4px 8px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   gap: 4px;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.15s, color 0.15s;
 }
 
 .c2p-code-block-copy:hover {
-  background-color: #4b5563;
-  color: #e5e7eb;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--c2p-code-fg, #e5e7eb);
 }
 
 .c2p-code-block-content {
-  padding: 16px;
+  padding: 14px 16px;
   margin: 0;
   overflow-x: auto;
 }
@@ -212,14 +205,14 @@
 
 .c2p-code-block-content code {
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 /* Fallback code block style */
 .c2p-code-block-fallback {
-  background-color: #1f2937;
-  color: #e5e7eb;
+  background-color: var(--c2p-code-bg, #1f2937);
+  color: var(--c2p-code-fg, #e5e7eb);
   white-space: pre-wrap;
   word-break: break-word;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
@@ -363,9 +356,10 @@
   color: #9ca3af;
 }
 
+/* Inline code in dark mode - uses same CSS variables */
 .c2p-dark .c2p-inline-code {
-  background-color: #374151;
-  color: #f472b6;
+  background-color: var(--c2p-code-bg, #374151);
+  color: var(--c2p-code-fg, #f472b6);
 }
 
 .c2p-dark .c2p-thead {

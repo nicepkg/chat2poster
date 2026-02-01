@@ -131,15 +131,16 @@ export function EditorPreview({
     }
   }, [totalPages, currentPage, actions]);
 
-  // Theme colors
+  // Theme colors - use same colors for user and assistant (unified look)
   const isWindowDark = selectedTheme.mode === "dark";
   const contentBg = selectedTheme.tokens.colors.background;
   const contentFg = selectedTheme.tokens.colors.foreground;
-  const userBubbleBg = selectedTheme.tokens.colors.userBubble;
-  const userBubbleFg = selectedTheme.tokens.colors.userBubbleForeground;
-  const assistantBubbleBg = selectedTheme.tokens.colors.assistantBubble;
-  const assistantBubbleFg =
-    selectedTheme.tokens.colors.assistantBubbleForeground;
+  const bubbleBg = selectedTheme.tokens.colors.userBubble; // Same for both
+  const bubbleFg = selectedTheme.tokens.colors.userBubbleForeground; // Same for both
+  const mutedFg = selectedTheme.tokens.colors.mutedForeground;
+  const codeBlockBg = selectedTheme.tokens.colors.codeBlockBackground;
+  const codeBlockFg = selectedTheme.tokens.colors.codeBlockForeground;
+  const borderColor = selectedTheme.tokens.colors.border;
 
   // Theme tokens
   const bubbleRadius = selectedTheme.tokens.bubbleRadius;
@@ -351,12 +352,6 @@ export function EditorPreview({
                   >
                     {currentPageMessages.map((message, index) => {
                       const isUser = message.role === "user";
-                      const bubbleBg = isUser
-                        ? userBubbleBg
-                        : assistantBubbleBg;
-                      const bubbleFg = isUser
-                        ? userBubbleFg
-                        : assistantBubbleFg;
 
                       return (
                         <motion.div
@@ -371,12 +366,12 @@ export function EditorPreview({
                               : "c2p-message-assistant flex-row",
                           )}
                         >
-                          {/* Avatar */}
+                          {/* Avatar - same style for both */}
                           <div
                             className="c2p-message-avatar flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
                             style={{
                               backgroundColor: bubbleBg,
-                              color: bubbleFg,
+                              color: mutedFg,
                             }}
                           >
                             {isUser ? (
@@ -399,11 +394,7 @@ export function EditorPreview({
                                 "c2p-message-role mb-1.5 text-xs font-medium",
                                 isUser ? "pr-1" : "pl-1",
                               )}
-                              style={{
-                                color: isWindowDark
-                                  ? "rgba(255,255,255,0.5)"
-                                  : "rgba(0,0,0,0.4)",
-                              }}
+                              style={{ color: mutedFg }}
                             >
                               {isUser
                                 ? t("role.user")
@@ -412,30 +403,39 @@ export function EditorPreview({
                                   : t("role.system")}
                             </div>
 
-                            {/* Bubble */}
+                            {/* Bubble - same style for both */}
                             <div
                               className="c2p-message-bubble"
-                              style={{
-                                backgroundColor: bubbleBg,
-                                color: bubbleFg,
-                                borderRadius: bubbleRadius,
-                                padding: messagePadding,
-                                // Chat bubble tail effect via border-radius
-                                borderTopLeftRadius: isUser
-                                  ? bubbleRadius
-                                  : bubbleRadius / 3,
-                                borderTopRightRadius: isUser
-                                  ? bubbleRadius / 3
-                                  : bubbleRadius,
-                              }}
+                              style={
+                                {
+                                  backgroundColor: bubbleBg,
+                                  color: bubbleFg,
+                                  borderRadius: bubbleRadius,
+                                  padding: messagePadding,
+                                  // Chat bubble tail effect via border-radius
+                                  borderTopLeftRadius: isUser
+                                    ? bubbleRadius
+                                    : bubbleRadius / 3,
+                                  borderTopRightRadius: isUser
+                                    ? bubbleRadius / 3
+                                    : bubbleRadius,
+                                  // CSS variables for code blocks
+                                  "--c2p-code-bg": codeBlockBg,
+                                  "--c2p-code-fg": codeBlockFg,
+                                  "--c2p-border": borderColor,
+                                  "--c2p-muted-fg": mutedFg,
+                                } as React.CSSProperties
+                              }
                             >
                               <div
-                                className="c2p-message-body prose prose-sm max-w-none dark:prose-invert"
+                                className={cn(
+                                  "c2p-message-body",
+                                  isWindowDark && "c2p-dark",
+                                )}
                                 style={{
                                   lineHeight: selectedTheme.tokens.lineHeight,
                                   fontSize: selectedTheme.tokens.baseFontSize,
                                   textAlign: "left",
-                                  // Ensure prose colors match bubble
                                   color: bubbleFg,
                                 }}
                               >
