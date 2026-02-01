@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Browser extension for chat2poster - export AI chats as images",
   "scripts": {
+    "prepare": "wxt prepare",
     "dev": "wxt dev",
     "dev:firefox": "wxt dev --browser firefox",
     "build": "wxt build",
