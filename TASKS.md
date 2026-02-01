@@ -98,13 +98,19 @@ export interface Selection {
 }
 
 // Default values defined in EXPORT_DEFAULTS constant
+export type DeviceType = 'mobile' | 'tablet' | 'desktop'
+
+// Device widths: mobile=390px, tablet=768px, desktop=1200px
+export const DEVICE_WIDTHS: Record<DeviceType, number>
+
 export interface ExportParams {
   scale: 1 | 2 | 3  // Default: 2
-  canvasPreset: 'square' | 'portrait' | 'story' | 'wide' | 'custom'
-  canvasWidthPx: number  // Default: 1080
+  deviceType: DeviceType  // Default: 'tablet'
   maxPageHeightPx: number  // Default: 4096
   outputMode: 'single' | 'multi-zip'
 }
+
+// Note: Window width = DEVICE_WIDTHS[deviceType] - (canvasPaddingPx × 2)
 ```
 
 ### T1.3 - Shared Utilities ✅

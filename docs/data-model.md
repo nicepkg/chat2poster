@@ -138,8 +138,10 @@
 - conversationId: string
 - params: ExportParams
   - scale: 1|2|3（默认 2）
-  - canvasPreset: enum（square|portrait|story|wide|custom）
-  - canvasWidthPx: number（默认 1080）
+  - deviceType: enum（mobile|tablet|desktop）（默认 tablet）
+    - mobile: 390px（手机尺寸）
+    - tablet: 768px（平板尺寸）
+    - desktop: 1200px（桌面尺寸）
   - maxPageHeightPx: number（默认 4096，范围 2000-10000）
   - outputMode: enum（single|multi-zip）
 - paginationResult（可选缓存）
@@ -155,6 +157,11 @@
 
 - JOB-001：multi-zip 时 pages.length 必须 > 1。
 - JOB-002：失败时必须保留 params 与 selection（用于重试）。
+
+注意：
+
+- Desktop 宽度由 deviceType 决定
+- Window 宽度 = Desktop 宽度 - (canvasPaddingPx × 2)
 
 ---
 

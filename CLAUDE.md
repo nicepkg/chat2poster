@@ -611,41 +611,62 @@ const [copied, setCopied] = useState(false);
 ### Editor Layout (Chat2Poster Specific)
 
 ```tsx
-/* Three-column layout - Messages / Preview / Settings */
-<div className="flex h-[calc(100vh-64px)]">
-  {/* Left - Message list */}
-  <aside className="w-80 border-r bg-muted/30 overflow-y-auto">
-    <div className="p-4 border-b sticky top-0 bg-background/95 backdrop-blur">
-      <SelectionControls />
-    </div>
-    <div className="p-2">
-      <MessageList />
-    </div>
-  </aside>
+/* Two-column layout - Settings Tabs / Preview */
+/* Header + Editor = 100vh, Footer below (scrollable) */
+<main className="bg-muted/30">
+  <div className="mx-auto flex h-[calc(100vh-64px)] w-full max-w-7xl gap-4 p-4">
+    {/* Left - Settings Tabs */}
+    <Card className="w-80 shrink-0 h-full overflow-hidden">
+      <Tabs defaultValue="theme" className="h-full flex flex-col">
+        <TabsList className="m-2 grid grid-cols-3">
+          <TabsTrigger value="messages">Messages</TabsTrigger>
+          <TabsTrigger value="theme">Theme</TabsTrigger>
+          <TabsTrigger value="export">Export</TabsTrigger>
+        </TabsList>
+        <TabsContent value="messages" className="flex-1 min-h-0">
+          <MessagesTab /> {/* Scrollable list */}
+        </TabsContent>
+        <TabsContent value="theme" className="flex-1 overflow-auto">
+          <ThemeTab />
+        </TabsContent>
+        <TabsContent value="export" className="flex-1 overflow-auto">
+          <ExportTab />
+        </TabsContent>
+      </Tabs>
+    </Card>
 
-  {/* Center - Preview */}
-  <main className="flex-1 overflow-y-auto bg-[url('/grid.svg')] bg-repeat">
-    <div className="flex items-center justify-center min-h-full p-8">
-      <PreviewCanvas />
-    </div>
-  </main>
-
-  {/* Right - Settings panel */}
-  <aside className="w-80 border-l overflow-y-auto">
-    <Tabs defaultValue="theme" className="h-full">
-      <TabsList className="w-full sticky top-0 bg-background z-10 border-b rounded-none h-12">
-        <TabsTrigger value="theme" className="flex-1">Theme</TabsTrigger>
-        <TabsTrigger value="decoration" className="flex-1">Style</TabsTrigger>
-        <TabsTrigger value="export" className="flex-1">Export</TabsTrigger>
-      </TabsList>
-      <TabsContent value="theme" className="p-4">
-        <ThemePanel />
-      </TabsContent>
-      {/* ... */}
-    </Tabs>
-  </aside>
-</div>
+    {/* Right - Preview with controls in header */}
+    <Card className="flex-1 min-h-0 h-full overflow-hidden">
+      {/* Preview Header: Device selector | Page nav | Export button */}
+      <div className="flex items-center justify-between border-b px-3 py-2">
+        <DeviceSelector />      {/* mobile/tablet/desktop icons */}
+        <PageNavigation />      {/* Only when pages > 1 */}
+        <ExportButton />
+      </div>
+      {/* Preview Canvas (CleanShot X style layers) */}
+      <div className="flex-1 min-h-0 overflow-auto checkerboard-bg p-4">
+        <div className="c2p-desktop mx-auto" style={{ width: deviceWidth }}>
+          <div className="c2p-window">
+            <div className="c2p-window-bar"><MacOSBar /></div>
+            <div className="c2p-window-content"><Messages /></div>
+          </div>
+        </div>
+      </div>
+    </Card>
+  </div>
+</main>
 ```
+
+**Layer Structure (CleanShot X style):**
+- `c2p-desktop`: Canvas surface with gradient background (width = deviceType)
+- `c2p-window`: App window (width = desktop - padding×2)
+- `c2p-window-bar`: macOS traffic lights (optional)
+- `c2p-window-content`: Message content with theme colors
+
+**Device Widths:**
+- mobile: 390px
+- tablet: 768px (default)
+- desktop: 1200px
 
 ---
 
