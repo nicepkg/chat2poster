@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { createExportJobManager } from "./export-job-manager";
 
-// Use a valid UUID for testing
-const TEST_CONVERSATION_ID = "00000000-0000-0000-0000-000000000001";
+// Use a valid UUID for testing (nil UUID is allowed by the schema)
+const TEST_CONVERSATION_ID = "00000000-0000-0000-0000-000000000000";
 
 describe("ExportJobManager", () => {
   describe("initial state", () => {
@@ -258,7 +258,7 @@ describe("ExportJobManager", () => {
     it("should set pagination result", () => {
       const manager = createExportJobManager(TEST_CONVERSATION_ID);
       const paginationResult = {
-        pages: [["00000000-0000-0000-0000-000000000002", "00000000-0000-0000-0000-000000000003"]],
+        pages: [["f47ac10b-58cc-4372-a567-0e02b2c3d479", "a1b2c3d4-e5f6-4789-abcd-ef0123456789"]],
         totalPages: 1,
       };
 
