@@ -1,23 +1,27 @@
 "use client";
 
-import type { Decoration, Theme } from "@chat2poster/core-schema";
+import type { Decoration, ShadowLevel, Theme } from "@chat2poster/core-schema";
 import { motion } from "framer-motion";
 import { Monitor } from "lucide-react";
 import * as React from "react";
 import { Label } from "../ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
 import { BackgroundPicker, type BackgroundPreset } from "./background-picker";
 import { useI18n } from "~/i18n";
 import { BACKGROUND_PRESETS } from "~/themes/backgrounds";
 import { cn } from "~/utils/common";
+
+// Shadow levels mapped to slider values (0-4)
+const SHADOW_LEVELS: ShadowLevel[] = ["none", "sm", "md", "lg", "xl"];
+const SHADOW_LABELS: Record<ShadowLevel, string> = {
+  none: "None",
+  xs: "XS",
+  sm: "S",
+  md: "M",
+  lg: "L",
+  xl: "XL",
+};
 
 export interface ThemeTabProps {
   selectedThemeId: string;
@@ -39,15 +43,20 @@ export function ThemeTab({
   className,
 }: ThemeTabProps) {
   const { t } = useI18n();
+
+  // Convert shadow level to slider index
+  const shadowIndex = SHADOW_LEVELS.indexOf(decoration.shadowLevel);
+  const currentShadowIndex = shadowIndex === -1 ? 2 : shadowIndex; // default to "md"
+
   return (
-    <div className={cn("c2p-theme-tab space-y-6 p-4", className)}>
-      {/* Content Theme Selector - controls c2p-window-content colors */}
+    <div className={cn("c2p-theme-tab space-y-4 p-3", className)}>
+      {/* Theme Selector */}
       {themes.length > 0 && (
-        <div className="c2p-content-theme-section space-y-3">
-          <Label className="c2p-section-label text-muted-foreground text-xs uppercase tracking-wide">
+        <div className="space-y-2">
+          <Label className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
             {t("theme.label")}
           </Label>
-          <div className="c2p-theme-grid grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-1.5">
             {themes.map((theme) => (
               <motion.button
                 key={theme.id}
@@ -55,27 +64,34 @@ export function ThemeTab({
                 whileTap={{ scale: 0.98 }}
                 onClick={() => onThemeChange(theme)}
                 className={cn(
-                  "c2p-theme-option rounded-lg border-2 p-2 text-center text-xs font-medium transition-all",
+                  "relative flex items-center gap-2 rounded-lg border px-2.5 py-2 text-left text-xs font-medium transition-all",
                   selectedThemeId === theme.id
-                    ? "c2p-theme-selected border-primary bg-primary/10 text-primary"
-                    : "border-border text-muted-foreground hover:border-border/80",
+                    ? "border-primary bg-primary/5 text-foreground"
+                    : "border-border/60 text-muted-foreground hover:border-border hover:bg-muted/30",
                 )}
               >
                 <div
-                  className="c2p-theme-preview mb-1.5 h-6 w-full rounded"
+                  className="h-4 w-4 shrink-0 rounded-full border"
                   style={{
-                    background: theme.decorationDefaults.backgroundValue,
+                    background: theme.tokens.colors.background,
+                    borderColor: theme.tokens.colors.border,
                   }}
                 />
                 {theme.name}
+                {selectedThemeId === theme.id && (
+                  <motion.div
+                    layoutId="theme-indicator"
+                    className="bg-primary absolute right-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full"
+                  />
+                )}
               </motion.button>
             ))}
           </div>
         </div>
       )}
 
-      {/* Desktop Background Picker - controls c2p-desktop background */}
-      <div className="c2p-desktop-bg-section">
+      {/* Background */}
+      <div>
         <BackgroundPicker
           value={decoration.backgroundValue}
           onChange={(value, type) =>
@@ -89,92 +105,99 @@ export function ThemeTab({
         />
       </div>
 
-      {/* Window Radius - controls c2p-window border-radius */}
-      <div className="c2p-window-radius-section space-y-3">
+      {/* Radius + Padding in one row */}
+      <div className="grid grid-cols-2 gap-3">
+        {/* Radius */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <Label className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
+              {t("theme.borderRadius")}
+            </Label>
+            <span className="text-muted-foreground/70 text-[10px] tabular-nums">
+              {decoration.canvasRadiusPx}
+            </span>
+          </div>
+          <Slider
+            value={[decoration.canvasRadiusPx]}
+            min={0}
+            max={32}
+            step={2}
+            onValueChange={(values) =>
+              onDecorationChange({
+                canvasRadiusPx: values[0] ?? decoration.canvasRadiusPx,
+              })
+            }
+            className="h-5"
+          />
+        </div>
+
+        {/* Padding */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <Label className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
+              {t("theme.padding")}
+            </Label>
+            <span className="text-muted-foreground/70 text-[10px] tabular-nums">
+              {decoration.canvasPaddingPx}
+            </span>
+          </div>
+          <Slider
+            value={[decoration.canvasPaddingPx]}
+            min={0}
+            max={64}
+            step={4}
+            onValueChange={(values) =>
+              onDecorationChange({
+                canvasPaddingPx: values[0] ?? decoration.canvasPaddingPx,
+              })
+            }
+            className="h-5"
+          />
+        </div>
+      </div>
+
+      {/* Shadow Slider */}
+      <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <Label className="c2p-section-label text-muted-foreground text-xs uppercase tracking-wide">
-            {t("theme.borderRadius")}
+          <Label className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
+            {t("theme.shadow")}
           </Label>
-          <span className="c2p-value-display text-muted-foreground text-xs">
-            {decoration.canvasRadiusPx}px
+          <span className="text-muted-foreground/70 text-[10px]">
+            {SHADOW_LABELS[decoration.shadowLevel]}
           </span>
         </div>
         <Slider
-          value={[decoration.canvasRadiusPx]}
+          value={[currentShadowIndex]}
           min={0}
-          max={32}
-          step={2}
-          onValueChange={(values) =>
-            onDecorationChange({
-              canvasRadiusPx: values[0] ?? decoration.canvasRadiusPx,
-            })
-          }
-          className="c2p-radius-slider"
+          max={4}
+          step={1}
+          onValueChange={(values) => {
+            const index = values[0] ?? 2;
+            const level = SHADOW_LEVELS[index] ?? "md";
+            onDecorationChange({ shadowLevel: level });
+          }}
+          className="h-5"
         />
-      </div>
-
-      {/* Window Margin - controls c2p-desktop padding (distance from desktop edge to window) */}
-      <div className="c2p-window-margin-section space-y-3">
-        <div className="flex items-center justify-between">
-          <Label className="c2p-section-label text-muted-foreground text-xs uppercase tracking-wide">
-            {t("theme.padding")}
-          </Label>
-          <span className="c2p-value-display text-muted-foreground text-xs">
-            {decoration.canvasPaddingPx}px
-          </span>
+        {/* Shadow level markers */}
+        <div className="text-muted-foreground/50 flex justify-between px-0.5 text-[9px]">
+          {SHADOW_LEVELS.map((level) => (
+            <span key={level}>{SHADOW_LABELS[level]}</span>
+          ))}
         </div>
-        <Slider
-          value={[decoration.canvasPaddingPx]}
-          min={0}
-          max={64}
-          step={4}
-          onValueChange={(values) =>
-            onDecorationChange({
-              canvasPaddingPx: values[0] ?? decoration.canvasPaddingPx,
-            })
-          }
-          className="c2p-margin-slider"
-        />
       </div>
 
-      {/* Window Shadow - controls c2p-window box-shadow */}
-      <div className="c2p-window-shadow-section space-y-3">
-        <Label className="c2p-section-label text-muted-foreground text-xs uppercase tracking-wide">
-          {t("theme.shadow")}
-        </Label>
-        <Select
-          value={decoration.shadowLevel}
-          onValueChange={(value: Decoration["shadowLevel"]) =>
-            onDecorationChange({ shadowLevel: value })
-          }
-        >
-          <SelectTrigger className="c2p-shadow-select h-9">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="none">{t("theme.shadow.none")}</SelectItem>
-            <SelectItem value="sm">{t("theme.shadow.small")}</SelectItem>
-            <SelectItem value="md">{t("theme.shadow.medium")}</SelectItem>
-            <SelectItem value="lg">{t("theme.shadow.large")}</SelectItem>
-            <SelectItem value="xl">{t("theme.shadow.extraLarge")}</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* macOS Title Bar Toggle - controls c2p-window-bar visibility */}
-      <div className="c2p-macos-bar-section flex items-center justify-between">
+      {/* macOS Bar Toggle */}
+      <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2">
         <div className="flex items-center gap-2">
-          <Monitor className="text-muted-foreground h-4 w-4" />
-          <Label className="c2p-toggle-label text-sm">
-            {t("theme.macosBar")}
-          </Label>
+          <Monitor className="text-muted-foreground h-3.5 w-3.5" />
+          <Label className="text-xs font-medium">{t("theme.macosBar")}</Label>
         </div>
         <Switch
           checked={decoration.macosBarEnabled}
           onCheckedChange={(checked) =>
             onDecorationChange({ macosBarEnabled: checked })
           }
-          className="c2p-macos-bar-toggle"
+          className="scale-90"
         />
       </div>
     </div>

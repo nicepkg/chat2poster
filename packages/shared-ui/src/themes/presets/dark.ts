@@ -1,8 +1,10 @@
 import type { Theme } from "@chat2poster/core-schema";
 
 /**
- * Dark theme preset
- * A sleek, modern dark theme with comfortable contrast
+ * Dark theme preset - "Midnight"
+ *
+ * A sleek dark theme with vibrant accents for excellent contrast.
+ * All text uses light colors for perfect readability on dark backgrounds.
  */
 export const darkTheme: Theme = {
   id: "dark",
@@ -10,35 +12,43 @@ export const darkTheme: Theme = {
   mode: "dark",
   tokens: {
     fontFamily:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-    baseFontSize: 16,
-    lineHeight: 1.6,
-    bubbleRadius: 12,
+      '"Inter var", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Noto Sans SC", sans-serif',
+    baseFontSize: 15,
+    lineHeight: 1.65,
+    bubbleRadius: 18,
     messagePadding: 16,
-    messageGap: 16,
+    messageGap: 12,
     colors: {
-      background: "#1a1a1a",
+      // Window background - deep dark
+      background: "#0a0a0a",
+      // Primary text - bright white for excellent contrast
       foreground: "#f5f5f5",
-      muted: "#262626",
-      mutedForeground: "#a3a3a3",
-      userBubble: "#1d3a5c",
-      userBubbleForeground: "#e8f0fe",
-      assistantBubble: "#262626",
+      // Muted
+      muted: "#1c1c1e",
+      mutedForeground: "#a1a1aa",
+      // User bubble - vibrant blue
+      userBubble: "#2563eb",
+      userBubbleForeground: "#ffffff",
+      // Assistant bubble - dark gray with light text
+      assistantBubble: "#27272a",
       assistantBubbleForeground: "#f5f5f5",
-      systemBubble: "#3d3319",
+      // System
+      systemBubble: "#422006",
       systemBubbleForeground: "#fcd34d",
-      codeBlockBackground: "#0d0d0d",
-      codeBlockForeground: "#d4d4d4",
-      border: "#333333",
+      // Code
+      codeBlockBackground: "#000000",
+      codeBlockForeground: "#e4e4e7",
+      // Border
+      border: "#3f3f46",
     },
     codeTheme: "github-dark",
   },
   decorationDefaults: {
-    canvasPaddingPx: 32,
-    canvasRadiusPx: 16,
-    shadowLevel: "lg",
+    canvasPaddingPx: 48,
+    canvasRadiusPx: 20,
+    shadowLevel: "xl",
     backgroundType: "solid",
-    backgroundValue: "#0d0d0d",
+    backgroundValue: "#1f2937",
     macosBarEnabled: true,
   },
 };

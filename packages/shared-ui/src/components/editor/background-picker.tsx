@@ -32,26 +32,26 @@ export function BackgroundPicker({
   const { t } = useI18n();
   const resolvedLabel = label ?? t("theme.background");
   return (
-    <div className={cn("c2p-bg-picker space-y-3", className)}>
+    <div className={cn("c2p-bg-picker space-y-2", className)}>
       {resolvedLabel && (
-        <Label className="c2p-bg-picker-label text-muted-foreground text-xs uppercase tracking-wide">
+        <Label className="c2p-bg-picker-label text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
           {resolvedLabel}
         </Label>
       )}
-      <div className="c2p-bg-grid grid grid-cols-4 gap-2">
+      <div className="c2p-bg-grid grid grid-cols-10 gap-1">
         {presets.map((preset) => {
           const isSelected = value === preset.value;
           return (
             <motion.button
               key={preset.id}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => onChange(preset.value, preset.type)}
               className={cn(
-                "c2p-bg-option relative aspect-square rounded-lg border-2 transition-all",
+                "c2p-bg-option relative h-5 w-5 rounded border transition-all",
                 isSelected
-                  ? "c2p-bg-option-selected border-primary ring-primary/20 ring-2"
-                  : "border-transparent hover:border-border",
+                  ? "c2p-bg-option-selected border-primary ring-primary/30 ring-2"
+                  : "border-border/50 hover:border-border",
               )}
               style={{ background: preset.value }}
               title={preset.label}
@@ -60,9 +60,9 @@ export function BackgroundPicker({
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="c2p-bg-option-check absolute inset-0 flex items-center justify-center rounded-md bg-black/20"
+                  className="c2p-bg-option-check absolute inset-0 flex items-center justify-center"
                 >
-                  <Check className="h-4 w-4 text-white drop-shadow" />
+                  <Check className="h-3 w-3 text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]" />
                 </motion.div>
               )}
             </motion.button>

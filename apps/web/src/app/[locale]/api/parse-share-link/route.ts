@@ -7,6 +7,7 @@ import {
   createTranslator,
   type MessageKey,
 } from "@chat2poster/shared-ui/i18n/core";
+import { mergeAdjacentSameRoleMessages } from "@chat2poster/shared-ui/utils";
 import { type NextRequest, NextResponse } from "next/server";
 
 // Register adapters at module load time
@@ -181,9 +182,14 @@ export async function POST(
         `[parse-share-link] Provider: ${validation.provider}, Adapter: ${result.adapterId}, Duration: ${duration}ms, Status: success`,
       );
 
+      // Merge adjacent messages with the same role
+      const mergedConversation = mergeAdjacentSameRoleMessages(
+        result.conversation,
+      );
+
       return NextResponse.json({
         success: true,
-        conversation: result.conversation,
+        conversation: mergedConversation,
       });
     } catch (parseError: unknown) {
       console.error(parseError);

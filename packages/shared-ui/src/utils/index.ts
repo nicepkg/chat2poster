@@ -15,3 +15,6 @@ export * from "./filename";
 
 // Code highlighting
 export * from "./shiki";
+
+// Conversation utilities
+export * from "./conversation";

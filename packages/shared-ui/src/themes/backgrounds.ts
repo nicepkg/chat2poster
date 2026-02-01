@@ -11,43 +11,37 @@ export interface BackgroundPreset {
 }
 
 /**
- * All background presets - single source of truth
- * Used by background-picker and editor-context
+ * Premium solid color backgrounds
+ * Clean, professional colors for beautiful poster exports
  */
 export const BACKGROUND_PRESETS: BackgroundPreset[] = [
-  // Solid colors
+  // === Whites & Neutrals ===
   { id: "white", label: "White", value: "#ffffff", type: "solid" },
-  { id: "slate", label: "Slate", value: "#f8fafc", type: "solid" },
-  { id: "gray", label: "Gray", value: "#f5f5f5", type: "solid" },
-  { id: "amber", label: "Amber", value: "#fef3c7", type: "solid" },
-  { id: "blue", label: "Blue", value: "#dbeafe", type: "solid" },
-  { id: "green", label: "Green", value: "#dcfce7", type: "solid" },
-  { id: "fuchsia", label: "Fuchsia", value: "#fae8ff", type: "solid" },
-  { id: "dark", label: "Dark", value: "#1e1e2e", type: "solid" },
+  { id: "snow", label: "Snow", value: "#fafafa", type: "solid" },
+  { id: "pearl", label: "Pearl", value: "#f5f5f4", type: "solid" },
+  { id: "silver", label: "Silver", value: "#e5e5e5", type: "solid" },
 
-  // Gradients
-  {
-    id: "gradient-indigo",
-    label: "Indigo",
-    value: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    type: "gradient",
-  },
-  {
-    id: "gradient-blue",
-    label: "Blue Gradient",
-    value: "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)",
-    type: "gradient",
-  },
-  {
-    id: "gradient-purple",
-    label: "Purple Gradient",
-    value: "linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)",
-    type: "gradient",
-  },
-  {
-    id: "gradient-sunset",
-    label: "Sunset Gradient",
-    value: "linear-gradient(135deg, #fef3c7 0%, #fce7f3 100%)",
-    type: "gradient",
-  },
+  // === Cool Tones ===
+  { id: "ice", label: "Ice", value: "#f0f9ff", type: "solid" },
+  { id: "sky", label: "Sky", value: "#e0f2fe", type: "solid" },
+  { id: "ocean", label: "Ocean", value: "#0ea5e9", type: "solid" },
+  { id: "navy", label: "Navy", value: "#1e3a5f", type: "solid" },
+
+  // === Warm Tones ===
+  { id: "cream", label: "Cream", value: "#fef7ed", type: "solid" },
+  { id: "peach", label: "Peach", value: "#fed7aa", type: "solid" },
+  { id: "coral", label: "Coral", value: "#f97316", type: "solid" },
+  { id: "rose", label: "Rose", value: "#fda4af", type: "solid" },
+
+  // === Nature ===
+  { id: "mint", label: "Mint", value: "#d1fae5", type: "solid" },
+  { id: "sage", label: "Sage", value: "#86efac", type: "solid" },
+  { id: "forest", label: "Forest", value: "#166534", type: "solid" },
+  { id: "lavender", label: "Lavender", value: "#e9d5ff", type: "solid" },
+
+  // === Darks ===
+  { id: "slate", label: "Slate", value: "#475569", type: "solid" },
+  { id: "graphite", label: "Graphite", value: "#374151", type: "solid" },
+  { id: "charcoal", label: "Charcoal", value: "#1f2937", type: "solid" },
+  { id: "black", label: "Black", value: "#0a0a0a", type: "solid" },
 ];
