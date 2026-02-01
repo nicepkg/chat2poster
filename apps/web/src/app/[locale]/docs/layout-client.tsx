@@ -98,6 +98,11 @@ export default function DocsLayoutClient({
         <SiteFooter
           logo={<Logo width={28} height={28} />}
           description={t("web.footer.description")}
+          navLinks={footerConfig.links.map((link) => ({
+            label: link.label,
+            href: link.href,
+            external: true,
+          }))}
           socialLinks={socialLinks}
           copyright={{
             holder: footerConfig.copyright.holder,

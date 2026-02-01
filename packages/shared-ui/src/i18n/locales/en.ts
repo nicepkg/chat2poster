@@ -58,6 +58,7 @@ const en = {
   "mermaid.error": "Error",
   "mermaid.viewSource": "View source",
   "siteHeader.viewOnGithub": "View on GitHub",
+  "siteHeader.switchLanguage": "Switch language",
   "siteFooter.license": "Released under the {{license}} License.",
   "siteFooter.builtWithPrefix": "Built with",
   "siteFooter.builtWithSuffix": "by",

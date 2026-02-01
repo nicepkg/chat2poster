@@ -16,6 +16,7 @@ import {
   getLocaleFromPath,
   normalizeLocale,
   stripLocaleFromPath,
+  type Locale,
 } from "@chat2poster/shared-ui/i18n/core";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
@@ -99,6 +100,7 @@ function LayoutFrame({
   showHeaderFooter: boolean;
 }) {
   const { t, locale } = useI18n();
+  const pathname = usePathname();
   const localePrefix = `/${locale}`;
   const navItems = useMemo<NavItem[]>(
     () => [
@@ -109,6 +111,11 @@ function LayoutFrame({
     [localePrefix, t],
   );
 
+  const handleLocaleChange = (newLocale: Locale) => {
+    const pathWithoutLocale = stripLocaleFromPath(pathname);
+    onNavigate(`/${newLocale}${pathWithoutLocale}`);
+  };
+
   return (
     <>
       {showHeaderFooter && (
@@ -117,7 +124,9 @@ function LayoutFrame({
           navItems={navItems}
           githubUrl={githubConfig.url}
           showThemeToggle
+          showLocaleToggle
           onNavigate={onNavigate}
+          onLocaleChange={handleLocaleChange}
         />
       )}
       <div className={showHeaderFooter ? "min-h-[calc(100vh-64px)]" : ""}>
@@ -127,6 +136,11 @@ function LayoutFrame({
         <SiteFooter
           logo={<Logo width={28} height={28} name={siteConfig.name} />}
           description={t("web.footer.description")}
+          navLinks={footerConfig.links.map((link) => ({
+            label: link.label,
+            href: link.href,
+            external: true,
+          }))}
           socialLinks={socialLinks}
           copyright={{
             holder: footerConfig.copyright.holder,

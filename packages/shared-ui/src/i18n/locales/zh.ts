@@ -59,6 +59,7 @@ const zh: LocaleMessages = {
   "mermaid.error": "错误",
   "mermaid.viewSource": "查看源码",
   "siteHeader.viewOnGithub": "查看 GitHub",
+  "siteHeader.switchLanguage": "切换语言",
   "siteFooter.license": "以 {{license}} 许可发布。",
   "siteFooter.builtWithPrefix": "由",
   "siteFooter.builtWithSuffix": "构建",

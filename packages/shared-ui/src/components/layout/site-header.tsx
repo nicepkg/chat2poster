@@ -4,17 +4,21 @@ import { Github } from "lucide-react";
 import * as React from "react";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "./theme-toggle";
+import { LocaleToggle } from "./locale-toggle";
 import { MobileNav, type NavItem } from "./mobile-nav";
 import { cn } from "../../utils";
 import { useI18n } from "~/i18n";
+import type { Locale } from "~/i18n/core";
 
 export interface SiteHeaderProps {
   logo: React.ReactNode;
   navItems?: NavItem[];
   githubUrl?: string;
   showThemeToggle?: boolean;
+  showLocaleToggle?: boolean;
   className?: string;
   onNavigate?: (href: string) => void;
+  onLocaleChange?: (locale: Locale) => void;
 }
 
 export function SiteHeader({
@@ -22,8 +26,10 @@ export function SiteHeader({
   navItems = [],
   githubUrl,
   showThemeToggle = true,
+  showLocaleToggle = false,
   className,
   onNavigate,
+  onLocaleChange,
 }: SiteHeaderProps) {
   const { t } = useI18n();
   return (
@@ -45,7 +51,12 @@ export function SiteHeader({
             onNavigate={onNavigate}
             footer={
               <div className="flex items-center justify-between">
-                {showThemeToggle && <ThemeToggle />}
+                <div className="flex items-center gap-2">
+                  {showLocaleToggle && (
+                    <LocaleToggle onLocaleChange={onLocaleChange} />
+                  )}
+                  {showThemeToggle && <ThemeToggle />}
+                </div>
                 {githubUrl && (
                   <a
                     href={githubUrl}
@@ -101,6 +112,9 @@ export function SiteHeader({
 
         {/* Right: Actions */}
         <div className="hidden md:flex items-center gap-2">
+          {showLocaleToggle && (
+            <LocaleToggle onLocaleChange={onLocaleChange} />
+          )}
           {showThemeToggle && <ThemeToggle />}
           {githubUrl && (
             <Button
