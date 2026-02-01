@@ -2,8 +2,32 @@
  * Core export engine using SnapDOM
  */
 
-import { createAppError, type ExportScale, type AppError } from "@chat2poster/core-schema";
+import {
+  createAppError,
+  type ExportScale,
+  type ExportFormat,
+  type AppError,
+} from "@chat2poster/core-schema";
 import { waitForResources } from "./resource-loader";
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+/** Default timeout for font loading in milliseconds */
+export const FONT_TIMEOUT_MS = 5000;
+
+/** Default timeout for image loading in milliseconds */
+export const IMAGE_TIMEOUT_MS = 10000;
+
+/** Default JPEG quality (0-1) */
+export const DEFAULT_JPEG_QUALITY = 0.92;
+
+/** Maximum canvas dimension (conservative limit for Safari) */
+export const MAX_CANVAS_DIMENSION = 16384;
+
+/** Maximum total canvas pixels (~268 million) */
+export const MAX_CANVAS_PIXELS = 268435456;
 
 /**
  * Export options
@@ -12,7 +36,7 @@ export interface ExportOptions {
   /** Scale factor for the output (1x, 2x, 3x) */
   scale: ExportScale;
   /** Output format */
-  format: "png" | "jpeg";
+  format: ExportFormat;
   /** JPEG quality (0-1), only used for JPEG format */
   quality?: number;
   /** Wait for fonts to load */
@@ -33,11 +57,11 @@ export interface ExportOptions {
 export const DEFAULT_EXPORT_OPTIONS: ExportOptions = {
   scale: 2,
   format: "png",
-  quality: 0.92,
+  quality: DEFAULT_JPEG_QUALITY,
   waitForFonts: true,
   waitForImages: true,
-  fontTimeout: 5000,
-  imageTimeout: 10000,
+  fontTimeout: FONT_TIMEOUT_MS,
+  imageTimeout: IMAGE_TIMEOUT_MS,
 };
 
 /**
@@ -103,7 +127,7 @@ async function elementToCanvas(
  */
 function canvasToBlob(
   canvas: HTMLCanvasElement,
-  format: "png" | "jpeg",
+  format: ExportFormat,
   quality?: number
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
@@ -127,7 +151,7 @@ function canvasToBlob(
  */
 function canvasToDataUrl(
   canvas: HTMLCanvasElement,
-  format: "png" | "jpeg",
+  format: ExportFormat,
   quality?: number
 ): string {
   const mimeType = format === "jpeg" ? "image/jpeg" : "image/png";
@@ -231,17 +255,11 @@ export async function exportElement(
  * Different browsers have different maximum canvas sizes
  */
 export function isCanvasSizeValid(width: number, height: number): boolean {
-  // Common browser limits:
-  // Chrome/Firefox: ~32767 x 32767 or ~268 million pixels
-  // Safari: ~16384 x 16384
-  const MAX_DIMENSION = 16384; // Conservative limit for Safari
-  const MAX_PIXELS = 268435456; // ~268 million pixels
-
-  if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+  if (width > MAX_CANVAS_DIMENSION || height > MAX_CANVAS_DIMENSION) {
     return false;
   }
 
-  if (width * height > MAX_PIXELS) {
+  if (width * height > MAX_CANVAS_PIXELS) {
     return false;
   }
 

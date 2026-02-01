@@ -10,11 +10,13 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { ScrollArea } from "../ui/scroll-area";
 
+type MessageId = Message["id"];
+
 export interface MessagesTabProps {
   messages: Message[];
-  selectedIds: string[];
+  selectedIds: MessageId[];
   pageBreaks: Pick<PageBreak, "id" | "afterMessageId">[];
-  onToggle: (id: string) => void;
+  onToggle: (id: MessageId) => void;
   onSelectAll: () => void;
   onDeselectAll: () => void;
   onAddPageBreak: (afterMessageId: string) => void;

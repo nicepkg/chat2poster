@@ -17,6 +17,7 @@ import type {
   Theme,
 } from "@chat2poster/core-schema";
 import { THEME_PRESETS, BACKGROUND_PRESETS } from "~/themes";
+import { generateUUID } from "~/utils/uuid";
 
 // Re-export for backward compatibility
 export { THEME_PRESETS, BACKGROUND_PRESETS };
@@ -141,7 +142,7 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
     case "ADD_PAGE_BREAK": {
       if (!state.selection) return state;
       const newPageBreak: PageBreak = {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         afterMessageId: action.payload.afterMessageId,
         createdAt: new Date().toISOString(),
       };

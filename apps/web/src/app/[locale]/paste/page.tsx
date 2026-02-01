@@ -6,6 +6,7 @@ import {
   CardContent,
   Textarea,
   useI18n,
+  generateUUID,
 } from "@chat2poster/shared-ui";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -90,7 +91,7 @@ export default function PasteImportPage() {
         if (userMatch) {
           if (currentContent.length > 0) {
             messages.push({
-              id: crypto.randomUUID(),
+              id: generateUUID(),
               role: currentRole,
               content: currentContent.join("\n").trim(),
             });
@@ -102,7 +103,7 @@ export default function PasteImportPage() {
         } else if (assistantMatch) {
           if (currentContent.length > 0) {
             messages.push({
-              id: crypto.randomUUID(),
+              id: generateUUID(),
               role: currentRole,
               content: currentContent.join("\n").trim(),
             });
@@ -118,7 +119,7 @@ export default function PasteImportPage() {
 
       if (currentContent.length > 0) {
         messages.push({
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           role: currentRole,
           content: currentContent.join("\n").trim(),
         });
@@ -126,7 +127,7 @@ export default function PasteImportPage() {
 
       if (messages.length === 0) {
         messages.push({
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           role: "assistant",
           content: pastedText.trim(),
         });

@@ -12,6 +12,7 @@ import {
   SelectValue,
   cn,
   useI18n,
+  generateUUID,
 } from "@chat2poster/shared-ui";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import {
@@ -38,8 +39,8 @@ export default function ManualBuilderPage() {
   const { t, locale } = useI18n();
   const router = useRouter();
   const [messages, setMessages] = useState<MessageInput[]>([
-    { id: crypto.randomUUID(), role: "user", content: "" },
-    { id: crypto.randomUUID(), role: "assistant", content: "" },
+    { id: generateUUID(), role: "user", content: "" },
+    { id: generateUUID(), role: "assistant", content: "" },
   ]);
   const validCount = messages.filter((m) => m.content.trim()).length;
   const roleUser = t("web.manual.roleUser");
@@ -54,7 +55,7 @@ export default function ManualBuilderPage() {
     setMessages((prev) => [
       ...prev,
       {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         role: lastRole === "user" ? "assistant" : "user",
         content: "",
       },

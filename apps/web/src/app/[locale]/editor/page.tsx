@@ -16,6 +16,7 @@ import {
   DrawerTrigger,
   Button,
   useI18n,
+  generateUUID,
 } from "@chat2poster/shared-ui";
 import "@chat2poster/shared-ui/styles/renderer.css";
 import { motion } from "framer-motion";
@@ -56,7 +57,7 @@ function loadConversationFromStorage() {
         content: string;
       }>;
       return {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         messages: parsed.map((m, idx) => ({
           id: m.id,
           role: m.role,

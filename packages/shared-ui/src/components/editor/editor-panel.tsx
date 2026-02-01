@@ -4,6 +4,7 @@ import * as React from "react";
 import { useState, useCallback, useEffect } from "react";
 import type { Conversation } from "@chat2poster/core-schema";
 import { cn } from "~/utils/common";
+import { generateUUID } from "~/utils/uuid";
 import { useEditor } from "~/contexts/editor-context";
 import { useI18n } from "~/i18n";
 import { MessagesTab } from "./messages-tab";
@@ -71,31 +72,31 @@ export function EditorPanel({
       } else {
         // Use mock data if no onParse provided
         const mockConversation: Conversation = {
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           sourceType: "extension-current",
           messages: [
             {
-              id: crypto.randomUUID(),
+              id: generateUUID(),
               role: "user",
               contentMarkdown: "Hello, can you help me with something?",
               order: 0,
             },
             {
-              id: crypto.randomUUID(),
+              id: generateUUID(),
               role: "assistant",
               contentMarkdown:
                 "Of course! I'd be happy to help. What do you need assistance with?",
               order: 1,
             },
             {
-              id: crypto.randomUUID(),
+              id: generateUUID(),
               role: "user",
               contentMarkdown:
                 "I need to understand how React hooks work, especially useEffect.",
               order: 2,
             },
             {
-              id: crypto.randomUUID(),
+              id: generateUUID(),
               role: "assistant",
               contentMarkdown: `Great question! \`useEffect\` is one of the most commonly used React hooks. Here's a quick overview:\n\n**Basic Usage:**\n\`\`\`javascript\nuseEffect(() => {\n  // Side effect code here\n  return () => {\n    // Cleanup function\n  };\n}, [dependencies]);\n\`\`\`\n\n**Key Points:**\n- Runs after every render by default\n- Add a dependency array to control when it runs\n- Return a cleanup function for subscriptions/timers`,
               order: 3,

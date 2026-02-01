@@ -1,6 +1,12 @@
 import { z } from "zod";
 
 /**
+ * Export image format
+ */
+export const ExportFormat = z.enum(["png", "jpeg"]);
+export type ExportFormat = z.infer<typeof ExportFormat>;
+
+/**
  * Canvas width preset
  */
 export const CanvasPreset = z.enum([
