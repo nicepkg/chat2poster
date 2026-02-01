@@ -1,13 +1,31 @@
 import { z } from "zod";
 
 /**
+ * Device type for desktop width preset
+ * - mobile: Phone-sized export (390px - iPhone 14 Pro)
+ * - tablet: Tablet-sized export (768px - iPad)
+ * - desktop: Desktop-sized export (1200px)
+ */
+export const DeviceType = z.enum(["mobile", "tablet", "desktop"]);
+export type DeviceType = z.infer<typeof DeviceType>;
+
+/**
+ * Device width presets in pixels
+ * These define the desktop (canvas) width for each device type
+ */
+export const DEVICE_WIDTHS: Record<DeviceType, number> = {
+  mobile: 390,
+  tablet: 768,
+  desktop: 1200,
+} as const;
+
+/**
  * Default values for export parameters.
  * These are the single source of truth - use these constants instead of hardcoding values.
  */
 export const EXPORT_DEFAULTS = {
   SCALE: 2 as const,
-  CANVAS_PRESET: "portrait" as const,
-  CANVAS_WIDTH_PX: 1080,
+  DEVICE_TYPE: "tablet" as const,
   MAX_PAGE_HEIGHT_PX: 4096,
   OUTPUT_MODE: "single" as const,
 } as const;
@@ -17,18 +35,6 @@ export const EXPORT_DEFAULTS = {
  */
 export const ExportFormat = z.enum(["png", "jpeg"]);
 export type ExportFormat = z.infer<typeof ExportFormat>;
-
-/**
- * Canvas width preset
- */
-export const CanvasPreset = z.enum([
-  "square", // 1080x1080
-  "portrait", // 1080x1350
-  "story", // 1080x1920
-  "wide", // 1920x1080
-  "custom",
-]);
-export type CanvasPreset = z.infer<typeof CanvasPreset>;
 
 /**
  * Export scale factor
@@ -44,26 +50,39 @@ export type OutputMode = z.infer<typeof OutputMode>;
 
 /**
  * Export parameters
+ *
+ * Desktop width is determined by deviceType:
+ * - mobile: 390px (iPhone 14 Pro)
+ * - tablet: 768px (iPad)
+ * - desktop: 1200px
+ *
+ * Window width = Desktop width - (canvasPaddingPx × 2)
  */
 export const ExportParams = z
   .object({
+    /** Export scale factor (1x, 2x, 3x) */
     scale: ExportScale.default(EXPORT_DEFAULTS.SCALE),
-    canvasPreset: CanvasPreset.default(EXPORT_DEFAULTS.CANVAS_PRESET),
-    canvasWidthPx: z
-      .number()
-      .int()
-      .positive()
-      .default(EXPORT_DEFAULTS.CANVAS_WIDTH_PX),
+    /** Device type determines desktop width */
+    deviceType: DeviceType.default(EXPORT_DEFAULTS.DEVICE_TYPE),
+    /** Maximum page height before auto-pagination */
     maxPageHeightPx: z
       .number()
       .int()
       .min(2000)
       .max(10000)
       .default(EXPORT_DEFAULTS.MAX_PAGE_HEIGHT_PX),
+    /** Output mode: single PNG or multi-page ZIP */
     outputMode: OutputMode.default(EXPORT_DEFAULTS.OUTPUT_MODE),
   })
   .strict();
 export type ExportParams = z.infer<typeof ExportParams>;
+
+/**
+ * Get desktop width in pixels for a device type
+ */
+export function getDesktopWidth(deviceType: DeviceType): number {
+  return DEVICE_WIDTHS[deviceType];
+}
 
 /**
  * Export job status

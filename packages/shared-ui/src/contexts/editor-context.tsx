@@ -32,6 +32,8 @@ export interface EditorState {
   decoration: Decoration;
   exportParams: ExportParams;
   autoPagination: boolean;
+  /** Current page index for preview (0-based) */
+  currentPage: number;
 }
 
 export interface RuntimeState {
@@ -54,6 +56,7 @@ export type EditorAction =
   | { type: "SET_DECORATION"; payload: Partial<Decoration> }
   | { type: "SET_EXPORT_PARAMS"; payload: Partial<ExportParams> }
   | { type: "SET_AUTO_PAGINATION"; payload: boolean }
+  | { type: "SET_CURRENT_PAGE"; payload: number }
   | { type: "RESET" };
 
 export type RuntimeAction =
@@ -74,8 +77,7 @@ const defaultDecoration: Decoration = {
 
 const defaultExportParams: ExportParams = {
   scale: EXPORT_DEFAULTS.SCALE,
-  canvasPreset: EXPORT_DEFAULTS.CANVAS_PRESET,
-  canvasWidthPx: EXPORT_DEFAULTS.CANVAS_WIDTH_PX,
+  deviceType: EXPORT_DEFAULTS.DEVICE_TYPE,
   maxPageHeightPx: EXPORT_DEFAULTS.MAX_PAGE_HEIGHT_PX,
   outputMode: EXPORT_DEFAULTS.OUTPUT_MODE,
 };
@@ -87,6 +89,7 @@ const initialEditorState: EditorState = {
   decoration: defaultDecoration,
   exportParams: defaultExportParams,
   autoPagination: false,
+  currentPage: 0,
 };
 
 const initialRuntimeState: RuntimeState = {
@@ -199,6 +202,9 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
     case "SET_AUTO_PAGINATION":
       return { ...state, autoPagination: action.payload };
 
+    case "SET_CURRENT_PAGE":
+      return { ...state, currentPage: action.payload };
+
     case "RESET":
       return initialEditorState;
 
@@ -243,6 +249,7 @@ export interface EditorContextValue {
     setDecoration: (decoration: Partial<Decoration>) => void;
     setExportParams: (params: Partial<ExportParams>) => void;
     setAutoPagination: (enabled: boolean) => void;
+    setCurrentPage: (page: number) => void;
   };
 }
 
@@ -368,6 +375,11 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const setCurrentPage = useCallback(
+    (page: number) => dispatch({ type: "SET_CURRENT_PAGE", payload: page }),
+    [],
+  );
+
   const value: EditorContextValue = {
     editor,
     runtime,
@@ -383,6 +395,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       setDecoration,
       setExportParams,
       setAutoPagination,
+      setCurrentPage,
     },
   };
 

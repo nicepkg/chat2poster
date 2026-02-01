@@ -5,9 +5,7 @@ import {
   Card,
   EditorProvider,
   EditorTabs,
-  EditorHeader,
   EditorPreview,
-  ExportButton,
   useEditor,
   useIsMobile,
   Drawer,
@@ -100,7 +98,7 @@ function MobileSettingsDrawer({ title }: { title: string }) {
           <DrawerTitle>{title}</DrawerTitle>
         </DrawerHeader>
         <div className="flex-1 overflow-y-auto">
-          <EditorTabs defaultTab="messages" />
+          <EditorTabs defaultTab="theme" />
         </div>
       </DrawerContent>
     </Drawer>
@@ -157,8 +155,7 @@ function EditorContent() {
     await new Promise((resolve) => setTimeout(resolve, 1500));
   }, []);
 
-  // Calculate page count
-  const pageCount = (editor.selection?.pageBreaks.length ?? 0) + 1;
+  // Count selected messages for export disabled state
   const selectedCount = editor.selection?.selectedMessageIds.length ?? 0;
 
   // Loading state
@@ -180,20 +177,8 @@ function EditorContent() {
   }
 
   return (
-    <main className="bg-muted/30 flex min-h-screen flex-col">
-      <EditorHeader
-        backHref={`/${locale}/import`}
-        backLabel={t("web.editor.back")}
-        exportSlot={
-          <ExportButton
-            pageCount={pageCount}
-            disabled={selectedCount === 0}
-            onExport={handleExport}
-          />
-        }
-      />
-
-      <div className="mx-auto flex w-full max-w-7xl flex-1 gap-6 p-4 lg:p-6">
+    <main className="bg-muted/30">
+      <div className="mx-auto flex h-[calc(100vh-64px)] w-full max-w-7xl gap-4 p-4">
         {/* Left Panel - Settings (Desktop only) */}
         {!isMobile && (
           <motion.div
@@ -202,8 +187,8 @@ function EditorContent() {
             transition={{ delay: 0.1 }}
             className="hidden w-80 shrink-0 lg:block"
           >
-            <Card className="bg-card/80 sticky top-24 h-[calc(100vh-140px)] overflow-hidden backdrop-blur-sm">
-              <EditorTabs defaultTab="messages" />
+            <Card className="bg-card/80 h-full overflow-hidden backdrop-blur-sm py-0">
+              <EditorTabs defaultTab="theme" />
             </Card>
           </motion.div>
         )}
@@ -213,9 +198,14 @@ function EditorContent() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="flex-1 overflow-hidden"
+          className="min-h-0 flex-1 overflow-hidden"
         >
-          <EditorPreview canvasRef={canvasRef} />
+          <EditorPreview
+            canvasRef={canvasRef}
+            onExport={handleExport}
+            exportDisabled={selectedCount === 0}
+            className="h-full"
+          />
         </motion.div>
       </div>
 

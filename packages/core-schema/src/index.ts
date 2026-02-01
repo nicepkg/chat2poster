@@ -40,9 +40,10 @@ export {
 
 // Export types
 export {
+  DeviceType,
+  DEVICE_WIDTHS,
   EXPORT_DEFAULTS,
   ExportFormat,
-  CanvasPreset,
   ExportScale,
   OutputMode,
   ExportParams,
@@ -51,6 +52,7 @@ export {
   ExportError,
   ExportJob,
   createExportJob,
+  getDesktopWidth,
 } from "./export";
 
 // Adapter types

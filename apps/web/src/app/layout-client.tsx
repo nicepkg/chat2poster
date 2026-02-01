@@ -59,13 +59,12 @@ export function RootLayoutClient({ children }: { children: React.ReactNode }) {
   // Check if we're on a docs page - don't show header/footer there (Nextra has its own)
   const stripLocalePath = stripLocaleFromPath(pathname);
   const isDocsPage = stripLocalePath.startsWith("/docs");
-  // Check if we're on the editor page - no header/footer needed
-  const isEditorPage = stripLocalePath === "/editor";
   // Check if we're on manual or paste page - minimal header/footer
   const isMinimalPage =
     stripLocalePath === "/manual" || stripLocalePath === "/paste";
 
-  const showHeaderFooter = !isDocsPage && !isEditorPage && !isMinimalPage;
+  const showHeader = !isDocsPage && !isMinimalPage;
+  const showFooter = !isDocsPage && !isMinimalPage;
 
   const handleNavigate = (href: string) => {
     router.push(href);
@@ -82,7 +81,8 @@ export function RootLayoutClient({ children }: { children: React.ReactNode }) {
       <ThemeProvider>
         <LayoutFrame
           onNavigate={handleNavigate}
-          showHeaderFooter={showHeaderFooter}
+          showHeader={showHeader}
+          showFooter={showFooter}
         >
           {children}
         </LayoutFrame>
@@ -95,11 +95,13 @@ export function RootLayoutClient({ children }: { children: React.ReactNode }) {
 function LayoutFrame({
   children,
   onNavigate,
-  showHeaderFooter,
+  showHeader,
+  showFooter,
 }: {
   children: React.ReactNode;
   onNavigate: (href: string) => void;
-  showHeaderFooter: boolean;
+  showHeader: boolean;
+  showFooter: boolean;
 }) {
   const { t, locale } = useI18n();
   const pathname = usePathname();
@@ -120,7 +122,7 @@ function LayoutFrame({
 
   return (
     <>
-      {showHeaderFooter && (
+      {showHeader && (
         <SiteHeader
           logo={<Logo width={28} height={28} name={siteConfig.name} />}
           navItems={navItems}
@@ -131,10 +133,10 @@ function LayoutFrame({
           onLocaleChange={handleLocaleChange}
         />
       )}
-      <div className={showHeaderFooter ? "min-h-[calc(100vh-64px)]" : ""}>
+      <div className={showHeader ? "min-h-[calc(100vh-64px)]" : ""}>
         {children}
       </div>
-      {showHeaderFooter && (
+      {showFooter && (
         <SiteFooter
           logo={<Logo width={28} height={28} name={siteConfig.name} />}
           description={t("web.footer.description")}
