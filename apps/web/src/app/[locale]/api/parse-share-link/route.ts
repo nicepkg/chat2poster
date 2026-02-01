@@ -186,6 +186,7 @@ export async function POST(
         conversation: result.conversation,
       });
     } catch (parseError: unknown) {
+      console.error(parseError);
       const duration = Date.now() - startTime;
 
       // Handle different error types

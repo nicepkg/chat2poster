@@ -14,7 +14,8 @@
     "**/*.js",
     "**/*.jsx",
     "**/*.mjs",
-    "**/*.cjs"
+    "**/*.cjs",
+    "**/*.json"
   ],
   "exclude": ["node_modules", "dist"]
 }

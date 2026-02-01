@@ -71,7 +71,7 @@ describe("ChatGPTShareLinkAdapter", () => {
     });
 
     it("should have version", () => {
-      expect(chatGPTShareLinkAdapter.version).toBe("1.0.0");
+      expect(chatGPTShareLinkAdapter.version).toBe("2.0.0");
     });
   });
 });

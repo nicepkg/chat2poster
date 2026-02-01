@@ -63,6 +63,29 @@ export {
 } from "./base";
 export type { AdapterConfig, ConversationOptions, RawMessage } from "./base";
 
+// Network utilities
+export {
+  generateChromeUserAgent,
+  generateFirefoxUserAgent,
+  getRealUserHeaders,
+  getRequestHeaders,
+  getHtmlHeaders,
+  getJsonHeaders,
+  getApiHeaders,
+  getSameOriginHeaders,
+  fetchExternal,
+  fetchHtml,
+  fetchJson,
+  isUrlReachable,
+  getRedirectUrl,
+} from "./network";
+export type {
+  HeaderPreset,
+  HeaderOptions,
+  FetchOptions,
+  FetchResult,
+} from "./network";
+
 // Adapter implementations
 export {
   // DOM adapters

@@ -2,75 +2,625 @@
  * ChatGPT Share Link Adapter
  *
  * Parses conversations from ChatGPT share link pages.
+ * Based on the chatgpt-share-to-markdown Python implementation.
  *
  * Share Link URL Format:
  * - https://chatgpt.com/s/t_{id}
  * - https://chatgpt.com/share/{id}
  * - https://chat.openai.com/share/{id}
  *
- * Note: ChatGPT share pages use React Server Components with streaming.
- * The conversation data is loaded dynamically via JavaScript, not embedded
- * in the initial HTML. This adapter attempts multiple extraction strategies:
+ * Supports two extraction strategies:
+ * 1. Modern: React Flight loader payload (streamController.enqueue)
+ * 2. Legacy: __NEXT_DATA__ script tag
  *
- * 1. Look for __NEXT_DATA__ script (older versions)
- * 2. Look for React Server Component streaming chunks
- * 3. Parse DOM structure if JavaScript has rendered
- * 4. Try backend API (requires CORS proxy in browser)
+ * @see https://github.com/nicepkg/chat2poster
  */
 
 import type { Provider } from "@chat2poster/core-schema";
 import { createAppError } from "@chat2poster/core-schema";
 import { BaseShareLinkAdapter, type RawMessage } from "../base";
+import { fetchHtml } from "../network";
+
+// =============================================================================
+// Types
+// =============================================================================
+
+type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
+interface MessageAuthor {
+  role?: string;
+  name?: string;
+}
+
+interface MessageContent {
+  content_type?: string;
+  parts?: (string | Record<string, JsonValue>)[];
+  text?: string;
+  language?: string;
+  thoughts?: Array<{ summary?: string; content?: string }>;
+}
+
+interface MessageNode {
+  id?: string;
+  message?: {
+    id?: string;
+    author?: MessageAuthor;
+    content?: MessageContent;
+    create_time?: number;
+    metadata?: {
+      attachments?: Array<{
+        download_url?: string;
+        file_url?: string;
+        mime_type?: string;
+        name?: string;
+        title?: string;
+        file_type?: string;
+        type?: string;
+      }>;
+    };
+  };
+  parent?: string;
+  children?: string[];
+}
+
+interface ShareData {
+  title?: string;
+  model?: { slug?: string };
+  update_time?: number;
+  mapping?: Record<string, MessageNode>;
+  linear_conversation?: Array<{ id?: string }>;
+}
+
+interface ServerResponse {
+  data?: ShareData;
+  sharedConversationId?: string;
+}
+
+interface LoaderData {
+  "routes/share.$shareId.($action)"?: {
+    serverResponse?: ServerResponse;
+    sharedConversationId?: string;
+  };
+}
+
+interface DecodedLoader {
+  loaderData?: LoaderData;
+}
+
+// =============================================================================
+// Text Processing Utilities
+// =============================================================================
+
+/** Pattern to match Unicode private use area characters */
+const PRIVATE_USE_PATTERN = /[\uE000-\uF8FF]/g;
+
+/** Pattern to match citation tokens */
+const CITATION_TOKEN_PATTERN = /\s*(?:citeturn|navlist|turn\d+\w*)[^,\s]*,?/g;
 
 /**
- * ChatGPT conversation structure from share page
+ * Strip private use Unicode characters
  */
-interface ChatGPTShareData {
-  title?: string;
-  create_time?: number;
-  update_time?: number;
-  mapping?: Record<
-    string,
-    {
-      id: string;
-      message?: {
-        id: string;
-        author: {
-          role: "user" | "assistant" | "system" | "tool";
-          name?: string;
-        };
-        content: {
-          content_type: string;
-          parts?: string[];
-          text?: string;
-        };
-        create_time?: number;
-      };
-      parent?: string;
-      children?: string[];
+function stripPrivateUse(text: string): string {
+  return text.replace(PRIVATE_USE_PATTERN, "");
+}
+
+/**
+ * Strip citation tokens from text
+ */
+function stripCitationTokens(text: string): string {
+  if (!text) return text;
+  return text
+    .split("\n")
+    .map((line) => line.replace(CITATION_TOKEN_PATTERN, "").trimEnd())
+    .join("\n");
+}
+
+// =============================================================================
+// React Flight Loader Decoder
+// =============================================================================
+
+/**
+ * Decode a flattened React Flight loader array into structured data.
+ *
+ * The loader format is a flat array where:
+ * - Odd indices contain keys (strings)
+ * - Even indices contain values (which may be integers referencing other indices)
+ * - Objects use keys like "_1", "_2" that reference other indices
+ */
+function decodeLoader(loader: JsonValue[]): DecodedLoader {
+  const cache = new Map<number, JsonValue>();
+
+  /**
+   * Decode a key that might be a reference (e.g., "_1" -> loader[1])
+   */
+  function decodeKey(rawKey: JsonValue): string {
+    if (
+      typeof rawKey === "string" &&
+      rawKey.startsWith("_") &&
+      /^\d+$/.test(rawKey.slice(1))
+    ) {
+      const idx = parseInt(rawKey.slice(1), 10);
+      if (idx >= 0 && idx < loader.length) {
+        const candidate = loader[idx];
+        if (typeof candidate === "string") {
+          return candidate;
+        }
+      }
     }
-  >;
-  linear_conversation?: Array<{
-    id: string;
-    message?: {
-      author: { role: string };
-      content: {
-        content_type?: string;
-        parts?: string[];
-        text?: string;
+    return typeof rawKey === "object" && rawKey !== null
+      ? JSON.stringify(rawKey)
+      : String(rawKey);
+  }
+
+  /**
+   * Resolve a value, following integer references
+   */
+  function resolve(value: JsonValue): JsonValue {
+    // Integer reference to another index
+    if (typeof value === "number" && Number.isInteger(value)) {
+      if (cache.has(value)) {
+        return cache.get(value)!;
+      }
+      if (value < 0 || value >= loader.length) {
+        return value;
+      }
+      cache.set(value, null);
+      const loaderValue = loader[value];
+      if (loaderValue === undefined) return value;
+      const resolved = resolve(loaderValue);
+      cache.set(value, resolved);
+      return resolved;
+    }
+
+    // Array - resolve each element
+    if (Array.isArray(value)) {
+      return value.map((item) => resolve(item));
+    }
+
+    // Object - resolve values and decode keys
+    if (typeof value === "object" && value !== null) {
+      const result: Record<string, JsonValue> = {};
+      for (const [k, v] of Object.entries(value)) {
+        result[decodeKey(k)] = resolve(v);
+      }
+      return result;
+    }
+
+    return value;
+  }
+
+  // Build the result by iterating through key-value pairs
+  const resolved: Record<string, JsonValue> = {};
+  const iter = loader.slice(1);
+
+  for (let i = 0; i < iter.length - 1; i += 2) {
+    const key = iter[i];
+    const value = iter[i + 1];
+    if (typeof key === "string" && !(key in resolved) && value !== undefined) {
+      resolved[key] = resolve(value);
+    }
+  }
+
+  return resolved as unknown as DecodedLoader;
+}
+
+// =============================================================================
+// Content Extraction
+// =============================================================================
+
+/**
+ * Flatten message content into a string based on content type
+ */
+function flattenMessageContent(content: MessageContent): string {
+  const contentType = content.content_type;
+
+  // Text content
+  if (contentType === "text") {
+    const parts = content.parts ?? [];
+    const textParts: string[] = [];
+
+    for (const part of parts) {
+      if (typeof part !== "string") continue;
+
+      let cleaned = stripPrivateUse(part).trim();
+
+      // Try to parse JSON response
+      if (cleaned.startsWith("{") && cleaned.endsWith("}")) {
+        try {
+          const json = JSON.parse(cleaned) as Record<string, unknown>;
+          if (typeof json.response === "string") {
+            cleaned = json.response;
+          } else if (typeof json.content === "string") {
+            cleaned = json.content;
+          }
+        } catch {
+          // Keep original
+        }
+      }
+
+      if (cleaned) {
+        textParts.push(cleaned);
+      }
+    }
+
+    return textParts.join("\n\n");
+  }
+
+  // Code content
+  if (contentType === "code") {
+    const lang =
+      content.language && content.language !== "unknown"
+        ? content.language
+        : "";
+    let body = typeof content.text === "string" ? content.text.trimEnd() : "";
+
+    if (body) {
+      // Try to summarize tool payload
+      try {
+        const json = JSON.parse(body) as Record<string, unknown>;
+        // Remove response_length and format nicely
+        const cleaned = Object.fromEntries(
+          Object.entries(json).filter(([k]) => k !== "response_length"),
+        );
+        if (Object.keys(cleaned).length > 0) {
+          body = JSON.stringify(cleaned, null, 2);
+        } else {
+          return "";
+        }
+      } catch {
+        // Not JSON, keep as is
+      }
+    }
+
+    return body ? `\`\`\`${lang}\n${body}\n\`\`\`` : "";
+  }
+
+  // Thoughts content
+  if (contentType === "thoughts") {
+    const thoughts = content.thoughts ?? [];
+    const parts: string[] = [];
+
+    for (const thought of thoughts) {
+      const summary = thought.summary ?? "";
+      const detail = thought.content ?? "";
+      const combined = [summary, detail].filter(Boolean).join(": ");
+      if (combined) {
+        parts.push(`_${combined}_`);
+      }
+    }
+
+    return parts.join("\n\n");
+  }
+
+  // Reasoning recap
+  if (contentType === "reasoning_recap") {
+    const recap = typeof content.text === "string" ? content.text.trim() : "";
+    return recap ? `_${recap}_` : "";
+  }
+
+  // Multimodal text
+  if (contentType === "multimodal_text") {
+    const parts = content.parts ?? [];
+    const segments: string[] = [];
+
+    for (const part of parts) {
+      if (typeof part === "string") {
+        segments.push(stripPrivateUse(part));
+        continue;
+      }
+
+      if (typeof part === "object" && part !== null) {
+        const pType =
+          (part as Record<string, unknown>).content_type ??
+          (part as Record<string, unknown>).type;
+
+        if (pType === "text") {
+          const texts = (part as Record<string, unknown>).text;
+          if (Array.isArray(texts)) {
+            segments.push(
+              ...texts
+                .filter((t): t is string => typeof t === "string")
+                .map(stripPrivateUse),
+            );
+          } else if (typeof texts === "string") {
+            segments.push(stripPrivateUse(texts));
+          }
+        }
+        // Skip image_asset_pointer and file types (not downloadable server-side)
+      }
+    }
+
+    return segments
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .join("\n\n");
+  }
+
+  // Tool response
+  if (contentType === "tool_response") {
+    const output =
+      typeof (content as Record<string, unknown>).output === "string"
+        ? ((content as Record<string, unknown>).output as string)
+        : "";
+    return stripPrivateUse(output);
+  }
+
+  // Model editable context
+  if (contentType === "model_editable_context") {
+    const context = (content as Record<string, unknown>).model_set_context;
+    return typeof context === "string" ? context.trim() : "";
+  }
+
+  // Fallback: try to extract from parts
+  if (content.parts) {
+    const parts = content.parts
+      .filter((p): p is string => typeof p === "string")
+      .map((p) => stripPrivateUse(p));
+    return parts.join("\n\n").trim();
+  }
+
+  return "";
+}
+
+// =============================================================================
+// Parsing Strategies
+// =============================================================================
+
+/**
+ * Extract content from streamController.enqueue() call
+ *
+ * Handles nested parentheses and quoted strings properly.
+ */
+function extractEnqueueContent(html: string, startPos: number): string | null {
+  let pos = startPos;
+  let depth = 1;
+  let inString = false;
+  let escape = false;
+
+  while (pos < html.length && depth > 0) {
+    const char = html[pos];
+
+    if (escape) {
+      escape = false;
+    } else if (char === "\\") {
+      escape = true;
+    } else if (char === '"' && !escape) {
+      inString = !inString;
+    } else if (!inString) {
+      if (char === "(") {
+        depth++;
+      } else if (char === ")") {
+        depth--;
+      }
+    }
+    pos++;
+  }
+
+  if (depth === 0) {
+    return html.slice(startPos, pos - 1).trim();
+  }
+  return null;
+}
+
+/**
+ * Extract React Flight loader payload from HTML
+ */
+function extractLoaderPayload(html: string): JsonValue[] | null {
+  const marker = "streamController.enqueue(";
+  let searchStart = 0;
+
+  while (true) {
+    const markerPos = html.indexOf(marker, searchStart);
+    if (markerPos === -1) break;
+
+    const contentStart = markerPos + marker.length;
+    const rawChunk = extractEnqueueContent(html, contentStart);
+
+    if (!rawChunk) {
+      searchStart = contentStart;
+      continue;
+    }
+
+    let chunk = rawChunk;
+
+    // Remove outer quotes and unescape JSON string
+    if (chunk.startsWith('"') && chunk.endsWith('"')) {
+      try {
+        chunk = JSON.parse(chunk) as string;
+      } catch {
+        // Continue with raw string
+      }
+    }
+
+    chunk = chunk.trim();
+
+    // Try to parse as JSON array
+    if (chunk.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(chunk) as unknown;
+        if (Array.isArray(parsed)) {
+          return parsed as JsonValue[];
+        }
+      } catch {
+        // Try to fix common escape issues
+        try {
+          const fixed = chunk
+            .replace(/\\x([0-9A-Fa-f]{2})/g, (_match: string, hex: string) =>
+              String.fromCharCode(parseInt(hex, 16)),
+            )
+            .replace(/\\u([0-9A-Fa-f]{4})/g, (_match: string, hex: string) =>
+              String.fromCharCode(parseInt(hex, 16)),
+            );
+          const parsedFixed = JSON.parse(fixed) as unknown;
+          if (Array.isArray(parsedFixed)) {
+            return parsedFixed as JsonValue[];
+          }
+        } catch {
+          // Continue to next match
+        }
+      }
+    }
+
+    searchStart = contentStart + rawChunk.length;
+  }
+
+  return null;
+}
+
+/**
+ * Parse modern share format (React Flight)
+ */
+function parseModernShare(html: string): RawMessage[] {
+  const loader = extractLoaderPayload(html);
+  if (!loader) {
+    throw new Error("Modern share payload not found");
+  }
+
+  const decoded = decodeLoader(loader);
+  const route = decoded.loaderData?.["routes/share.$shareId.($action)"];
+  const data = route?.serverResponse?.data;
+
+  if (!data?.mapping) {
+    throw new Error("No conversation mapping found");
+  }
+
+  const sequence = data.linear_conversation ?? [];
+  const messages: RawMessage[] = [];
+
+  for (const entry of sequence) {
+    const nodeId = entry.id;
+    if (!nodeId) continue;
+
+    const node = data.mapping[nodeId];
+    if (!node?.message) continue;
+
+    const message = node.message;
+    const role = message.author?.role;
+
+    // Skip system messages
+    if (role === "system") continue;
+    if (role !== "user" && role !== "assistant" && role !== "tool") continue;
+
+    const content = message.content;
+    if (!content) continue;
+
+    let text = flattenMessageContent(content);
+    text = stripCitationTokens(text);
+
+    if (!text.trim()) continue;
+
+    messages.push({
+      role: role === "user" ? "user" : "assistant",
+      content: text,
+    });
+  }
+
+  return messages;
+}
+
+/**
+ * Parse legacy share format (__NEXT_DATA__)
+ */
+function parseLegacyShare(html: string): RawMessage[] {
+  const match = /<script id="__NEXT_DATA__"[^>]*>([^<]+)<\/script>/.exec(html);
+  if (!match?.[1]) {
+    throw new Error("Legacy share payload not found");
+  }
+
+  const payload = JSON.parse(match[1]) as {
+    props?: {
+      pageProps?: {
+        serverResponse?: {
+          data?: ShareData;
+        };
       };
     };
-  }>;
+  };
+
+  const data = payload.props?.pageProps?.serverResponse?.data;
+  if (!data) {
+    throw new Error("No conversation data found");
+  }
+
+  const sequence = data.linear_conversation ?? [];
+  const mapping = data.mapping ?? {};
+  const messages: RawMessage[] = [];
+
+  for (const entry of sequence) {
+    const nodeId = entry.id;
+    if (!nodeId) continue;
+
+    const node = mapping[nodeId];
+    if (!node?.message) continue;
+
+    const message = node.message;
+    const role = message.author?.role;
+
+    if (role === "system") continue;
+    if (role !== "user" && role !== "assistant" && role !== "tool") continue;
+
+    const content = message.content;
+    if (!content) continue;
+
+    let text = flattenMessageContent(content);
+    text = stripCitationTokens(text);
+
+    if (!text.trim()) continue;
+
+    messages.push({
+      role: role === "user" ? "user" : "assistant",
+      content: text,
+    });
+  }
+
+  return messages;
 }
+
+/**
+ * Parse share HTML using best available strategy
+ */
+function parseShareHtml(html: string): RawMessage[] {
+  // Try modern format first
+  try {
+    const messages = parseModernShare(html);
+    if (messages.length > 0) {
+      return messages;
+    }
+  } catch {
+    // Fall through to legacy
+  }
+
+  // Try legacy format
+  try {
+    const messages = parseLegacyShare(html);
+    if (messages.length > 0) {
+      return messages;
+    }
+  } catch {
+    // Fall through
+  }
+
+  return [];
+}
+
+// =============================================================================
+// Adapter Implementation
+// =============================================================================
 
 /**
  * ChatGPT Share Link Adapter
  *
- * Extracts conversation from ChatGPT share page.
+ * Extracts conversations from ChatGPT share pages.
  */
 export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
   readonly id = "chatgpt-share-link";
-  readonly version = "1.0.0";
+  readonly version = "2.0.0";
   readonly name = "ChatGPT Share Link Parser";
   readonly provider: Provider = "chatgpt";
 
@@ -83,496 +633,33 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
    */
   async fetchAndExtract(url: string): Promise<RawMessage[]> {
     // Normalize URL
-    const normalizedUrl = this.normalizeUrl(url);
-
-    // Try multiple extraction strategies
-    const strategies = [
-      () => this.extractFromHtml(normalizedUrl),
-      () => this.extractFromApi(normalizedUrl),
-    ];
-
-    let lastError: Error | null = null;
-
-    for (const strategy of strategies) {
-      try {
-        const messages = await strategy();
-        if (messages.length > 0) {
-          return messages;
-        }
-      } catch (error) {
-        lastError = error instanceof Error ? error : new Error(String(error));
-        // Continue to next strategy
-      }
-    }
-
-    throw createAppError(
-      "E-PARSE-005",
-      `ChatGPT share pages load content dynamically via JavaScript. Server-side extraction found no messages. ${lastError?.message || "Try using the browser extension instead."}`,
-    );
-  }
-
-  /**
-   * Normalize share link URL
-   */
-  private normalizeUrl(url: string): string {
-    // Convert old chat.openai.com URLs to chatgpt.com
-    return url.replace("chat.openai.com", "chatgpt.com");
-  }
-
-  /**
-   * Extract conversation ID from URL
-   */
-  private extractConversationId(url: string): string {
-    const match = /\/(share|s)\/([a-zA-Z0-9_-]+)/.exec(url);
-    return match?.[2] || "";
-  }
-
-  /**
-   * Extract messages from HTML response
-   */
-  private async extractFromHtml(url: string): Promise<RawMessage[]> {
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        Accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const html = await response.text();
-
-    // Strategy 1: Look for __NEXT_DATA__ script
-    const nextDataMatch =
-      /<script id="__NEXT_DATA__"[^>]*>([^<]+)<\/script>/.exec(html);
-    if (nextDataMatch?.[1]) {
-      try {
-        const data = JSON.parse(nextDataMatch[1]) as {
-          props?: {
-            pageProps?: { serverResponse?: { data?: ChatGPTShareData } };
-          };
-        };
-        const shareData = data.props?.pageProps?.serverResponse?.data;
-        if (shareData) {
-          return this.parseShareData(shareData);
-        }
-      } catch {
-        // Continue to other strategies
-      }
-    }
-
-    // Strategy 2: Look for React Router streaming data
-    // Pattern: .enqueue("..."); where content is JavaScript string literal
-    const enqueueChunks = this.extractEnqueueChunks(html);
-
-    for (const chunk of enqueueChunks) {
-      try {
-        // Decode JavaScript string literal escapes
-        // The raw string has: \" for quotes, \\n for newlines, \\\\ for backslash
-        const decoded = this.decodeJsStringLiteral(chunk);
-
-        // Parse as JSON array
-        const data = JSON.parse(decoded) as unknown[];
-        const messages = this.parseRscStreamData(data);
-        if (messages.length > 0) {
-          return messages;
-        }
-      } catch {
-        // Continue to next chunk or strategy
-      }
-    }
-
-    // Strategy 3: Parse embedded JSON in script tags
-    const jsonScripts = html.match(
-      /<script[^>]*type="application\/json"[^>]*>([^<]+)<\/script>/g,
-    );
-    if (jsonScripts) {
-      for (const script of jsonScripts) {
-        const jsonMatch = />([^<]+)</.exec(script);
-        if (jsonMatch?.[1]) {
-          try {
-            const data = JSON.parse(jsonMatch[1]) as ChatGPTShareData;
-            if (data.mapping ?? data.linear_conversation) {
-              return this.parseShareData(data);
-            }
-          } catch {
-            // Continue
-          }
-        }
-      }
-    }
-
-    // Strategy 4: Look for data in global variables
-    const globalDataPatterns = [
-      /window\.__SHARE_DATA__\s*=\s*({[^;]+});/,
-      /window\.shareData\s*=\s*({[^;]+});/,
-      /"serverResponse"\s*:\s*({[^}]+})/,
-    ];
-
-    for (const pattern of globalDataPatterns) {
-      const match = html.match(pattern);
-      if (match?.[1]) {
-        try {
-          const data = JSON.parse(match[1]) as {
-            data?: ChatGPTShareData;
-          } & ChatGPTShareData;
-          const shareData: ChatGPTShareData = data.data ?? data;
-          if (shareData.mapping ?? shareData.linear_conversation) {
-            return this.parseShareData(shareData);
-          }
-        } catch {
-          // Continue
-        }
-      }
-    }
-
-    return [];
-  }
-
-  /**
-   * Try to extract from ChatGPT API directly
-   * Note: This may fail due to CORS restrictions in browser environments
-   */
-  private async extractFromApi(url: string): Promise<RawMessage[]> {
-    const conversationId = this.extractConversationId(url);
-    if (!conversationId) {
-      throw new Error("Could not extract conversation ID from URL");
-    }
-
-    // Try the share API endpoint
-    const apiUrl = `https://chatgpt.com/backend-api/share/${conversationId}`;
+    const normalizedUrl = url.replace("chat.openai.com", "chatgpt.com");
 
     try {
-      const response = await fetch(apiUrl, {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-          Accept: "application/json",
-        },
-      });
+      const html = await fetchHtml(normalizedUrl);
+      const messages = parseShareHtml(html);
 
-      if (!response.ok) {
-        throw new Error(`API returned ${response.status}`);
+      if (messages.length === 0) {
+        throw createAppError(
+          "E-PARSE-005",
+          "ChatGPT share pages load content dynamically. No messages could be extracted. Try using the browser extension instead.",
+        );
       }
 
-      const data = (await response.json()) as ChatGPTShareData;
-      if (data.mapping ?? data.linear_conversation) {
-        return this.parseShareData(data);
-      }
+      return messages;
     } catch (error) {
-      // API access may be restricted
-      throw new Error(
-        `API access failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      if (
+        error instanceof Error &&
+        error.message.includes("E-PARSE") // Our error
+      ) {
+        throw error;
+      }
+
+      throw createAppError(
+        "E-PARSE-005",
+        `Failed to parse ChatGPT share page: ${error instanceof Error ? error.message : "Unknown error"}. Try using the browser extension instead.`,
       );
     }
-
-    return [];
-  }
-
-  /**
-   * Parse ChatGPT share data into RawMessages
-   */
-  private parseShareData(data: ChatGPTShareData): RawMessage[] {
-    const messages: RawMessage[] = [];
-
-    // If linear_conversation is available, use it (simpler structure)
-    if (data.linear_conversation) {
-      for (const item of data.linear_conversation) {
-        if (!item.message) continue;
-
-        const role = item.message.author.role;
-        if (role !== "user" && role !== "assistant") continue;
-
-        const content = this.extractMessageContent(item.message.content);
-        if (content.trim()) {
-          messages.push({
-            role: role,
-            content,
-          });
-        }
-      }
-      return messages;
-    }
-
-    // Otherwise, traverse the mapping tree
-    if (data.mapping) {
-      // Build the message order from parent-child relationships
-      const orderedMessages = this.buildMessageOrder(data.mapping);
-
-      for (const node of orderedMessages) {
-        if (!node.message) continue;
-
-        const role = node.message.author.role;
-        if (role !== "user" && role !== "assistant") continue;
-
-        const content = this.extractMessageContent(node.message.content);
-        if (content.trim()) {
-          messages.push({
-            role: role,
-            content,
-          });
-        }
-      }
-    }
-
-    return messages;
-  }
-
-  /**
-   * Build ordered message list from mapping tree
-   */
-  private buildMessageOrder(
-    mapping: NonNullable<ChatGPTShareData["mapping"]>,
-  ): Array<(typeof mapping)[string]> {
-    const ordered: Array<(typeof mapping)[string]> = [];
-
-    // Find root (node with no parent or parent not in mapping)
-    let rootId: string | null = null;
-    for (const [id, node] of Object.entries(mapping)) {
-      if (!node.parent || !mapping[node.parent]) {
-        rootId = id;
-        break;
-      }
-    }
-
-    if (!rootId) return ordered;
-
-    // BFS traversal
-    const queue: string[] = [rootId];
-    const visited = new Set<string>();
-
-    while (queue.length > 0) {
-      const currentId = queue.shift()!;
-      if (visited.has(currentId)) continue;
-      visited.add(currentId);
-
-      const node = mapping[currentId];
-      if (node) {
-        ordered.push(node);
-        if (node.children) {
-          queue.push(...node.children);
-        }
-      }
-    }
-
-    return ordered;
-  }
-
-  /**
-   * Extract text content from message content object
-   */
-  private extractMessageContent(content: {
-    content_type?: string;
-    parts?: string[];
-    text?: string;
-  }): string {
-    if (content.parts && content.parts.length > 0) {
-      return content.parts
-        .filter((part) => typeof part === "string")
-        .join("\n");
-    }
-    if (content.text) {
-      return content.text;
-    }
-    return "";
-  }
-
-  /**
-   * Extract content from .enqueue("...") calls in HTML
-   * Pattern: .enqueue("JSON string with escapes")
-   */
-  private extractEnqueueChunks(html: string): string[] {
-    const chunks: string[] = [];
-
-    // Match .enqueue("...") patterns with proper escape handling
-    const regex = /\.enqueue\("((?:[^"\\]|\\.)*)"\)/g;
-    let match;
-
-    while ((match = regex.exec(html)) !== null) {
-      if (match[1] && match[1].length > 100) {
-        // Only consider substantial chunks
-        chunks.push(match[1]);
-      }
-    }
-
-    return chunks;
-  }
-
-  /**
-   * Decode JavaScript string literal escapes
-   * Manually handles common escape sequences like \" and \\n
-   */
-  private decodeJsStringLiteral(str: string): string {
-    // Manual decoding of JavaScript escape sequences
-    return str
-      .replace(/\\"/g, '"')
-      .replace(/\\n/g, "\n")
-      .replace(/\\r/g, "\r")
-      .replace(/\\t/g, "\t")
-      .replace(/\\\\/g, "\\");
-  }
-
-  /**
-   * Parse React Server Components streaming data format
-   * Handles two formats:
-   * 1. /s/t_ format: Simple post with "text" field and role/parts
-   * 2. /share/ format: Full conversation with "mapping" structure
-   */
-  private parseRscStreamData(data: unknown[]): RawMessage[] {
-    const messages: RawMessage[] = [];
-
-    // Check if this is the /share/ format (has "mapping" and "serverResponse")
-    const hasMapping = data.some((x) => x === "mapping");
-    const hasServerResponse = data.some((x) => x === "serverResponse");
-
-    if (hasMapping && hasServerResponse) {
-      // Strategy for /share/ format: Extract from mapping structure
-      return this.parseShareFormatData(data);
-    }
-
-    // Strategy for /s/t_ format (simple post)
-    // Strategy 1: Find user message from "text" field near "post" context
-    for (let i = 0; i < data.length - 1; i++) {
-      if (data[i] === "text" && typeof data[i + 1] === "string") {
-        const text = data[i + 1] as string;
-        if (text.length > 3) {
-          const contextStart = Math.max(0, i - 15);
-          const context = data.slice(contextStart, i);
-          const hasPostContext = context.some(
-            (x) => x === "post" || x === "attachments" || x === "posted_at",
-          );
-          if (hasPostContext) {
-            messages.push({ role: "user", content: text });
-            break;
-          }
-        }
-      }
-    }
-
-    // Strategy 2: Find assistant messages via role/parts pattern
-    for (let i = 0; i < data.length - 1; i++) {
-      if (data[i] === "role") {
-        const roleValue = data[i + 1];
-        if (roleValue === "user" || roleValue === "assistant") {
-          for (let j = i + 2; j < Math.min(i + 40, data.length - 1); j++) {
-            if (data[j] === "parts") {
-              const partsRef = data[j + 1];
-              if (
-                Array.isArray(partsRef) &&
-                partsRef.length === 1 &&
-                typeof partsRef[0] === "number"
-              ) {
-                const contentIdx = partsRef[0];
-                if (contentIdx < data.length) {
-                  const content = data[contentIdx];
-                  if (typeof content === "string" && content.trim()) {
-                    const exists = messages.some((m) => m.content === content);
-                    if (!exists) {
-                      messages.push({ role: roleValue, content });
-                    }
-                  }
-                }
-              } else if (Array.isArray(partsRef) && partsRef.length > 0) {
-                const content = partsRef
-                  .filter((p): p is string => typeof p === "string")
-                  .join("\n");
-                if (content.trim()) {
-                  const exists = messages.some((m) => m.content === content);
-                  if (!exists) {
-                    messages.push({ role: roleValue, content });
-                  }
-                }
-              }
-              break;
-            }
-          }
-        }
-      }
-    }
-
-    return messages;
-  }
-
-  /**
-   * Parse /share/ format data with mapping structure
-   * This format contains the full conversation tree with complex references
-   *
-   * Note: ChatGPT RSC data often only has one "user" and one "assistant" marker
-   * for the entire conversation, so we extract the title as user message
-   * and find all substantial assistant responses.
-   */
-  private parseShareFormatData(data: unknown[]): RawMessage[] {
-    const messages: RawMessage[] = [];
-
-    // Find title (this will be the user's question)
-    let title = "";
-    for (let i = 0; i < data.length - 1; i++) {
-      if (data[i] === "title" && typeof data[i + 1] === "string") {
-        title = data[i + 1] as string;
-        break;
-      }
-    }
-
-    // Add title as user message
-    if (title) {
-      messages.push({ role: "user", content: title });
-    }
-
-    // Find the "assistant" role position
-    let assistantIdx = -1;
-    for (let i = 0; i < data.length; i++) {
-      if (data[i] === "assistant") {
-        assistantIdx = i;
-        break;
-      }
-    }
-
-    // Collect all substantial content strings after the assistant marker
-    // These are the assistant's responses in the conversation
-    if (assistantIdx > 0) {
-      for (let i = assistantIdx; i < data.length; i++) {
-        const item = data[i];
-
-        // Look for array references pointing to content
-        if (Array.isArray(item) && item.length === 1) {
-          const ref = (item as unknown[])[0];
-          if (typeof ref === "number" && ref < data.length) {
-            const content = data[ref];
-
-            if (
-              typeof content === "string" &&
-              content.length > 100 &&
-              !content.startsWith("http") &&
-              !/^[a-f0-9-]{36}$/.exec(content) &&
-              !content.includes("custom instructions") &&
-              !content.includes("no longer available")
-            ) {
-              // Skip ChatGPT's internal thinking/reasoning
-              if (
-                /^(I'm |It seems|I'll |The files|However|Sparse|If that|I need)/i.exec(
-                  content,
-                )
-              ) {
-                continue;
-              }
-
-              // Avoid duplicates
-              const exists = messages.some((m) => m.content === content);
-              if (!exists) {
-                messages.push({ role: "assistant", content });
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return messages;
   }
 }
 
