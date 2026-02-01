@@ -1,6 +1,18 @@
 import { z } from "zod";
 
 /**
+ * Default values for export parameters.
+ * These are the single source of truth - use these constants instead of hardcoding values.
+ */
+export const EXPORT_DEFAULTS = {
+  SCALE: 2 as const,
+  CANVAS_PRESET: "portrait" as const,
+  CANVAS_WIDTH_PX: 1080,
+  MAX_PAGE_HEIGHT_PX: 4096,
+  OUTPUT_MODE: "single" as const,
+} as const;
+
+/**
  * Export image format
  */
 export const ExportFormat = z.enum(["png", "jpeg"]);
@@ -35,11 +47,11 @@ export type OutputMode = z.infer<typeof OutputMode>;
  */
 export const ExportParams = z
   .object({
-    scale: ExportScale.default(2),
-    canvasPreset: CanvasPreset.default("portrait"),
-    canvasWidthPx: z.number().int().positive().default(1080),
-    maxPageHeightPx: z.number().int().min(2000).max(10000).default(4096),
-    outputMode: OutputMode.default("single"),
+    scale: ExportScale.default(EXPORT_DEFAULTS.SCALE),
+    canvasPreset: CanvasPreset.default(EXPORT_DEFAULTS.CANVAS_PRESET),
+    canvasWidthPx: z.number().int().positive().default(EXPORT_DEFAULTS.CANVAS_WIDTH_PX),
+    maxPageHeightPx: z.number().int().min(2000).max(10000).default(EXPORT_DEFAULTS.MAX_PAGE_HEIGHT_PX),
+    outputMode: OutputMode.default(EXPORT_DEFAULTS.OUTPUT_MODE),
   })
   .strict();
 export type ExportParams = z.infer<typeof ExportParams>;

@@ -1,5 +1,6 @@
 "use client";
 
+import type { MessageRole } from "@chat2poster/core-schema";
 import {
   Button,
   Card,
@@ -7,6 +8,7 @@ import {
   Textarea,
   useI18n,
   generateUUID,
+  STORAGE_KEYS,
 } from "@chat2poster/shared-ui";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -22,6 +24,9 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+/** Message role for paste parser (excludes system messages) */
+type PasteMessageRole = Exclude<MessageRole, "system">;
 
 export default function PasteImportPage() {
   const { t, locale } = useI18n();
@@ -73,11 +78,11 @@ export default function PasteImportPage() {
       const lines = pastedText.split("\n");
       const messages: {
         id: string;
-        role: "user" | "assistant";
+        role: PasteMessageRole;
         content: string;
       }[] = [];
 
-      let currentRole: "user" | "assistant" = "user";
+      let currentRole: PasteMessageRole = "user";
       let currentContent: string[] = [];
 
       for (const line of lines) {
@@ -134,7 +139,7 @@ export default function PasteImportPage() {
       }
 
       sessionStorage.setItem(
-        "chat2poster:manual-messages",
+        STORAGE_KEYS.MANUAL_MESSAGES,
         JSON.stringify(messages),
       );
       router.push(`/${locale}/editor`);

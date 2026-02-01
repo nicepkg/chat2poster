@@ -1,5 +1,6 @@
 "use client";
 
+import type { MessageRole } from "@chat2poster/core-schema";
 import {
   Button,
   Card,
@@ -13,6 +14,7 @@ import {
   cn,
   useI18n,
   generateUUID,
+  STORAGE_KEYS,
 } from "@chat2poster/shared-ui";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import {
@@ -29,9 +31,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useCallback } from "react";
 
+/** Message role for manual builder (excludes system messages) */
+type ManualMessageRole = Exclude<MessageRole, "system">;
+
 interface MessageInput {
   id: string;
-  role: "user" | "assistant";
+  role: ManualMessageRole;
   content: string;
 }
 
@@ -82,7 +87,7 @@ export default function ManualBuilderPage() {
     }
 
     sessionStorage.setItem(
-      "chat2poster:manual-messages",
+      STORAGE_KEYS.MANUAL_MESSAGES,
       JSON.stringify(validMessages),
     );
     router.push(`/${locale}/editor`);

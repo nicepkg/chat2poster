@@ -9,6 +9,7 @@ import type {
   AdapterInput,
   Conversation,
   Message,
+  MessageRole,
   Provider,
   SourceType,
 } from "@chat2poster/core-schema";
@@ -38,7 +39,7 @@ export interface ConversationOptions {
  * Raw message data before transformation
  */
 export interface RawMessage {
-  role: "user" | "assistant" | "system";
+  role: MessageRole;
   content: string;
 }
 

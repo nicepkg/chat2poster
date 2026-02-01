@@ -45,6 +45,7 @@ export {
 
 // Export types
 export {
+  EXPORT_DEFAULTS,
   ExportFormat,
   CanvasPreset,
   ExportScale,

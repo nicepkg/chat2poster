@@ -1,4 +1,4 @@
-import type { Theme } from "@chat2poster/core-schema";
+import type { Theme, ThemeMode } from "@chat2poster/core-schema";
 import { lightTheme, darkTheme, sunsetTheme } from "./presets";
 
 /**
@@ -30,7 +30,7 @@ export function getAllThemes(): Theme[] {
 /**
  * Get themes by mode
  */
-export function getThemesByMode(mode: "light" | "dark"): Theme[] {
+export function getThemesByMode(mode: ThemeMode): Theme[] {
   return getAllThemes().filter((theme) => theme.mode === mode);
 }
 

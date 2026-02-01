@@ -7,6 +7,7 @@ import {
   Input,
   cn,
   useI18n,
+  STORAGE_KEYS,
 } from "@chat2poster/shared-ui";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -100,7 +101,7 @@ export default function ImportPage() {
 
       if (data.conversation) {
         sessionStorage.setItem(
-          "chat2poster:conversation",
+          STORAGE_KEYS.CONVERSATION,
           JSON.stringify(data.conversation),
         );
         router.push(`/${locale}/editor`);

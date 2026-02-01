@@ -1,5 +1,6 @@
 "use client";
 
+import type { MessageRole } from "@chat2poster/core-schema";
 import {
   Card,
   EditorProvider,
@@ -17,6 +18,7 @@ import {
   Button,
   useI18n,
   generateUUID,
+  STORAGE_KEYS,
 } from "@chat2poster/shared-ui";
 import "@chat2poster/shared-ui/styles/renderer.css";
 import { motion } from "framer-motion";
@@ -24,20 +26,23 @@ import { Loader2, Settings2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useEffect, useCallback, useState } from "react";
 
+/** Message role for editor (excludes system messages) */
+type EditorMessageRole = Exclude<MessageRole, "system">;
+
 /**
  * Load conversation from sessionStorage
  * Supports both share link imports and manual builder
  */
 function loadConversationFromStorage() {
   // Try share link conversation first
-  const conversationData = sessionStorage.getItem("chat2poster:conversation");
+  const conversationData = sessionStorage.getItem(STORAGE_KEYS.CONVERSATION);
   if (conversationData) {
     try {
       return JSON.parse(conversationData) as {
         id: string;
         messages: Array<{
           id: string;
-          role: "user" | "assistant";
+          role: EditorMessageRole;
           contentMarkdown: string;
           order: number;
         }>;
@@ -48,12 +53,12 @@ function loadConversationFromStorage() {
   }
 
   // Try manual builder messages
-  const manualData = sessionStorage.getItem("chat2poster:manual-messages");
+  const manualData = sessionStorage.getItem(STORAGE_KEYS.MANUAL_MESSAGES);
   if (manualData) {
     try {
       const parsed = JSON.parse(manualData) as Array<{
         id: string;
-        role: "user" | "assistant";
+        role: EditorMessageRole;
         content: string;
       }>;
       return {
@@ -121,7 +126,7 @@ function EditorContent() {
     }
 
     // Determine source type from storage key
-    const sourceType = sessionStorage.getItem("chat2poster:conversation")
+    const sourceType = sessionStorage.getItem(STORAGE_KEYS.CONVERSATION)
       ? "web-share-link"
       : "web-manual";
 

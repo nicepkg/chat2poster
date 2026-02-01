@@ -8,16 +8,18 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
-import type {
-  Conversation,
-  Selection,
-  Decoration,
-  ExportParams,
-  PageBreak,
-  Theme,
+import {
+  EXPORT_DEFAULTS,
+  type Conversation,
+  type Selection,
+  type Decoration,
+  type ExportParams,
+  type PageBreak,
+  type Theme,
 } from "@chat2poster/core-schema";
 import { THEME_PRESETS, BACKGROUND_PRESETS } from "~/themes";
 import { generateUUID } from "~/utils/uuid";
+import { STORAGE_KEYS } from "~/constants";
 
 // Re-export for backward compatibility
 export { THEME_PRESETS, BACKGROUND_PRESETS };
@@ -71,11 +73,11 @@ const defaultDecoration: Decoration = {
 };
 
 const defaultExportParams: ExportParams = {
-  scale: 2,
-  canvasPreset: "portrait",
-  canvasWidthPx: 800,
-  maxPageHeightPx: 4096,
-  outputMode: "single",
+  scale: EXPORT_DEFAULTS.SCALE,
+  canvasPreset: EXPORT_DEFAULTS.CANVAS_PRESET,
+  canvasWidthPx: EXPORT_DEFAULTS.CANVAS_WIDTH_PX,
+  maxPageHeightPx: EXPORT_DEFAULTS.MAX_PAGE_HEIGHT_PX,
+  outputMode: EXPORT_DEFAULTS.OUTPUT_MODE,
 };
 
 const initialEditorState: EditorState = {
@@ -246,9 +248,6 @@ export interface EditorContextValue {
 
 const EditorContext = createContext<EditorContextValue | null>(null);
 
-// Storage key
-const STORAGE_KEY = "chat2poster:preferences";
-
 interface StoredPreferences {
   themeId: string;
   decoration: Decoration;
@@ -259,7 +258,7 @@ interface StoredPreferences {
 function loadPreferences(): Partial<StoredPreferences> {
   try {
     if (typeof localStorage === "undefined") return {};
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(STORAGE_KEYS.PREFERENCES);
     if (stored) {
       return JSON.parse(stored) as Partial<StoredPreferences>;
     }
@@ -272,7 +271,7 @@ function loadPreferences(): Partial<StoredPreferences> {
 function savePreferences(prefs: StoredPreferences): void {
   try {
     if (typeof localStorage === "undefined") return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    localStorage.setItem(STORAGE_KEYS.PREFERENCES, JSON.stringify(prefs));
   } catch {
     // Ignore errors
   }
