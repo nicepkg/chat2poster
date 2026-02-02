@@ -1,11 +1,11 @@
 "use client";
 
 import type { MessageRole } from "@chat2poster/core-schema";
+import { useI18n } from "@ui/i18n";
+import { cn } from "@ui/utils/common";
 import { motion } from "framer-motion";
 import { User, Bot } from "lucide-react";
 import * as React from "react";
-import { useI18n } from "~/i18n";
-import { cn } from "~/utils/common";
 
 export interface MessageBubbleProps {
   role: MessageRole;

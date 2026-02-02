@@ -26,7 +26,8 @@
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@ui/*": ["../../packages/shared-ui/src/*"]
     }
   },
   "include": [

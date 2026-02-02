@@ -1,10 +1,10 @@
 "use client";
 
+import { useI18n } from "@ui/i18n";
+import { cn } from "@ui/utils/common";
 import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import * as React from "react";
-import { useI18n } from "~/i18n";
-import { cn } from "~/utils/common";
 
 export interface EditorHeaderProps {
   /** Page title */

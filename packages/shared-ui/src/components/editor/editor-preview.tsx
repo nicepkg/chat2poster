@@ -2,6 +2,10 @@
 
 import type { DeviceType } from "@chat2poster/core-schema";
 import { DEVICE_WIDTHS } from "@chat2poster/core-schema";
+import { useEditor } from "@ui/contexts/editor-context";
+import { useI18n } from "@ui/i18n";
+import { SHADOW_STYLES } from "@ui/themes/shadows";
+import { cn } from "@ui/utils/common";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageSquare,
@@ -22,10 +26,6 @@ import { MarkdownRenderer } from "../renderer";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { MacOSBar } from "./mac-os-bar";
-import { useEditor } from "~/contexts/editor-context";
-import { useI18n } from "~/i18n";
-import { SHADOW_STYLES } from "~/themes/shadows";
-import { cn } from "~/utils/common";
 
 /** Device icons */
 const DEVICE_ICONS: Record<

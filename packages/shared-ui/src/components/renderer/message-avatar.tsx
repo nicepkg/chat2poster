@@ -1,8 +1,8 @@
 "use client";
 
 import type { MessageRole } from "@chat2poster/core-schema";
+import { cssVar } from "@ui/themes";
 import { memo } from "react";
-import { cssVar } from "~/themes";
 
 export interface MessageAvatarProps {
   role: MessageRole;

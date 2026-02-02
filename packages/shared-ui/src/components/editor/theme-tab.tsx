@@ -1,6 +1,9 @@
 "use client";
 
 import type { Decoration, ShadowLevel, Theme } from "@chat2poster/core-schema";
+import { useI18n } from "@ui/i18n";
+import { BACKGROUND_PRESETS } from "@ui/themes/backgrounds";
+import { cn } from "@ui/utils/common";
 import { motion } from "framer-motion";
 import { Monitor } from "lucide-react";
 import * as React from "react";
@@ -8,9 +11,6 @@ import { Label } from "../ui/label";
 import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
 import { BackgroundPicker, type BackgroundPreset } from "./background-picker";
-import { useI18n } from "~/i18n";
-import { BACKGROUND_PRESETS } from "~/themes/backgrounds";
-import { cn } from "~/utils/common";
 
 // Shadow levels mapped to slider values (0-4)
 const SHADOW_LEVELS: ShadowLevel[] = ["none", "sm", "md", "lg", "xl"];

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@ui/utils/common";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -12,7 +13,6 @@ import {
   type DayButton,
 } from "react-day-picker";
 import { Button, buttonVariants } from "./button";
-import { cn } from "~/utils/common";
 
 function Calendar({
   className,

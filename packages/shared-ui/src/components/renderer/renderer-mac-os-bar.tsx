@@ -1,7 +1,7 @@
 "use client";
 
+import { cssVar } from "@ui/themes";
 import { memo } from "react";
-import { cssVar } from "~/themes";
 
 export interface RendererMacOSBarProps {
   /** Title to display in the center (optional) */

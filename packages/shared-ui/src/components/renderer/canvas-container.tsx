@@ -1,10 +1,10 @@
 "use client";
 
 import type { Decoration } from "@chat2poster/core-schema";
+import type { Theme } from "@ui/themes";
+import { applyThemeToElement } from "@ui/themes";
 import { memo, forwardRef } from "react";
 import { DecorationFrame } from "./decoration-frame";
-import type { Theme } from "~/themes";
-import { applyThemeToElement } from "~/themes";
 
 export interface CanvasContainerProps {
   /** Theme to apply */

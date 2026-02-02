@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@ui/i18n";
+import type { Locale } from "@ui/i18n/core";
 import { Github } from "lucide-react";
 import * as React from "react";
 import { cn } from "../../utils";
@@ -7,8 +9,6 @@ import { Button } from "../ui/button";
 import { LocaleToggle } from "./locale-toggle";
 import { MobileNav, type NavItem } from "./mobile-nav";
 import { ThemeToggle } from "./theme-toggle";
-import { useI18n } from "~/i18n";
-import type { Locale } from "~/i18n/core";
 
 export interface SiteHeaderProps {
   logo: React.ReactNode;

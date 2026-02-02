@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@ui/i18n";
+import { localeLabels, locales, type Locale } from "@ui/i18n/core";
 import { Languages } from "lucide-react";
 import { cn } from "../../utils";
 import { Button } from "../ui/button";
@@ -9,8 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useI18n } from "~/i18n";
-import { localeLabels, locales, type Locale } from "~/i18n/core";
 
 export interface LocaleToggleProps {
   className?: string;

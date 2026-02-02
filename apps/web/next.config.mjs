@@ -1,5 +1,13 @@
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 import { defaultLocale, locales } from "@chat2poster/shared-ui/i18n/core";
 import nextra from "nextra";
+
+const dir = dirname(fileURLToPath(import.meta.url));
+const isDev = process.env.NODE_ENV === "development";
+
+// Alias for shared-ui source files in development
+const sharedUiSrc = resolve(dir, "../../packages/shared-ui/src");
 
 const withNextra = nextra({
   // Nextra config options
@@ -47,6 +55,13 @@ const config = {
     "@chat2poster/shared-ui",
   ],
 
+  // Enable development condition exports for faster HMR (no build needed)
+  ...(isDev && {
+    experimental: {
+      exportsFieldConditions: ["development", "browser"],
+    },
+  }),
+
   // Required for image optimization
   images: {
     unoptimized: true,
@@ -66,9 +81,19 @@ const config = {
         as: "*.js",
       },
     },
+    // Resolve @ui/* alias for shared-ui source files in development
+    ...(isDev && {
+      resolveAlias: {
+        "@ui": sharedUiSrc,
+      },
+    }),
   },
 
   webpack(config) {
+    // Add @ui/* alias for shared-ui source files in development
+    if (isDev) {
+      config.resolve.alias["@ui"] = sharedUiSrc;
+    }
     // Grab the existing rule that handles SVG imports
     // @ts-ignore
     const fileLoaderRule = config.module.rules.find((rule) =>

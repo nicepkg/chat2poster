@@ -1,8 +1,8 @@
 "use client";
 
+import { useI18n } from "@ui/i18n";
 import mermaid from "mermaid";
 import { memo, useEffect, useRef, useState } from "react";
-import { useI18n } from "~/i18n";
 
 // Initialize mermaid
 let mermaidInitialized = false;

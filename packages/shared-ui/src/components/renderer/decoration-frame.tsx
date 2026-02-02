@@ -1,9 +1,9 @@
 "use client";
 
 import type { Decoration, ShadowLevel } from "@chat2poster/core-schema";
+import { cssVar } from "@ui/themes";
 import { memo } from "react";
 import { RendererMacOSBar } from "./renderer-mac-os-bar";
-import { cssVar } from "~/themes";
 
 export interface DecorationFrameProps {
   /** Decoration settings */

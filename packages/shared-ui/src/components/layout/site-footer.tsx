@@ -1,8 +1,8 @@
 "use client";
 
+import { useI18n } from "@ui/i18n";
 import * as React from "react";
 import { cn } from "../../utils";
-import { useI18n } from "~/i18n";
 
 export interface FooterLink {
   label: string;

@@ -1,12 +1,12 @@
 "use client";
 
+import { highlightCode } from "@ui/utils/shiki";
 import { memo, useMemo, useEffect, useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import type { BundledTheme } from "shiki";
 import { MermaidBlock } from "./mermaid-block";
-import { highlightCode } from "~/utils/shiki";
 
 export interface MarkdownRendererProps {
   content: string;

@@ -1,15 +1,15 @@
 "use client";
 
 import type { Conversation } from "@chat2poster/core-schema";
+import { useEditor } from "@ui/contexts/editor-context";
+import { useI18n } from "@ui/i18n";
+import { cn } from "@ui/utils/common";
+import { generateUUID } from "@ui/utils/uuid";
 import * as React from "react";
 import { useState, useCallback, useEffect } from "react";
 import { ExportTab } from "./export-tab";
 import { MessagesTab } from "./messages-tab";
 import { ThemeTab } from "./theme-tab";
-import { useEditor } from "~/contexts/editor-context";
-import { useI18n } from "~/i18n";
-import { cn } from "~/utils/common";
-import { generateUUID } from "~/utils/uuid";
 
 function CloseIcon() {
   return (

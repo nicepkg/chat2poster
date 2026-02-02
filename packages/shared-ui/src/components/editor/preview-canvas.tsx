@@ -1,15 +1,15 @@
 "use client";
 
 import type { MessageRole, ShadowLevel } from "@chat2poster/core-schema";
+import { useI18n } from "@ui/i18n";
+import { getShadowStyle } from "@ui/themes";
+import { cn } from "@ui/utils/common";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare } from "lucide-react";
 import * as React from "react";
 import { forwardRef } from "react";
 import { MacOSBar } from "./mac-os-bar";
 import { MessageBubble } from "./message-bubble";
-import { useI18n } from "~/i18n";
-import { getShadowStyle } from "~/themes";
-import { cn } from "~/utils/common";
 
 export interface PreviewMessage {
   id: string;

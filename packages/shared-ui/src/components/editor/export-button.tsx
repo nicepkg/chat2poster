@@ -1,12 +1,12 @@
 "use client";
 
+import { useI18n } from "@ui/i18n";
+import { cn } from "@ui/utils/common";
 import { motion, AnimatePresence } from "framer-motion";
 import { Download, Loader2, Check } from "lucide-react";
 import * as React from "react";
 import { useState, useCallback } from "react";
 import { Button } from "../ui/button";
-import { useI18n } from "~/i18n";
-import { cn } from "~/utils/common";
 
 export interface ExportButtonProps {
   /** Number of pages to export (shows count if > 1) */

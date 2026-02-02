@@ -1,6 +1,8 @@
 "use client";
 
 import type { Message } from "@chat2poster/core-schema";
+import type { Theme } from "@ui/themes";
+import { cssVar } from "@ui/themes";
 import { memo, useMemo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -8,8 +10,6 @@ import remarkGfm from "remark-gfm";
 import type { BundledTheme } from "shiki";
 import { CodeBlock } from "./code-block";
 import { MessageAvatar } from "./message-avatar";
-import type { Theme } from "~/themes";
-import { cssVar } from "~/themes";
 
 export interface MessageItemProps {
   message: Message;

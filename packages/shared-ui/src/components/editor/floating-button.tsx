@@ -1,8 +1,8 @@
 "use client";
 
+import { useI18n } from "@ui/i18n";
+import { cn } from "@ui/utils/common";
 import * as React from "react";
-import { useI18n } from "~/i18n";
-import { cn } from "~/utils/common";
 
 export interface FloatingButtonProps {
   onClick: () => void;

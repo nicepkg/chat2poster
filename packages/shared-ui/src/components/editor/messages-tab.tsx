@@ -1,13 +1,13 @@
 "use client";
 
 import type { Message, PageBreak } from "@chat2poster/core-schema";
+import { useI18n } from "@ui/i18n";
+import { cn } from "@ui/utils/common";
 import { AnimatePresence, motion } from "framer-motion";
 import { Scissors, X, User, Bot } from "lucide-react";
 import * as React from "react";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import { useI18n } from "~/i18n";
-import { cn } from "~/utils/common";
 
 type MessageId = Message["id"];
 

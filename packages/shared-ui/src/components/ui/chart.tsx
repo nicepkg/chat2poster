@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@ui/utils/common";
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 import type { Payload as RechartsLegendPayload } from "recharts/types/component/DefaultLegendContent";
@@ -8,7 +9,6 @@ import type {
   Payload as RechartsTooltipPayload,
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
-import { cn } from "~/utils/common";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;

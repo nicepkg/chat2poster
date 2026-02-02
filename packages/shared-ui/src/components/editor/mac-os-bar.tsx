@@ -1,8 +1,8 @@
 "use client";
 
+import { cn } from "@ui/utils/common";
 import { motion } from "framer-motion";
 import * as React from "react";
-import { cn } from "~/utils/common";
 
 export interface MacOSBarProps {
   className?: string;

@@ -9,6 +9,9 @@ import {
   type PageBreak,
   type Theme,
 } from "@chat2poster/core-schema";
+import { STORAGE_KEYS } from "@ui/constants";
+import { THEME_PRESETS, BACKGROUND_PRESETS } from "@ui/themes";
+import { generateUUID } from "@ui/utils/uuid";
 import {
   createContext,
   useContext,
@@ -17,9 +20,6 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
-import { STORAGE_KEYS } from "~/constants";
-import { THEME_PRESETS, BACKGROUND_PRESETS } from "~/themes";
-import { generateUUID } from "~/utils/uuid";
 
 // Re-export for backward compatibility
 export { THEME_PRESETS, BACKGROUND_PRESETS };

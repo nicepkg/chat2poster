@@ -1,9 +1,9 @@
 "use client";
 
+import { cssVar } from "@ui/themes";
+import { highlightCode } from "@ui/utils/shiki";
 import { memo, useState, useEffect, useCallback } from "react";
 import type { BundledTheme } from "shiki";
-import { cssVar } from "~/themes";
-import { highlightCode } from "~/utils/shiki";
 
 export interface CodeBlockProps {
   code: string;

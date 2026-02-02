@@ -1,12 +1,12 @@
 "use client";
 
 import type { Message, Selection, Decoration } from "@chat2poster/core-schema";
+import type { Theme } from "@ui/themes";
+import { cssVar } from "@ui/themes";
 import { memo, useRef, useEffect, useState } from "react";
 import { CanvasContainer } from "./canvas-container";
 import { ConversationView } from "./conversation-view";
 import { PageIndicator } from "./page-indicator";
-import type { Theme } from "~/themes";
-import { cssVar } from "~/themes";
 
 export interface PreviewPanelProps {
   /** Messages to display */

@@ -10,58 +10,72 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
       "import": "./dist/index.js"
     },
     "./components/ui": {
       "types": "./dist/components/ui/index.d.ts",
+      "development": "./src/components/ui/index.ts",
       "import": "./dist/components/ui/index.js"
     },
     "./components/common": {
       "types": "./dist/components/common/index.d.ts",
+      "development": "./src/components/common/index.ts",
       "import": "./dist/components/common/index.js"
     },
     "./components/editor": {
       "types": "./dist/components/editor/index.d.ts",
+      "development": "./src/components/editor/index.ts",
       "import": "./dist/components/editor/index.js"
     },
     "./components/layout": {
       "types": "./dist/components/layout/index.d.ts",
+      "development": "./src/components/layout/index.ts",
       "import": "./dist/components/layout/index.js"
     },
     "./components/renderer": {
       "types": "./dist/components/renderer/index.d.ts",
+      "development": "./src/components/renderer/index.ts",
       "import": "./dist/components/renderer/index.js"
     },
     "./contexts": {
       "types": "./dist/contexts/index.d.ts",
+      "development": "./src/contexts/index.ts",
       "import": "./dist/contexts/index.js"
     },
     "./hooks": {
       "types": "./dist/hooks/index.d.ts",
+      "development": "./src/hooks/index.ts",
       "import": "./dist/hooks/index.js"
     },
     "./utils": {
       "types": "./dist/utils/index.d.ts",
+      "development": "./src/utils/index.ts",
       "import": "./dist/utils/index.js"
     },
     "./themes": {
       "types": "./dist/themes/index.d.ts",
+      "development": "./src/themes/index.ts",
       "import": "./dist/themes/index.js"
     },
     "./i18n": {
       "types": "./dist/i18n/index.d.ts",
+      "development": "./src/i18n/index.ts",
       "import": "./dist/i18n/index.js"
     },
     "./i18n/core": {
       "types": "./dist/i18n/core.d.ts",
+      "development": "./src/i18n/core.ts",
       "import": "./dist/i18n/core.js"
     },
     "./i18n/react": {
       "types": "./dist/i18n/react.d.ts",
+      "development": "./src/i18n/react.tsx",
       "import": "./dist/i18n/react.js"
     },
     "./i18n/types": {
       "types": "./dist/i18n/types.d.ts",
+      "development": "./src/i18n/types.ts",
       "import": "./dist/i18n/types.js"
     },
     "./styles/globals.css": "./src/styles/globals.css",
