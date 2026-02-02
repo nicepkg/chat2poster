@@ -81,6 +81,10 @@ export interface FetchResult {
    * Final URL after redirects
    */
   url: string;
+  /**
+   * Cookies from set-cookie headers (combined into a single string)
+   */
+  cookies: string;
 }
 
 /**
@@ -188,6 +192,12 @@ export async function fetchExternal(
 
       clearTimeout(timeoutId);
 
+      // Extract cookies from set-cookie headers
+      const setCookieHeaders = response.headers.getSetCookie?.() ?? [];
+      const cookies = setCookieHeaders
+        .map((cookie) => cookie.split(";")[0]) // Get just the name=value part
+        .join("; ");
+
       return {
         response,
         text: () => response.text(),
@@ -198,6 +208,7 @@ export async function fetchExternal(
         status: response.status,
         statusText: response.statusText,
         url: response.url,
+        cookies,
       };
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
@@ -216,6 +227,14 @@ export async function fetchExternal(
 }
 
 /**
+ * Result of fetching HTML with cookies
+ */
+export interface FetchHtmlResult {
+  html: string;
+  cookies: string;
+}
+
+/**
  * Fetch an HTML page with appropriate headers
  *
  * @example
@@ -227,6 +246,22 @@ export async function fetchHtml(
   url: string,
   options: Omit<FetchOptions, "headers"> = {},
 ): Promise<string> {
+  const result = await fetchHtmlWithCookies(url, options);
+  return result.html;
+}
+
+/**
+ * Fetch an HTML page and return both HTML and cookies
+ *
+ * @example
+ * ```ts
+ * const { html, cookies } = await fetchHtmlWithCookies('https://example.com/page');
+ * ```
+ */
+export async function fetchHtmlWithCookies(
+  url: string,
+  options: Omit<FetchOptions, "headers"> = {},
+): Promise<FetchHtmlResult> {
   const result = await fetchExternal(url, {
     ...options,
     headers: getHtmlHeaders(),
@@ -236,7 +271,10 @@ export async function fetchHtml(
     throw new Error(`HTTP ${result.status}: ${result.statusText}`);
   }
 
-  return result.text();
+  return {
+    html: await result.text(),
+    cookies: result.cookies,
+  };
 }
 
 /**

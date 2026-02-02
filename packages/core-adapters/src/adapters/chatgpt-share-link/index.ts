@@ -19,7 +19,8 @@
 import type { Provider } from "@chat2poster/core-schema";
 import { createAppError } from "@chat2poster/core-schema";
 import { BaseShareLinkAdapter, type RawMessage } from "../../base";
-import { fetchHtml } from "../../network";
+import { fetchHtmlWithCookies } from "../../network";
+import { error as logError } from "./logger";
 import { parseShareHtml } from "./parsing-strategies";
 
 // Re-export types for external use
@@ -34,19 +35,52 @@ export type {
   DecodedLoader,
 } from "./types";
 
-// Re-export utilities for testing
+// Re-export constants
+export {
+  ContentType,
+  MessageRole,
+  AssetPointerPrefix,
+  ApiEndpoint,
+} from "./constants";
+
+// Re-export logger utilities
+export {
+  enableDebugLogging,
+  disableDebugLogging,
+  isDebugEnabled,
+  createScopedLogger,
+} from "./logger";
+
+// Re-export text processor utilities
 export { stripPrivateUse, stripCitationTokens } from "./text-processor";
+
+// Re-export React Flight decoder utilities
 export {
   decodeLoader,
   extractEnqueueContent,
   extractLoaderPayload,
 } from "./react-flight-decoder";
-export { flattenMessageContent } from "./content-flattener";
+
+// Re-export content flattener (now from content-flatteners directory)
+export {
+  flattenMessageContent,
+  registerContentFlattener,
+  unregisterContentFlattener,
+  getContentFlattener,
+  getAllContentFlatteners,
+  type ContentFlattener,
+  type FlattenContext,
+} from "./content-flatteners";
+
+// Re-export parsing strategies
 export {
   parseModernShare,
   parseLegacyShare,
   parseShareHtml,
 } from "./parsing-strategies";
+
+// Re-export message converter
+export { convertShareDataToMessages } from "./message-converter";
 
 /**
  * ChatGPT Share Link Adapter
@@ -71,8 +105,8 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
     const normalizedUrl = url.replace("chat.openai.com", "chatgpt.com");
 
     try {
-      const html = await fetchHtml(normalizedUrl);
-      const messages = parseShareHtml(html);
+      const { html, cookies } = await fetchHtmlWithCookies(normalizedUrl);
+      const messages = await parseShareHtml(html, cookies);
 
       if (messages.length === 0) {
         throw createAppError(
@@ -82,17 +116,19 @@ export class ChatGPTShareLinkAdapter extends BaseShareLinkAdapter {
       }
 
       return messages;
-    } catch (error) {
+    } catch (err) {
+      logError("Failed to fetch and extract", err);
+
       if (
-        error instanceof Error &&
-        error.message.includes("E-PARSE") // Our error
+        err instanceof Error &&
+        err.message.includes("E-PARSE") // Our error
       ) {
-        throw error;
+        throw err;
       }
 
       throw createAppError(
         "E-PARSE-005",
-        `Failed to parse ChatGPT share page: ${error instanceof Error ? error.message : "Unknown error"}. Try using the browser extension instead.`,
+        `Failed to parse ChatGPT share page: ${err instanceof Error ? err.message : "Unknown error"}. Try using the browser extension instead.`,
       );
     }
   }

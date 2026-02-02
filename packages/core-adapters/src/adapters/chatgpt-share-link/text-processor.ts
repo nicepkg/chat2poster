@@ -7,8 +7,9 @@
 /** Pattern to match Unicode private use area characters */
 const PRIVATE_USE_PATTERN = /[\uE000-\uF8FF]/g;
 
-/** Pattern to match citation tokens */
-const CITATION_TOKEN_PATTERN = /\s*(?:citeturn|navlist|turn\d+\w*)[^,\s]*,?/g;
+/** Pattern to match citation tokens (e.g., citeturn, turn0, turn0file0) */
+const CITATION_TOKEN_PATTERN =
+  /\s*(?:citeturn|filecite|navlist|turn\d+\w*(?:file\d+\w*)?)[^,\s]*,?/g;
 
 /**
  * Strip private use Unicode characters

@@ -26,8 +26,9 @@ export type { HeaderPreset, HeaderOptions } from "./headers";
 export {
   fetchExternal,
   fetchHtml,
+  fetchHtmlWithCookies,
   fetchJson,
   isUrlReachable,
   getRedirectUrl,
 } from "./fetcher";
-export type { FetchOptions, FetchResult } from "./fetcher";
+export type { FetchOptions, FetchResult, FetchHtmlResult } from "./fetcher";

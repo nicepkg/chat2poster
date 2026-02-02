@@ -24,6 +24,28 @@ export interface MessageAuthor {
 }
 
 /**
+ * Image asset pointer in multimodal content
+ */
+export interface ImageAssetPointer {
+  content_type: "image_asset_pointer";
+  asset_pointer: string;
+  size_bytes?: number;
+  width?: number | string;
+  height?: number | string | string[];
+  metadata?: {
+    dalle?: {
+      gen_id?: string;
+      prompt?: string;
+    };
+    generation?: {
+      gen_id?: string;
+      width?: number | string;
+      height?: number | string | string[];
+    };
+  };
+}
+
+/**
  * Message content structure
  */
 export interface MessageContent {
@@ -31,7 +53,7 @@ export interface MessageContent {
    * "thoughts"
    */
   content_type?: string;
-  parts?: (string | Record<string, JsonValue>)[];
+  parts?: (string | Record<string, JsonValue> | ImageAssetPointer)[];
   text?: string;
   language?: string;
   thoughts?: Array<{ summary?: string; content?: string }>;
@@ -70,6 +92,11 @@ export interface MessageNode {
       default_model_slug?: string;
       thinking_effort?: number;
       parent_id?: string;
+      finish_details?: {
+        type?: string;
+        stop_tokens?: string[];
+      };
+      is_complete?: boolean;
       attachments?: Array<{
         download_url?: string;
         file_url?: string;
