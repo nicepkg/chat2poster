@@ -48,7 +48,7 @@ Default behavior:
 
 - Default select all messages
 - Export format: PNG only (1x / 2x / 3x), default 2x
-- Default canvas width: 1080px (defined in EXPORT_DEFAULTS.CANVAS_WIDTH_PX)
+- Default device type: tablet (768px), configurable via deviceType (mobile: 390px, tablet: 768px, desktop: 1200px)
 - Allow long conversations; show pagination hint when estimated height > 6000px
 - Pagination via page-break markers inserted between message items
 - Auto pagination available (default max page height = 4096px, range 2000–10000px)

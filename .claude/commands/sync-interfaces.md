@@ -92,8 +92,8 @@ export interface Theme {
 export interface Decoration {
   canvasPaddingPx: number
   canvasRadiusPx: number
-  shadowLevel: 0 | 1 | 2 | 3
-  backgroundType: 'solid' | 'gradient'
+  shadowLevel: 'none' | 'sm' | 'md' | 'lg' | 'xl'
+  backgroundType: 'solid' | 'gradient' | 'image'
   backgroundValue: string
   macosBarEnabled: boolean
 }
@@ -105,7 +105,7 @@ export interface Decoration {
 export interface ExportParams {
   scale: 1 | 2 | 3
   maxPageHeightPx: number
-  canvasWidthPx: number
+  deviceType: 'mobile' | 'tablet' | 'desktop'
   outputMode: 'single' | 'multi-zip'
 }
 

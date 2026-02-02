@@ -123,7 +123,7 @@
 - decorationDefaults: DecorationDefaults
   - canvasPaddingPx: number
   - canvasRadiusPx: number
-  - shadowLevel: enum（none|xs|sm|md|lg|xl）
+  - shadowLevel: enum（none|sm|md|lg|xl）
   - backgroundType: enum（solid|gradient|image）
   - backgroundValue: string
   - macosBarEnabled: boolean
