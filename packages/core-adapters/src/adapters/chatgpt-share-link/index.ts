@@ -19,9 +19,9 @@
 import type { Provider } from "@chat2poster/core-schema";
 import { createAppError } from "@chat2poster/core-schema";
 import { BaseShareLinkAdapter, type RawMessage } from "../../base";
-import { fetchHtmlWithCookies } from "../../network";
 import { error as logError } from "./logger";
 import { parseShareHtml } from "./parsing-strategies";
+import { fetchHtmlWithCookies } from "./request";
 
 // Re-export types for external use
 export type {
