@@ -61,7 +61,7 @@ export const MarkdownRenderer = memo(function MarkdownRenderer({
 
         // Inline code
         return (
-          <code {...props} className="c2p-inline-code">
+          <code {...props} className="c2p-markdown-inline-code">
             {children}
           </code>
         );
@@ -76,7 +76,7 @@ export const MarkdownRenderer = memo(function MarkdownRenderer({
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="c2p-link"
+          className="c2p-markdown-link"
         >
           {children}
         </a>
@@ -87,45 +87,67 @@ export const MarkdownRenderer = memo(function MarkdownRenderer({
             {...props}
             src={src}
             alt={alt || ""}
-            className="c2p-image"
+            className="c2p-markdown-image"
             loading="lazy"
           />
         ) : null,
-      p: ({ children }) => <p className="c2p-paragraph">{children}</p>,
-      ul: ({ children }) => <ul className="c2p-list c2p-ul">{children}</ul>,
-      ol: ({ children }) => <ol className="c2p-list c2p-ol">{children}</ol>,
-      li: ({ children }) => <li className="c2p-list-item">{children}</li>,
-      blockquote: ({ children }) => (
-        <blockquote className="c2p-blockquote">{children}</blockquote>
+      p: ({ children }) => <p className="c2p-markdown-paragraph">{children}</p>,
+      ul: ({ children }) => (
+        <ul className="c2p-markdown-list c2p-markdown-ul">{children}</ul>
       ),
-      h1: ({ children }) => <h1 className="c2p-heading c2p-h1">{children}</h1>,
-      h2: ({ children }) => <h2 className="c2p-heading c2p-h2">{children}</h2>,
-      h3: ({ children }) => <h3 className="c2p-heading c2p-h3">{children}</h3>,
-      h4: ({ children }) => <h4 className="c2p-heading c2p-h4">{children}</h4>,
-      h5: ({ children }) => <h5 className="c2p-heading c2p-h5">{children}</h5>,
-      h6: ({ children }) => <h6 className="c2p-heading c2p-h6">{children}</h6>,
-      hr: () => <hr className="c2p-hr" />,
+      ol: ({ children }) => (
+        <ol className="c2p-markdown-list c2p-markdown-ol">{children}</ol>
+      ),
+      li: ({ children }) => (
+        <li className="c2p-markdown-list-item">{children}</li>
+      ),
+      blockquote: ({ children }) => (
+        <blockquote className="c2p-markdown-blockquote">{children}</blockquote>
+      ),
+      h1: ({ children }) => (
+        <h1 className="c2p-markdown-heading c2p-markdown-h1">{children}</h1>
+      ),
+      h2: ({ children }) => (
+        <h2 className="c2p-markdown-heading c2p-markdown-h2">{children}</h2>
+      ),
+      h3: ({ children }) => (
+        <h3 className="c2p-markdown-heading c2p-markdown-h3">{children}</h3>
+      ),
+      h4: ({ children }) => (
+        <h4 className="c2p-markdown-heading c2p-markdown-h4">{children}</h4>
+      ),
+      h5: ({ children }) => (
+        <h5 className="c2p-markdown-heading c2p-markdown-h5">{children}</h5>
+      ),
+      h6: ({ children }) => (
+        <h6 className="c2p-markdown-heading c2p-markdown-h6">{children}</h6>
+      ),
+      hr: () => <hr className="c2p-markdown-hr" />,
       table: ({ children }) => (
-        <div className="c2p-table-wrapper">
-          <table className="c2p-table">{children}</table>
+        <div className="c2p-markdown-table-wrapper">
+          <table className="c2p-markdown-table">{children}</table>
         </div>
       ),
-      thead: ({ children }) => <thead className="c2p-thead">{children}</thead>,
-      tbody: ({ children }) => <tbody className="c2p-tbody">{children}</tbody>,
-      tr: ({ children }) => <tr className="c2p-tr">{children}</tr>,
-      th: ({ children }) => <th className="c2p-th">{children}</th>,
-      td: ({ children }) => <td className="c2p-td">{children}</td>,
-      strong: ({ children }) => (
-        <strong className="c2p-strong">{children}</strong>
+      thead: ({ children }) => (
+        <thead className="c2p-markdown-thead">{children}</thead>
       ),
-      em: ({ children }) => <em className="c2p-em">{children}</em>,
-      del: ({ children }) => <del className="c2p-del">{children}</del>,
+      tbody: ({ children }) => (
+        <tbody className="c2p-markdown-tbody">{children}</tbody>
+      ),
+      tr: ({ children }) => <tr className="c2p-markdown-tr">{children}</tr>,
+      th: ({ children }) => <th className="c2p-markdown-th">{children}</th>,
+      td: ({ children }) => <td className="c2p-markdown-td">{children}</td>,
+      strong: ({ children }) => (
+        <strong className="c2p-markdown-strong">{children}</strong>
+      ),
+      em: ({ children }) => <em className="c2p-markdown-em">{children}</em>,
+      del: ({ children }) => <del className="c2p-markdown-del">{children}</del>,
     }),
     [codeTheme, defaultLanguage],
   );
 
   return (
-    <div className={`c2p-markdown ${className || ""}`}>
+    <div className={`c2p-markdown-markdown ${className || ""}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
@@ -169,14 +191,14 @@ const ShikiCodeBlock = memo(function ShikiCodeBlock({
   }, [code, language, theme]);
 
   return (
-    <div className="c2p-code-block">
+    <div className="c2p-markdown-code-block">
       {html ? (
         <div
-          className="c2p-code-block-content"
+          className="c2p-markdown-code-block-content"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       ) : (
-        <pre className="c2p-code-block-content c2p-code-block-fallback">
+        <pre className="c2p-markdown-code-block-content c2p-markdown-code-block-fallback">
           <code>{code}</code>
         </pre>
       )}

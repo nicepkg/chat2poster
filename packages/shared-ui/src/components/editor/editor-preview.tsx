@@ -455,7 +455,7 @@ export function EditorPreview({
                               <div
                                 className={cn(
                                   "c2p-message-body",
-                                  isWindowDark && "c2p-dark",
+                                  isWindowDark && "c2p-markdown-dark",
                                 )}
                                 style={{
                                   lineHeight: selectedTheme.tokens.lineHeight,
@@ -465,7 +465,9 @@ export function EditorPreview({
                                 }}
                               >
                                 <MarkdownRenderer
-                                  content={message.contentMarkdown}
+                                  content={
+                                    message.contentMarkdown?.trim() || ""
+                                  }
                                 />
                               </div>
                             </div>

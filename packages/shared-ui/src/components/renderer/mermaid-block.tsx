@@ -58,53 +58,22 @@ export const MermaidBlock = memo(function MermaidBlock({
     void renderDiagram();
   }, [code]);
 
-  const containerStyle: React.CSSProperties = {
-    margin: "16px 0",
-    padding: "16px",
-    backgroundColor: "#f8f9fa",
-    borderRadius: "8px",
-    overflow: "auto",
-    textAlign: "center",
-  };
-
-  const errorStyle: React.CSSProperties = {
-    color: "#dc3545",
-    padding: "12px",
-    backgroundColor: "#f8d7da",
-    borderRadius: "4px",
-    fontSize: "14px",
-    fontFamily: "monospace",
-    whiteSpace: "pre-wrap",
-    textAlign: "left",
-  };
-
-  const fallbackStyle: React.CSSProperties = {
-    padding: "12px",
-    backgroundColor: "#f1f3f5",
-    borderRadius: "4px",
-    fontSize: "13px",
-    fontFamily:
-      'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
-    whiteSpace: "pre-wrap",
-    textAlign: "left",
-    color: "#495057",
-  };
-
   if (error) {
     return (
       <div
         ref={containerRef}
-        style={containerStyle}
-        className={`c2p-mermaid-block c2p-mermaid-error ${className || ""}`}
+        className={`c2p-markdown-mermaid-block c2p-markdown-mermaid-error p-4 bg-gray-50 rounded-lg overflow-auto text-center ${className || ""}`}
       >
-        <div style={errorStyle}>
+        <div className="text-red-600 p-3 bg-red-50 rounded text-sm font-mono whitespace-pre-wrap text-left">
           {t("mermaid.error")}: {error}
         </div>
-        <details style={{ marginTop: "8px", textAlign: "left" }}>
-          <summary style={{ cursor: "pointer", fontSize: "14px" }}>
+        <details className="mt-2 text-left">
+          <summary className="cursor-pointer text-sm">
             {t("mermaid.viewSource")}
           </summary>
-          <pre style={fallbackStyle}>{code}</pre>
+          <pre className="p-3 bg-gray-100 rounded text-[13px] font-mono whitespace-pre-wrap text-left text-gray-600">
+            {code}
+          </pre>
         </details>
       </div>
     );
@@ -114,12 +83,9 @@ export const MermaidBlock = memo(function MermaidBlock({
     return (
       <div
         ref={containerRef}
-        style={containerStyle}
-        className={`c2p-mermaid-block c2p-mermaid-loading ${className || ""}`}
+        className={`c2p-markdown-mermaid-block c2p-markdown-mermaid-loading my-4 p-4 bg-gray-50 rounded-lg overflow-auto text-center ${className || ""}`}
       >
-        <div style={{ color: "#6c757d", fontSize: "14px" }}>
-          {t("mermaid.loading")}
-        </div>
+        <div className="text-gray-500 text-sm">{t("mermaid.loading")}</div>
       </div>
     );
   }
@@ -127,8 +93,7 @@ export const MermaidBlock = memo(function MermaidBlock({
   return (
     <div
       ref={containerRef}
-      style={containerStyle}
-      className={`c2p-mermaid-block ${className || ""}`}
+      className={`c2p-markdown-mermaid-block my-4 p-4 bg-gray-50 rounded-lg overflow-auto text-center ${className || ""}`}
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );
