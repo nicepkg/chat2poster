@@ -27,6 +27,9 @@ export interface MessageAuthor {
  * Message content structure
  */
 export interface MessageContent {
+  /**
+   * "thoughts"
+   */
   content_type?: string;
   parts?: (string | Record<string, JsonValue>)[];
   text?: string;
@@ -45,6 +48,28 @@ export interface MessageNode {
     content?: MessageContent;
     create_time?: number;
     metadata?: {
+      is_visually_hidden_from_conversation?: boolean;
+      user_context_message_data?: number;
+      is_user_system_message?: boolean;
+      shared_conversation_id?: string;
+      is_redacted?: boolean;
+      developer_mode_connector_ids?: string[];
+      selected_sources?: string[];
+      selected_github_repos?: string[];
+      serialization_metadata?: { custom_symbol_offsets: number[] };
+      request_id?: string;
+      message_source?: string;
+      turn_exchange_id?: string;
+      reasoning_status?: string;
+      citations?: unknown[];
+      content_references?: unknown[];
+      classifier_response?: string;
+      skip_reasoning_title?: string;
+      message_type?: string;
+      model_slug?: string;
+      default_model_slug?: string;
+      thinking_effort?: number;
+      parent_id?: string;
       attachments?: Array<{
         download_url?: string;
         file_url?: string;

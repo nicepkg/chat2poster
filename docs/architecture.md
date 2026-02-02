@@ -18,13 +18,13 @@
 
 ## 构建工具链
 
-| 工具 | 用途 |
-|------|------|
-| **pnpm** | 包管理器，使用 workspace 协议管理 monorepo |
-| **Turborepo** | 任务运行器，提供并行构建、缓存、任务依赖图 |
-| **tsup** | packages 打包（输出 ESM + DTS） |
-| **Next.js** | web 应用构建 |
-| **WXT + Vite** | 浏览器扩展构建 |
+| 工具           | 用途                                       |
+| -------------- | ------------------------------------------ |
+| **pnpm**       | 包管理器，使用 workspace 协议管理 monorepo |
+| **Turborepo**  | 任务运行器，提供并行构建、缓存、任务依赖图 |
+| **tsup**       | packages 打包（输出 ESM + DTS）            |
+| **Next.js**    | web 应用构建                               |
+| **WXT + Vite** | 浏览器扩展构建                             |
 
 ### 常用命令
 
@@ -66,34 +66,34 @@ pnpm test               # 运行所有测试
 ## 2) 推荐目录结构（示例）
 
 apps/
-  browser-extension/
-    src/
-      entrypoints/ (content script + styles)
-      components/
-      background/
-      popup/
-      assets/
-  web/
-    src/
-      app/ (Next App Router)
-        [locale]/
-          page.tsx
-          docs/**
-          import/**
-          manual/**
-          paste/**
-          editor/**
-          api/**
-      components/
-      styles/
+browser-extension/
+src/
+entrypoints/ (content script + styles)
+components/
+background/
+popup/
+assets/
+web/
+src/
+app/ (Next App Router)
+[locale]/
+page.tsx
+docs/**
+import/**
+manual/**
+paste/**
+editor/**
+api/**
+components/
+styles/
 packages/
-  core-schema/        (Conversation/Message/Selection/Theme/ExportJob types + validators)
-  core-pagination/    (height estimation + manual breaks + auto pagination)
-  core-export/        (SnapDOM export, SVG fallback, zip packaging, file naming)
-  core-adapters/      (adapter interface + registry + share-link/DOM adapters)
-  shared-ui/          (Radix/Shadcn UI, EditorContext, editor, renderer, themes, utils)
+core-schema/ (Conversation/Message/Selection/Theme/ExportJob types + validators)
+core-pagination/ (height estimation + manual breaks + auto pagination)
+core-export/ (SnapDOM export, SVG fallback, zip packaging, file naming)
+core-adapters/ (adapter interface + registry + share-link/DOM adapters)
+shared-ui/ (Radix/Shadcn UI, EditorContext, editor, renderer, themes, utils)
 configs/
-  eslint/             (shared flat config helpers)
+eslint/ (shared flat config helpers)
 
 说明：
 
@@ -131,6 +131,8 @@ configs/
 
 - id: string
 - version: string
+- name: string
+- supportedInputTypes: readonly AdapterInputType[]（显式声明支持的输入类型）
 - canHandle(input): boolean
 - parse(input): Promise<ConversationDTO>
 

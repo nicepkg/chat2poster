@@ -9,6 +9,7 @@
 **Chat2Poster** converts AI chat sessions (ChatGPT / Claude / Gemini) into beautiful, export-ready PNG images.
 
 ### Core Features (MVP)
+
 - Parse conversations from ChatGPT/Claude/Gemini pages
 - Select messages to export (all or specific)
 - Apply themes & decorations (radius, shadow, background, macOS bar)
@@ -16,6 +17,7 @@
 - Export as PNG (1x/2x/3x) or ZIP for multi-page
 
 ### Dual Platform
+
 - **Browser Extension:** WXT + Shadow DOM, works on AI chat pages
 - **Web App:** Next.js, supports share links + manual input
 
@@ -23,18 +25,20 @@
 
 ## 👤 Owner & Preferences
 
-| Key | Value |
-|-----|-------|
-| **Name** | Jinming Yang |
+| Key        | Value                                    |
+| ---------- | ---------------------------------------- |
+| **Name**   | Jinming Yang                             |
 | **GitHub** | `2214962083` (personal), `nicepkg` (org) |
-| **Domain** | `chat2poster.xiaominglab.com` |
+| **Domain** | `chat2poster.xiaominglab.com`            |
 
 ### Communication Rules
+
 - **Respond in Chinese** (Jinming prefers it)
 - **Code/docs in English**
 - **Be concise** - No bullshit, no unnecessary verbosity
 
 ### Automation Rules
+
 - **DO automatically:** lint, typecheck, commits, PRs, deploys
 - **ASK before:** force push, delete branches, production deploys
 
@@ -49,12 +53,12 @@
 
 Chat2Poster's design character:
 
-| Trait | Expression |
-|-------|------------|
-| **Premium** | Apple-level polish, every detail refined |
-| **Playful** | Fun without being childish, subtle joy |
-| **Confident** | Bold whitespace, restrained colors, no over-design |
-| **Smooth** | Fluid animations, silky transitions, natural feedback |
+| Trait         | Expression                                            |
+| ------------- | ----------------------------------------------------- |
+| **Premium**   | Apple-level polish, every detail refined              |
+| **Playful**   | Fun without being childish, subtle joy                |
+| **Confident** | Bold whitespace, restrained colors, no over-design    |
+| **Smooth**    | Fluid animations, silky transitions, natural feedback |
 
 ### Anti-Patterns (Never Do This)
 
@@ -79,17 +83,17 @@ Chat2Poster's design character:
 /* Don't use lifeless grays - use colors with emotion */
 
 /* Primary: Indigo - professional yet vibrant */
---primary: oklch(0.619 0.202 268.7);  /* #6366F1 */
+--primary: oklch(0.619 0.202 268.7); /* #6366F1 */
 --primary-hover: oklch(0.55 0.22 268.7);
 --primary-glow: oklch(0.619 0.202 268.7 / 0.15);
 
 /* Secondary: Rose - warm accent */
---secondary: oklch(0.749 0.164 14.2);  /* #FB7185 */
+--secondary: oklch(0.749 0.164 14.2); /* #FB7185 */
 
 /* Background layers */
---bg-base: oklch(0.985 0.002 240);     /* Not pure white, slight blue tint */
---bg-subtle: oklch(0.97 0.003 240);    /* Subtle layer */
---bg-muted: oklch(0.95 0.005 240);     /* Cards/inputs */
+--bg-base: oklch(0.985 0.002 240); /* Not pure white, slight blue tint */
+--bg-subtle: oklch(0.97 0.003 240); /* Subtle layer */
+--bg-muted: oklch(0.95 0.005 240); /* Cards/inputs */
 
 /* Dark mode - not pure black, deep blue-black */
 --bg-base-dark: oklch(0.145 0.015 260);
@@ -97,46 +101,47 @@ Chat2Poster's design character:
 --bg-muted-dark: oklch(0.22 0.015 260);
 
 /* Text colors - never use pure black */
---text-primary: oklch(0.25 0.015 260);   /* Main text */
---text-secondary: oklch(0.45 0.01 260);  /* Secondary text */
---text-muted: oklch(0.6 0.005 260);      /* Hints/labels */
+--text-primary: oklch(0.25 0.015 260); /* Main text */
+--text-secondary: oklch(0.45 0.01 260); /* Secondary text */
+--text-muted: oklch(0.6 0.005 260); /* Hints/labels */
 ```
 
 ### Typography
 
 ```css
 /* Font stack - local first, graceful fallback */
---font-sans: "Inter var", "SF Pro Display", -apple-system, "Noto Sans SC", sans-serif;
+--font-sans:
+  "Inter var", "SF Pro Display", -apple-system, "Noto Sans SC", sans-serif;
 --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
 /* Font weights with rhythm */
 --font-weight-normal: 400;
---font-weight-medium: 500;   /* Common, don't use 600 */
+--font-weight-medium: 500; /* Common, don't use 600 */
 --font-weight-semibold: 600; /* Headings only */
---font-weight-bold: 700;     /* Rarely used */
+--font-weight-bold: 700; /* Rarely used */
 
 /* Comfortable line heights */
---line-height-tight: 1.25;   /* Large headings */
---line-height-normal: 1.5;   /* Body text */
+--line-height-tight: 1.25; /* Large headings */
+--line-height-normal: 1.5; /* Body text */
 --line-height-relaxed: 1.75; /* Long paragraphs */
 
 /* Letter spacing */
---letter-spacing-tight: -0.02em;  /* Large headings */
---letter-spacing-normal: 0;       /* Body */
---letter-spacing-wide: 0.05em;    /* All-caps labels */
+--letter-spacing-tight: -0.02em; /* Large headings */
+--letter-spacing-normal: 0; /* Body */
+--letter-spacing-wide: 0.05em; /* All-caps labels */
 ```
 
 ### Spacing System (8px Grid)
 
 ```css
 /* All spacing is multiples of 8 */
---space-1: 4px;   /* Tiny gaps */
---space-2: 8px;   /* Compact */
---space-3: 12px;  /* Small */
---space-4: 16px;  /* Standard */
---space-5: 24px;  /* Comfortable */
---space-6: 32px;  /* Loose */
---space-8: 48px;  /* Sections */
+--space-1: 4px; /* Tiny gaps */
+--space-2: 8px; /* Compact */
+--space-3: 12px; /* Small */
+--space-4: 16px; /* Standard */
+--space-5: 24px; /* Comfortable */
+--space-6: 32px; /* Loose */
+--space-8: 48px; /* Sections */
 --space-10: 64px; /* Large sections */
 --space-12: 80px; /* Page margins */
 ```
@@ -145,11 +150,11 @@ Chat2Poster's design character:
 
 ```css
 /* Unified corner language */
---radius-sm: 6px;    /* Small elements: tag, badge */
---radius-md: 10px;   /* Medium: input, button */
---radius-lg: 14px;   /* Large: card, dialog */
---radius-xl: 20px;   /* Containers: modal, panel */
---radius-2xl: 28px;  /* Extra large: floating panel */
+--radius-sm: 6px; /* Small elements: tag, badge */
+--radius-md: 10px; /* Medium: input, button */
+--radius-lg: 14px; /* Large: card, dialog */
+--radius-xl: 20px; /* Containers: modal, panel */
+--radius-2xl: 28px; /* Extra large: floating panel */
 --radius-full: 9999px; /* Circle: avatar, pill */
 ```
 
@@ -159,17 +164,13 @@ Chat2Poster's design character:
 /* Shadows should be soft and layered */
 --shadow-xs: 0 1px 2px oklch(0.2 0.02 260 / 0.04);
 --shadow-sm:
-  0 1px 3px oklch(0.2 0.02 260 / 0.06),
-  0 1px 2px oklch(0.2 0.02 260 / 0.04);
+  0 1px 3px oklch(0.2 0.02 260 / 0.06), 0 1px 2px oklch(0.2 0.02 260 / 0.04);
 --shadow-md:
-  0 4px 6px oklch(0.2 0.02 260 / 0.05),
-  0 2px 4px oklch(0.2 0.02 260 / 0.03);
+  0 4px 6px oklch(0.2 0.02 260 / 0.05), 0 2px 4px oklch(0.2 0.02 260 / 0.03);
 --shadow-lg:
-  0 10px 15px oklch(0.2 0.02 260 / 0.06),
-  0 4px 6px oklch(0.2 0.02 260 / 0.03);
+  0 10px 15px oklch(0.2 0.02 260 / 0.06), 0 4px 6px oklch(0.2 0.02 260 / 0.03);
 --shadow-xl:
-  0 20px 25px oklch(0.2 0.02 260 / 0.08),
-  0 8px 10px oklch(0.2 0.02 260 / 0.04);
+  0 20px 25px oklch(0.2 0.02 260 / 0.08), 0 8px 10px oklch(0.2 0.02 260 / 0.04);
 
 /* Glow effects for emphasis */
 --shadow-glow: 0 0 20px oklch(0.619 0.202 268.7 / 0.25);
@@ -193,16 +194,16 @@ Chat2Poster's design character:
 
 ```css
 /* Duration */
---duration-fast: 150ms;    /* Micro-interactions: hover, focus */
---duration-normal: 250ms;  /* Standard transitions */
---duration-slow: 400ms;    /* Complex animations */
---duration-slower: 600ms;  /* Page transitions */
+--duration-fast: 150ms; /* Micro-interactions: hover, focus */
+--duration-normal: 250ms; /* Standard transitions */
+--duration-slow: 400ms; /* Complex animations */
+--duration-slower: 600ms; /* Page transitions */
 
 /* Easing */
---ease-out: cubic-bezier(0.16, 1, 0.3, 1);      /* Primary use */
---ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);  /* Symmetric */
+--ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* Primary use */
+--ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* Symmetric */
 --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* Elastic */
---ease-bounce: cubic-bezier(0.34, 1.8, 0.64, 1);  /* Playful bounce */
+--ease-bounce: cubic-bezier(0.34, 1.8, 0.64, 1); /* Playful bounce */
 ```
 
 ### Must-Have Animations
@@ -578,11 +579,13 @@ const [copied, setCopied] = useState(false);
 /* Standard page structure */
 <div className="min-h-screen bg-background">
   {/* Header - Frosted glass effect */}
-  <header className="
+  <header
+    className="
     sticky top-0 z-50
     bg-background/80 backdrop-blur-lg
     border-b border-border/50
-  ">
+  "
+  >
     <div className="container h-16 flex items-center justify-between">
       {/* ... */}
     </div>
@@ -601,9 +604,7 @@ const [copied, setCopied] = useState(false);
     </div>
 
     {/* Content area */}
-    <div className="grid gap-8">
-      {/* ... */}
-    </div>
+    <div className="grid gap-8">{/* ... */}</div>
   </main>
 </div>
 ```
@@ -639,16 +640,20 @@ const [copied, setCopied] = useState(false);
     <Card className="flex-1 min-h-0 h-full overflow-hidden">
       {/* Preview Header: Device selector | Page nav | Export button */}
       <div className="flex items-center justify-between border-b px-3 py-2">
-        <DeviceSelector />      {/* mobile/tablet/desktop icons */}
-        <PageNavigation />      {/* Only when pages > 1 */}
+        <DeviceSelector /> {/* mobile/tablet/desktop icons */}
+        <PageNavigation /> {/* Only when pages > 1 */}
         <ExportButton />
       </div>
       {/* Preview Canvas (CleanShot X style layers) */}
       <div className="flex-1 min-h-0 overflow-auto checkerboard-bg p-4">
         <div className="c2p-desktop mx-auto" style={{ width: deviceWidth }}>
           <div className="c2p-window">
-            <div className="c2p-window-bar"><MacOSBar /></div>
-            <div className="c2p-window-content"><Messages /></div>
+            <div className="c2p-window-bar">
+              <MacOSBar />
+            </div>
+            <div className="c2p-window-content">
+              <Messages />
+            </div>
           </div>
         </div>
       </div>
@@ -658,12 +663,14 @@ const [copied, setCopied] = useState(false);
 ```
 
 **Layer Structure (CleanShot X style):**
+
 - `c2p-desktop`: Canvas surface with gradient background (width = deviceType)
 - `c2p-window`: App window (width = desktop - padding×2)
 - `c2p-window-bar`: macOS traffic lights (optional)
 - `c2p-window-content`: Message content with theme colors
 
 **Device Widths:**
+
 - mobile: 390px
 - tablet: 768px (default)
 - desktop: 1200px
@@ -677,48 +684,48 @@ const [copied, setCopied] = useState(false);
 ```tsx
 const themePresets = [
   {
-    id: 'minimal-light',
-    name: 'Minimal Light',
-    preview: '/themes/minimal-light.png',
+    id: "minimal-light",
+    name: "Minimal Light",
+    preview: "/themes/minimal-light.png",
     tokens: {
-      background: '#FFFFFF',
-      foreground: '#1A1A2E',
-      userBubble: '#F4F4F5',
-      assistantBubble: '#FFFFFF',
-      border: '#E4E4E7',
-      codeBlock: '#FAFAFA',
+      background: "#FFFFFF",
+      foreground: "#1A1A2E",
+      userBubble: "#F4F4F5",
+      assistantBubble: "#FFFFFF",
+      border: "#E4E4E7",
+      codeBlock: "#FAFAFA",
     },
   },
   {
-    id: 'minimal-dark',
-    name: 'Minimal Dark',
-    preview: '/themes/minimal-dark.png',
+    id: "minimal-dark",
+    name: "Minimal Dark",
+    preview: "/themes/minimal-dark.png",
     tokens: {
-      background: '#0A0A0F',
-      foreground: '#FAFAFA',
-      userBubble: '#1F1F28',
-      assistantBubble: '#16161D',
-      border: '#27272A',
-      codeBlock: '#0D0D12',
+      background: "#0A0A0F",
+      foreground: "#FAFAFA",
+      userBubble: "#1F1F28",
+      assistantBubble: "#16161D",
+      border: "#27272A",
+      codeBlock: "#0D0D12",
     },
   },
   {
-    id: 'ocean-gradient',
-    name: 'Ocean',
-    preview: '/themes/ocean.png',
+    id: "ocean-gradient",
+    name: "Ocean",
+    preview: "/themes/ocean.png",
     tokens: {
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      foreground: '#FFFFFF',
-      userBubble: 'rgba(255,255,255,0.15)',
-      assistantBubble: 'rgba(255,255,255,0.1)',
+      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      foreground: "#FFFFFF",
+      userBubble: "rgba(255,255,255,0.15)",
+      assistantBubble: "rgba(255,255,255,0.1)",
     },
   },
   {
-    id: 'sunset',
-    name: 'Sunset',
-    preview: '/themes/sunset.png',
+    id: "sunset",
+    name: "Sunset",
+    preview: "/themes/sunset.png",
     tokens: {
-      background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
       // ...
     },
   },
@@ -739,7 +746,11 @@ const themePresets = [
           : "border-transparent hover:border-muted"
       )}
     >
-      <img src={theme.preview} alt={theme.name} className="w-full h-full object-cover" />
+      <img
+        src={theme.preview}
+        alt={theme.name}
+        className="w-full h-full object-cover"
+      />
       <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/60 to-transparent">
         <span className="text-white text-sm font-medium">{theme.name}</span>
       </div>
@@ -754,7 +765,7 @@ const themePresets = [
       )}
     </motion.button>
   ))}
-</div>
+</div>;
 ```
 
 ---
@@ -786,9 +797,7 @@ xl: 1280px  /* Desktop */
   </header>
 
   {/* Scrollable Content */}
-  <div className="flex-1 overflow-y-auto">
-    {/* ... */}
-  </div>
+  <div className="flex-1 overflow-y-auto">{/* ... */}</div>
 
   {/* Fixed Footer */}
   <footer className="shrink-0 border-t p-4">
@@ -803,14 +812,14 @@ xl: 1280px  /* Desktop */
 
 ### Design References
 
-| Product | What to Learn |
-|---------|---------------|
-| **Linear** | Keyboard shortcuts, fluid animations, minimalist aesthetic |
-| **Raycast** | Command palette, dark theme, icon design |
-| **Notion** | Content hierarchy, empty states, onboarding |
-| **Figma** | Toolbar design, multi-select interactions, collaboration hints |
-| **Arc Browser** | Bold colors, space utilization, innovative interactions |
-| **Vercel** | Black/white contrast, code display, deploy status |
+| Product         | What to Learn                                                  |
+| --------------- | -------------------------------------------------------------- |
+| **Linear**      | Keyboard shortcuts, fluid animations, minimalist aesthetic     |
+| **Raycast**     | Command palette, dark theme, icon design                       |
+| **Notion**      | Content hierarchy, empty states, onboarding                    |
+| **Figma**       | Toolbar design, multi-select interactions, collaboration hints |
+| **Arc Browser** | Bold colors, space utilization, innovative interactions        |
+| **Vercel**      | Black/white contrast, code display, deploy status              |
 
 ### Icon Library
 
@@ -869,6 +878,7 @@ pnpm test               # Run all tests
 ```
 
 **Turborepo Benefits:**
+
 - Task dependency graph (packages build before apps)
 - Local caching (repeat builds are instant)
 - Parallel execution (independent tasks run concurrently)
@@ -925,30 +935,32 @@ pnpm test               # Run all tests
 
 ### Memory Commands
 
-| Command | Purpose |
-|---------|---------|
-| `/remember` | Save current session to memory file |
-| `/recall` | Load previous sessions |
-| `/recall --long-term` | Load long-term memory |
+| Command               | Purpose                             |
+| --------------------- | ----------------------------------- |
+| `/remember`           | Save current session to memory file |
+| `/recall`             | Load previous sessions              |
+| `/recall --long-term` | Load long-term memory               |
 
 ---
 
 ## ⚡ Commands
 
 ### Task Management
-| Command | Description |
-|---------|-------------|
-| `/claim-track` | Claim a track (T1-T5) |
-| `/do-track` | Execute track tasks |
-| `/track-status` | View progress |
+
+| Command            | Description            |
+| ------------------ | ---------------------- |
+| `/claim-track`     | Claim a track (T1-T5)  |
+| `/do-track`        | Execute track tasks    |
+| `/track-status`    | View progress          |
 | `/milestone-check` | Check milestone status |
 
 ### Development
-| Command | Description |
-|---------|-------------|
-| `/commit` | Commit with Angular convention |
-| `/create-pr` | Create pull request |
-| `/code-review` | Review code changes |
+
+| Command        | Description                    |
+| -------------- | ------------------------------ |
+| `/commit`      | Commit with Angular convention |
+| `/create-pr`   | Create pull request            |
+| `/code-review` | Review code changes            |
 
 ---
 
@@ -983,6 +995,6 @@ AI-5 (T5): apps/browser-extension/**, apps/web/**, packages/shared-ui/**
 
 ---
 
-*Design is not just what it looks like. Design is how it works.* — Steve Jobs
+_Design is not just what it looks like. Design is how it works._ — Steve Jobs
 
-*Last updated: 2026-01-31*
+_Last updated: 2026-02-02_

@@ -44,6 +44,15 @@ export function parseModernShare(html: string): RawMessage[] {
     if (role === "system") continue;
     if (role !== "user" && role !== "assistant" && role !== "tool") continue;
 
+    // Skip hidden messages
+    if (
+      message?.content?.content_type === "thoughts" ||
+      message?.metadata?.is_visually_hidden_from_conversation ||
+      message?.metadata?.is_redacted ||
+      message?.metadata?.is_user_system_message
+    )
+      continue;
+
     const content = message.content;
     if (!content) continue;
 
