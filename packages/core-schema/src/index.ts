@@ -32,6 +32,8 @@ export {
   ThemeTokens,
   BackgroundType,
   ShadowLevel,
+  SHADOW_LEVELS,
+  DECORATION_LIMITS,
   DecorationDefaults,
   Theme,
   Decoration,
@@ -42,6 +44,7 @@ export {
 export {
   DeviceType,
   DEVICE_WIDTHS,
+  EXPORT_SCALES,
   EXPORT_DEFAULTS,
   ExportFormat,
   ExportScale,

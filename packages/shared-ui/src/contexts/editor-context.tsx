@@ -16,7 +16,6 @@ import {
   createContext,
   useContext,
   useReducer,
-  useCallback,
   useEffect,
   type ReactNode,
 } from "react";
@@ -239,18 +238,6 @@ export interface EditorContextValue {
   runtime: RuntimeState;
   dispatch: React.Dispatch<EditorAction>;
   runtimeDispatch: React.Dispatch<RuntimeAction>;
-  actions: {
-    toggleMessage: (messageId: string) => void;
-    selectAllMessages: () => void;
-    deselectAllMessages: () => void;
-    addPageBreak: (afterMessageId: string) => void;
-    removePageBreak: (pageBreakId: string) => void;
-    setTheme: (theme: Theme) => void;
-    setDecoration: (decoration: Partial<Decoration>) => void;
-    setExportParams: (params: Partial<ExportParams>) => void;
-    setAutoPagination: (enabled: boolean) => void;
-    setCurrentPage: (page: number) => void;
-  };
 }
 
 const EditorContext = createContext<EditorContextValue | null>(null);
@@ -323,80 +310,11 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     editor.autoPagination,
   ]);
 
-  // Actions
-  const toggleMessage = useCallback(
-    (messageId: string) =>
-      dispatch({ type: "TOGGLE_MESSAGE", payload: messageId }),
-    [],
-  );
-
-  const selectAllMessages = useCallback(
-    () => dispatch({ type: "SELECT_ALL_MESSAGES" }),
-    [],
-  );
-
-  const deselectAllMessages = useCallback(
-    () => dispatch({ type: "DESELECT_ALL_MESSAGES" }),
-    [],
-  );
-
-  const addPageBreak = useCallback(
-    (afterMessageId: string) =>
-      dispatch({ type: "ADD_PAGE_BREAK", payload: { afterMessageId } }),
-    [],
-  );
-
-  const removePageBreak = useCallback(
-    (pageBreakId: string) =>
-      dispatch({ type: "REMOVE_PAGE_BREAK", payload: pageBreakId }),
-    [],
-  );
-
-  const setTheme = useCallback(
-    (theme: Theme) => dispatch({ type: "SET_THEME", payload: theme }),
-    [],
-  );
-
-  const setDecoration = useCallback(
-    (decoration: Partial<Decoration>) =>
-      dispatch({ type: "SET_DECORATION", payload: decoration }),
-    [],
-  );
-
-  const setExportParams = useCallback(
-    (params: Partial<ExportParams>) =>
-      dispatch({ type: "SET_EXPORT_PARAMS", payload: params }),
-    [],
-  );
-
-  const setAutoPagination = useCallback(
-    (enabled: boolean) =>
-      dispatch({ type: "SET_AUTO_PAGINATION", payload: enabled }),
-    [],
-  );
-
-  const setCurrentPage = useCallback(
-    (page: number) => dispatch({ type: "SET_CURRENT_PAGE", payload: page }),
-    [],
-  );
-
   const value: EditorContextValue = {
     editor,
     runtime,
     dispatch,
     runtimeDispatch,
-    actions: {
-      toggleMessage,
-      selectAllMessages,
-      deselectAllMessages,
-      addPageBreak,
-      removePageBreak,
-      setTheme,
-      setDecoration,
-      setExportParams,
-      setAutoPagination,
-      setCurrentPage,
-    },
   };
 
   return (

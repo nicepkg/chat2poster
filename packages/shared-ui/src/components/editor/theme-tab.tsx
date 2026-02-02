@@ -1,6 +1,12 @@
 "use client";
 
-import type { Decoration, ShadowLevel, Theme } from "@chat2poster/core-schema";
+import {
+  type Decoration,
+  type ShadowLevel,
+  type Theme,
+  SHADOW_LEVELS,
+  DECORATION_LIMITS,
+} from "@chat2poster/core-schema";
 import { useI18n } from "@ui/i18n";
 import { BACKGROUND_PRESETS } from "@ui/themes/backgrounds";
 import { cn } from "@ui/utils/common";
@@ -11,16 +17,22 @@ import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";
 import { BackgroundPicker, type BackgroundPreset } from "./background-picker";
 
-// Shadow levels mapped to slider values (0-4)
-const SHADOW_LEVELS: ShadowLevel[] = ["none", "sm", "md", "lg", "xl"];
-const SHADOW_LABELS: Record<ShadowLevel, string> = {
+// Shadow level labels for UI display (maps SHADOW_LEVELS values to display labels)
+type ShadowLevelKey = (typeof SHADOW_LEVELS)[number];
+const SHADOW_LABELS: Record<ShadowLevelKey, string> = {
   none: "None",
-  xs: "XS",
   sm: "S",
   md: "M",
   lg: "L",
   xl: "XL",
 };
+
+// Helper to get shadow label (handles 'xs' by falling back to 'sm')
+function getShadowLabel(level: ShadowLevel): string {
+  if (level === "xs") return SHADOW_LABELS.sm;
+  // level is now narrowed to ShadowLevelKey (excludes 'xs')
+  return SHADOW_LABELS[level] ?? SHADOW_LABELS.md;
+}
 
 export interface ThemeTabProps {
   selectedThemeId: string;
@@ -44,7 +56,9 @@ export function ThemeTab({
   const { t } = useI18n();
 
   // Convert shadow level to slider index
-  const shadowIndex = SHADOW_LEVELS.indexOf(decoration.shadowLevel);
+  const shadowIndex = (SHADOW_LEVELS as readonly string[]).indexOf(
+    decoration.shadowLevel,
+  );
   const currentShadowIndex = shadowIndex === -1 ? 2 : shadowIndex; // default to "md"
 
   return (
@@ -118,9 +132,9 @@ export function ThemeTab({
           </div>
           <Slider
             value={[decoration.canvasRadiusPx]}
-            min={0}
-            max={32}
-            step={2}
+            min={DECORATION_LIMITS.radius.min}
+            max={DECORATION_LIMITS.radius.max}
+            step={DECORATION_LIMITS.radius.step}
             onValueChange={(values) =>
               onDecorationChange({
                 canvasRadiusPx: values[0] ?? decoration.canvasRadiusPx,
@@ -142,9 +156,9 @@ export function ThemeTab({
           </div>
           <Slider
             value={[decoration.canvasPaddingPx]}
-            min={0}
-            max={64}
-            step={4}
+            min={DECORATION_LIMITS.padding.min}
+            max={DECORATION_LIMITS.padding.max}
+            step={DECORATION_LIMITS.padding.step}
             onValueChange={(values) =>
               onDecorationChange({
                 canvasPaddingPx: values[0] ?? decoration.canvasPaddingPx,
@@ -162,13 +176,13 @@ export function ThemeTab({
             {t("theme.shadow")}
           </Label>
           <span className="text-muted-foreground/70 text-[10px]">
-            {SHADOW_LABELS[decoration.shadowLevel]}
+            {getShadowLabel(decoration.shadowLevel)}
           </span>
         </div>
         <Slider
           value={[currentShadowIndex]}
           min={0}
-          max={4}
+          max={SHADOW_LEVELS.length - 1}
           step={1}
           onValueChange={(values) => {
             const index = values[0] ?? 2;

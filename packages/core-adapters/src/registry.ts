@@ -203,3 +203,30 @@ export async function parseWithAdapters(
 export function clearAdapters(): void {
   adapters.clear();
 }
+
+/**
+ * Find an adapter that can handle a given share link URL
+ * @param url The share link URL to check
+ * @returns The adapter that can handle the URL, or null if none found
+ */
+export function findAdapterForUrl(url: string): Adapter | null {
+  const input: AdapterInput = { type: "share-link", url };
+  return (
+    getAdapters().find((adapter) => {
+      try {
+        return adapter.canHandle(input);
+      } catch {
+        return false;
+      }
+    }) ?? null
+  );
+}
+
+/**
+ * Check if any registered adapter can handle a share link URL
+ * @param url The share link URL to check
+ * @returns true if an adapter can handle the URL
+ */
+export function canHandleShareLink(url: string): boolean {
+  return findAdapterForUrl(url) !== null;
+}

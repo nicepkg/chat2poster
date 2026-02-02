@@ -16,8 +16,6 @@ import {
 export interface PaginationConfig {
   /** Maximum height for a single page in pixels */
   maxPageHeightPx: number;
-  /** Minimum height for a page (to avoid tiny pages) */
-  minPageHeightPx: number;
   /** Height configuration for message estimation */
   heightConfig: HeightEstimationConfig;
   /** Whether to use auto pagination when no manual breaks exist */
@@ -29,7 +27,6 @@ export interface PaginationConfig {
  */
 export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
   maxPageHeightPx: 4096,
-  minPageHeightPx: 200,
   heightConfig: DEFAULT_HEIGHT_CONFIG,
   autoEnabled: true,
 };

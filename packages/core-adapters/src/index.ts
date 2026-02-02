@@ -50,6 +50,8 @@ export {
   getAdaptersMeta,
   parseWithAdapters,
   clearAdapters,
+  findAdapterForUrl,
+  canHandleShareLink,
 } from "./registry";
 export type { ParseResult } from "./registry";
 

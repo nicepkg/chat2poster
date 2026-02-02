@@ -4,7 +4,6 @@ import type { Conversation } from "@chat2poster/core-schema";
 import { useEditor } from "@ui/contexts/editor-context";
 import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
-import { generateUUID } from "@ui/utils/uuid";
 import { useState, useCallback, useEffect } from "react";
 import { ExportTab } from "./export-tab";
 import { MessagesTab } from "./messages-tab";
@@ -48,73 +47,33 @@ export function EditorPanel({
 }: EditorPanelProps) {
   const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<PanelTab>("messages");
-  const { editor, runtime, dispatch, runtimeDispatch, actions } = useEditor();
+  const { editor, runtime, dispatch, runtimeDispatch } = useEditor();
 
   const handleParseConversation = useCallback(async () => {
+    if (!onParse) {
+      runtimeDispatch({
+        type: "SET_ERROR",
+        payload: "No parse handler provided",
+      });
+      return;
+    }
+
     runtimeDispatch({ type: "SET_PARSING", payload: true });
     runtimeDispatch({ type: "SET_ERROR", payload: null });
 
     try {
-      if (onParse) {
-        const conversation = await onParse();
-        const messageIds = conversation.messages.map((m) => m.id);
+      const conversation = await onParse();
+      const messageIds = conversation.messages.map((m) => m.id);
 
-        dispatch({ type: "SET_CONVERSATION", payload: conversation });
-        dispatch({
-          type: "SET_SELECTION",
-          payload: {
-            conversationId: conversation.id,
-            selectedMessageIds: messageIds,
-            pageBreaks: [],
-          },
-        });
-      } else {
-        // Use mock data if no onParse provided
-        const mockConversation: Conversation = {
-          id: generateUUID(),
-          sourceType: "extension-current",
-          messages: [
-            {
-              id: generateUUID(),
-              role: "user",
-              contentMarkdown: "Hello, can you help me with something?",
-              order: 0,
-            },
-            {
-              id: generateUUID(),
-              role: "assistant",
-              contentMarkdown:
-                "Of course! I'd be happy to help. What do you need assistance with?",
-              order: 1,
-            },
-            {
-              id: generateUUID(),
-              role: "user",
-              contentMarkdown:
-                "I need to understand how React hooks work, especially useEffect.",
-              order: 2,
-            },
-            {
-              id: generateUUID(),
-              role: "assistant",
-              contentMarkdown: `Great question! \`useEffect\` is one of the most commonly used React hooks. Here's a quick overview:\n\n**Basic Usage:**\n\`\`\`javascript\nuseEffect(() => {\n  // Side effect code here\n  return () => {\n    // Cleanup function\n  };\n}, [dependencies]);\n\`\`\`\n\n**Key Points:**\n- Runs after every render by default\n- Add a dependency array to control when it runs\n- Return a cleanup function for subscriptions/timers`,
-              order: 3,
-            },
-          ],
-        };
-
-        const messageIds = mockConversation.messages.map((m) => m.id);
-
-        dispatch({ type: "SET_CONVERSATION", payload: mockConversation });
-        dispatch({
-          type: "SET_SELECTION",
-          payload: {
-            conversationId: mockConversation.id,
-            selectedMessageIds: messageIds,
-            pageBreaks: [],
-          },
-        });
-      }
+      dispatch({ type: "SET_CONVERSATION", payload: conversation });
+      dispatch({
+        type: "SET_SELECTION",
+        payload: {
+          conversationId: conversation.id,
+          selectedMessageIds: messageIds,
+          pageBreaks: [],
+        },
+      });
     } catch (err) {
       runtimeDispatch({
         type: "SET_ERROR",
@@ -133,20 +92,19 @@ export function EditorPanel({
   }, [isOpen, editor.conversation, runtime.isParsing, handleParseConversation]);
 
   const handleExport = useCallback(async () => {
+    if (!onExport) {
+      runtimeDispatch({
+        type: "SET_ERROR",
+        payload: "No export handler provided",
+      });
+      return;
+    }
+
     runtimeDispatch({ type: "SET_EXPORTING", payload: true });
     runtimeDispatch({ type: "SET_EXPORT_PROGRESS", payload: 0 });
 
     try {
-      if (onExport) {
-        await onExport();
-      } else {
-        // Simulate progress
-        for (let i = 0; i <= 100; i += 20) {
-          await new Promise((r) => setTimeout(r, 200));
-          runtimeDispatch({ type: "SET_EXPORT_PROGRESS", payload: i });
-        }
-        alert(t("editor.panel.exportSoon"));
-      }
+      await onExport();
     } catch (err) {
       runtimeDispatch({
         type: "SET_ERROR",
@@ -237,25 +195,37 @@ export function EditorPanel({
             messages={editor.conversation?.messages ?? []}
             selectedIds={editor.selection?.selectedMessageIds ?? []}
             pageBreaks={editor.selection?.pageBreaks ?? []}
-            onToggle={actions.toggleMessage}
-            onSelectAll={actions.selectAllMessages}
-            onDeselectAll={actions.deselectAllMessages}
-            onAddPageBreak={actions.addPageBreak}
-            onRemovePageBreak={actions.removePageBreak}
+            onToggle={(id) => dispatch({ type: "TOGGLE_MESSAGE", payload: id })}
+            onSelectAll={() => dispatch({ type: "SELECT_ALL_MESSAGES" })}
+            onDeselectAll={() => dispatch({ type: "DESELECT_ALL_MESSAGES" })}
+            onAddPageBreak={(afterMessageId) =>
+              dispatch({ type: "ADD_PAGE_BREAK", payload: { afterMessageId } })
+            }
+            onRemovePageBreak={(id) =>
+              dispatch({ type: "REMOVE_PAGE_BREAK", payload: id })
+            }
           />
         ) : activeTab === "theme" ? (
           <ThemeTab
             selectedThemeId={editor.selectedTheme.id}
             decoration={editor.decoration}
-            onThemeChange={actions.setTheme}
-            onDecorationChange={actions.setDecoration}
+            onThemeChange={(theme) =>
+              dispatch({ type: "SET_THEME", payload: theme })
+            }
+            onDecorationChange={(decoration) =>
+              dispatch({ type: "SET_DECORATION", payload: decoration })
+            }
           />
         ) : (
           <ExportTab
             exportParams={editor.exportParams}
             autoPagination={editor.autoPagination}
-            onParamsChange={actions.setExportParams}
-            onAutoPaginationChange={actions.setAutoPagination}
+            onParamsChange={(params) =>
+              dispatch({ type: "SET_EXPORT_PARAMS", payload: params })
+            }
+            onAutoPaginationChange={(enabled) =>
+              dispatch({ type: "SET_AUTO_PAGINATION", payload: enabled })
+            }
           />
         )}
       </div>

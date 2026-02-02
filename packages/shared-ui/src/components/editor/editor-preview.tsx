@@ -63,7 +63,7 @@ export function EditorPreview({
   const { t } = useI18n();
   const internalCanvasRef = useRef<HTMLDivElement>(null);
   const canvasRef = externalCanvasRef ?? internalCanvasRef;
-  const { editor, actions } = useEditor();
+  const { editor, dispatch } = useEditor();
 
   // Export button state
   const [isExporting, setIsExporting] = useState(false);
@@ -87,16 +87,28 @@ export function EditorPreview({
   const messages = editor.conversation?.messages ?? [];
   const selectedIds = editor.selection?.selectedMessageIds ?? [];
   const pageBreaks = editor.selection?.pageBreaks ?? [];
-  const selectedMessages = messages.filter((m) => selectedIds.includes(m.id));
 
   const { decoration, exportParams, selectedTheme, currentPage } = editor;
+
+  // Pre-build Set for O(1) lookups
+  const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+  const pageBreakAfterIdSet = useMemo(
+    () => new Set(pageBreaks.map((pb) => pb.afterMessageId)),
+    [pageBreaks],
+  );
+
+  // Filter selected messages with O(n) instead of O(n*m)
+  const selectedMessages = useMemo(
+    () => messages.filter((m) => selectedIdSet.has(m.id)),
+    [messages, selectedIdSet],
+  );
 
   // Calculate desktop width from device type
   const desktopWidth = DEVICE_WIDTHS[exportParams.deviceType];
 
   // Split messages into pages based on page breaks
   const pages = useMemo(() => {
-    if (pageBreaks.length === 0) {
+    if (pageBreakAfterIdSet.size === 0) {
       return [selectedMessages];
     }
 
@@ -106,10 +118,8 @@ export function EditorPreview({
     for (const message of selectedMessages) {
       currentPageMessages.push(message);
 
-      const hasBreakAfter = pageBreaks.some(
-        (pb) => pb.afterMessageId === message.id,
-      );
-      if (hasBreakAfter) {
+      // O(1) lookup instead of O(p)
+      if (pageBreakAfterIdSet.has(message.id)) {
         result.push(currentPageMessages);
         currentPageMessages = [];
       }
@@ -120,16 +130,16 @@ export function EditorPreview({
     }
 
     return result;
-  }, [selectedMessages, pageBreaks]);
+  }, [selectedMessages, pageBreakAfterIdSet]);
 
   const totalPages = pages.length;
   const currentPageMessages = pages[currentPage] ?? [];
 
   useEffect(() => {
     if (totalPages > 0 && currentPage >= totalPages) {
-      actions.setCurrentPage(totalPages - 1);
+      dispatch({ type: "SET_CURRENT_PAGE", payload: totalPages - 1 });
     }
-  }, [totalPages, currentPage, actions]);
+  }, [totalPages, currentPage, dispatch]);
 
   // Theme colors - use same colors for user and assistant (unified look)
   const isWindowDark = selectedTheme.mode === "dark";
@@ -172,7 +182,10 @@ export function EditorPreview({
                   variant={isSelected ? "default" : "ghost"}
                   size="icon-sm"
                   onClick={() =>
-                    actions.setExportParams({ deviceType: device })
+                    dispatch({
+                      type: "SET_EXPORT_PARAMS",
+                      payload: { deviceType: device },
+                    })
                   }
                   className={cn(
                     "c2p-device-btn h-8 w-8",
@@ -195,7 +208,12 @@ export function EditorPreview({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                onClick={() => actions.setCurrentPage(currentPage - 1)}
+                onClick={() =>
+                  dispatch({
+                    type: "SET_CURRENT_PAGE",
+                    payload: currentPage - 1,
+                  })
+                }
                 disabled={currentPage === 0}
                 className="c2p-page-prev h-7 w-7"
               >
@@ -205,7 +223,9 @@ export function EditorPreview({
                 {Array.from({ length: totalPages }).map((_, index) => (
                   <button
                     key={index}
-                    onClick={() => actions.setCurrentPage(index)}
+                    onClick={() =>
+                      dispatch({ type: "SET_CURRENT_PAGE", payload: index })
+                    }
                     className={cn(
                       "c2p-page-dot h-1.5 rounded-full transition-all",
                       index === currentPage
@@ -218,7 +238,12 @@ export function EditorPreview({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                onClick={() => actions.setCurrentPage(currentPage + 1)}
+                onClick={() =>
+                  dispatch({
+                    type: "SET_CURRENT_PAGE",
+                    payload: currentPage + 1,
+                  })
+                }
                 disabled={currentPage === totalPages - 1}
                 className="c2p-page-next h-7 w-7"
               >

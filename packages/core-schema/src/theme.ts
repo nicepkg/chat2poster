@@ -72,6 +72,19 @@ export const ShadowLevel = z.enum(["none", "xs", "sm", "md", "lg", "xl"]);
 export type ShadowLevel = z.infer<typeof ShadowLevel>;
 
 /**
+ * Available shadow levels for UI controls (excludes 'xs' which is rarely used)
+ */
+export const SHADOW_LEVELS = ["none", "sm", "md", "lg", "xl"] as const;
+
+/**
+ * Decoration slider limits - single source of truth for UI controls
+ */
+export const DECORATION_LIMITS = {
+  radius: { min: 0, max: 32, step: 2 },
+  padding: { min: 0, max: 64, step: 4 },
+} as const;
+
+/**
  * Theme decoration defaults
  *
  * Layer structure (like CleanShot X):

@@ -1,12 +1,10 @@
 import {
   registerBuiltinAdapters,
   parseWithAdapters,
+  canHandleShareLink,
 } from "@chat2poster/core-adapters";
 import type { Conversation } from "@chat2poster/core-schema";
-import {
-  createTranslator,
-  type MessageKey,
-} from "@chat2poster/shared-ui/i18n/core";
+import { createTranslator } from "@chat2poster/shared-ui/i18n/core";
 import { mergeAdjacentSameRoleMessages } from "@chat2poster/shared-ui/utils";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -65,49 +63,34 @@ async function resolveLocale(context: RouteContext): Promise<string> {
   return params.locale;
 }
 
-function validateShareUrl(url: string): {
-  valid: boolean;
-  provider?: string;
-  errorKey?: MessageKey;
-} {
-  try {
-    const parsed = new URL(url);
+/**
+ * Create a standardized error response
+ */
+function createErrorResponse(
+  code: string,
+  message: string,
+  status: number,
+): NextResponse<ParseResponse> {
+  return NextResponse.json(
+    { success: false, error: { code, message } },
+    { status },
+  );
+}
 
-    // ChatGPT share links
-    if (
-      parsed.hostname === "chat.openai.com" ||
-      parsed.hostname === "chatgpt.com"
-    ) {
-      // Support both /share/ and /s/ formats
-      if (
-        parsed.pathname.startsWith("/share/") ||
-        parsed.pathname.startsWith("/s/")
-      ) {
-        return { valid: true, provider: "chatgpt" };
-      }
-      return { valid: false, errorKey: "api.parseShareLink.invalidChatgpt" };
-    }
-
-    // Claude share links
-    if (parsed.hostname === "claude.ai") {
-      if (parsed.pathname.startsWith("/share/")) {
-        return { valid: true, provider: "claude" };
-      }
-      return { valid: false, errorKey: "api.parseShareLink.invalidClaude" };
-    }
-
-    // Gemini share links
-    if (parsed.hostname === "gemini.google.com") {
-      if (parsed.pathname.startsWith("/share/")) {
-        return { valid: true, provider: "gemini" };
-      }
-      return { valid: false, errorKey: "api.parseShareLink.invalidGemini" };
-    }
-
-    return { valid: false, errorKey: "api.parseShareLink.unsupportedDomain" };
-  } catch {
-    return { valid: false, errorKey: "api.parseShareLink.invalidUrl" };
+/**
+ * Extract error details from various error types
+ */
+function extractErrorDetails(
+  error: unknown,
+  fallbackMessage: string,
+): { code: string; message: string } {
+  // AppError from core-schema
+  if (error && typeof error === "object" && "code" in error) {
+    const appError = error as { code: string };
+    return { code: appError.code, message: fallbackMessage };
   }
+  // Standard Error or unknown
+  return { code: "E-PARSE-FAILED", message: fallbackMessage };
 }
 
 export async function POST(
@@ -121,15 +104,10 @@ export async function POST(
   // Rate limiting
   if (!checkRateLimit(ip)) {
     console.log(`[parse-share-link] Rate limit exceeded for ${ip}`);
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: "E-PARSE-RATE-LIMIT",
-          message: t("api.parseShareLink.rateLimit"),
-        },
-      },
-      { status: 429 },
+    return createErrorResponse(
+      "E-PARSE-RATE-LIMIT",
+      t("api.parseShareLink.rateLimit"),
+      429,
     );
   }
 
@@ -138,35 +116,20 @@ export async function POST(
     const { url } = body;
 
     if (!url || typeof url !== "string") {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: "E-PARSE-INVALID-INPUT",
-            message: t("api.parseShareLink.invalidInput"),
-          },
-        },
-        { status: 400 },
+      return createErrorResponse(
+        "E-PARSE-INVALID-INPUT",
+        t("api.parseShareLink.invalidInput"),
+        400,
       );
     }
 
-    // Validate URL
-    const validation = validateShareUrl(url);
-    if (!validation.valid) {
-      console.log(
-        `[parse-share-link] Invalid URL: ${url}, errorKey: ${validation.errorKey}`,
-      );
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: "E-PARSE-UNSUPPORTED",
-            message: t(
-              validation.errorKey ?? "api.parseShareLink.unsupportedUrl",
-            ),
-          },
-        },
-        { status: 400 },
+    // Validate URL using adapter registry
+    if (!canHandleShareLink(url)) {
+      console.log(`[parse-share-link] Unsupported URL: ${url}`);
+      return createErrorResponse(
+        "E-PARSE-UNSUPPORTED",
+        t("api.parseShareLink.unsupportedUrl"),
+        400,
       );
     }
 
@@ -179,7 +142,7 @@ export async function POST(
 
       const duration = Date.now() - startTime;
       console.log(
-        `[parse-share-link] Provider: ${validation.provider}, Adapter: ${result.adapterId}, Duration: ${duration}ms, Status: success`,
+        `[parse-share-link] Adapter: ${result.adapterId}, Duration: ${duration}ms, Status: success`,
       );
 
       // Merge adjacent messages with the same role
@@ -194,50 +157,18 @@ export async function POST(
     } catch (parseError: unknown) {
       console.error(parseError);
       const duration = Date.now() - startTime;
-
-      // Handle different error types
-      let errorMessage: string;
-      let errorCode: string;
-
-      if (parseError instanceof Error) {
-        // Standard Error instance
-        errorMessage = t("api.parseShareLink.parseFailed");
-        errorCode = "E-PARSE-FAILED";
-      } else if (
-        parseError &&
-        typeof parseError === "object" &&
-        "code" in parseError &&
-        "message" in parseError
-      ) {
-        // AppError object from core-schema
-        const appError = parseError as {
-          code: string;
-          message: string;
-          detail?: string;
-        };
-        errorCode = appError.code;
-        errorMessage = t("api.parseShareLink.parseFailed");
-      } else {
-        errorMessage = t("api.parseShareLink.parseFailed");
-        errorCode = "E-PARSE-FAILED";
-      }
+      const { code, message } = extractErrorDetails(
+        parseError,
+        t("api.parseShareLink.parseFailed"),
+      );
 
       console.error(
         `[parse-share-link] Parse error after ${duration}ms:`,
-        errorCode,
-        errorMessage,
+        code,
+        message,
       );
 
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: errorCode,
-            message: errorMessage,
-          },
-        },
-        { status: 422 },
-      );
+      return createErrorResponse(code, message, 422);
     }
   } catch (error) {
     const duration = Date.now() - startTime;
@@ -246,15 +177,10 @@ export async function POST(
       error instanceof Error ? error.message : "Unknown error",
     );
 
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: "E-PARSE-NETWORK",
-          message: t("api.parseShareLink.networkError"),
-        },
-      },
-      { status: 500 },
+    return createErrorResponse(
+      "E-PARSE-NETWORK",
+      t("api.parseShareLink.networkError"),
+      500,
     );
   }
 }

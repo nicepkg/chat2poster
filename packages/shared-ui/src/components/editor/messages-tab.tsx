@@ -5,6 +5,7 @@ import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
 import { AnimatePresence, motion } from "framer-motion";
 import { Scissors, X, User, Bot } from "lucide-react";
+import { useMemo } from "react";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 
@@ -34,8 +35,17 @@ export function MessagesTab({
   className,
 }: MessagesTabProps) {
   const { t } = useI18n();
-  const getPageBreakAfter = (messageId: string) =>
-    pageBreaks.find((pb) => pb.afterMessageId === messageId);
+
+  // Pre-build Set for O(1) lookups
+  const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+
+  // Pre-build Map for O(1) page break lookups
+  const pageBreakMap = useMemo(
+    () => new Map(pageBreaks.map((pb) => [pb.afterMessageId, pb])),
+    [pageBreaks],
+  );
+
+  const getPageBreakAfter = (messageId: string) => pageBreakMap.get(messageId);
 
   return (
     <div className={cn("c2p-messages-tab flex h-full flex-col", className)}>
@@ -69,7 +79,7 @@ export function MessagesTab({
         <div className="space-y-2 p-3">
           {messages.map((message, index) => {
             const pageBreak = getPageBreakAfter(message.id);
-            const isSelected = selectedIds.includes(message.id);
+            const isSelected = selectedIdSet.has(message.id);
             const isLast = index === messages.length - 1;
 
             return (

@@ -20,6 +20,11 @@ export const DEVICE_WIDTHS: Record<DeviceType, number> = {
 } as const;
 
 /**
+ * Available export scale factors
+ */
+export const EXPORT_SCALES = [1, 2, 3] as const;
+
+/**
  * Default values for export parameters.
  * These are the single source of truth - use these constants instead of hardcoding values.
  */

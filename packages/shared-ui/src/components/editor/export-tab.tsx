@@ -1,6 +1,6 @@
 "use client";
 
-import type { ExportParams } from "@chat2poster/core-schema";
+import { type ExportParams, EXPORT_SCALES } from "@chat2poster/core-schema";
 import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
 import { motion } from "framer-motion";
@@ -36,7 +36,7 @@ export function ExportTab({
           {t("export.scale")}
         </Label>
         <div className="c2p-scale-options grid grid-cols-3 gap-2">
-          {([1, 2, 3] as const).map((scale) => (
+          {EXPORT_SCALES.map((scale) => (
             <Button
               key={scale}
               variant={exportParams.scale === scale ? "default" : "outline"}

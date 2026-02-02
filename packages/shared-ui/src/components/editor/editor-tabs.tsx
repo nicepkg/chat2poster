@@ -31,7 +31,7 @@ export function EditorTabs({
   showLabels = true,
 }: EditorTabsProps) {
   const { t } = useI18n();
-  const { editor, actions } = useEditor();
+  const { editor, dispatch } = useEditor();
 
   const messages = editor.conversation?.messages ?? [];
   const selectedIds = editor.selection?.selectedMessageIds ?? [];
@@ -86,11 +86,15 @@ export function EditorTabs({
           messages={messages}
           selectedIds={selectedIds}
           pageBreaks={pageBreaks}
-          onToggle={actions.toggleMessage}
-          onSelectAll={actions.selectAllMessages}
-          onDeselectAll={actions.deselectAllMessages}
-          onAddPageBreak={actions.addPageBreak}
-          onRemovePageBreak={actions.removePageBreak}
+          onToggle={(id) => dispatch({ type: "TOGGLE_MESSAGE", payload: id })}
+          onSelectAll={() => dispatch({ type: "SELECT_ALL_MESSAGES" })}
+          onDeselectAll={() => dispatch({ type: "DESELECT_ALL_MESSAGES" })}
+          onAddPageBreak={(afterMessageId) =>
+            dispatch({ type: "ADD_PAGE_BREAK", payload: { afterMessageId } })
+          }
+          onRemovePageBreak={(id) =>
+            dispatch({ type: "REMOVE_PAGE_BREAK", payload: id })
+          }
         />
       </TabsContent>
 
@@ -102,8 +106,12 @@ export function EditorTabs({
           selectedThemeId={editor.selectedTheme.id}
           decoration={editor.decoration}
           themes={THEME_PRESETS}
-          onThemeChange={actions.setTheme}
-          onDecorationChange={actions.setDecoration}
+          onThemeChange={(theme) =>
+            dispatch({ type: "SET_THEME", payload: theme })
+          }
+          onDecorationChange={(decoration) =>
+            dispatch({ type: "SET_DECORATION", payload: decoration })
+          }
         />
       </TabsContent>
 
@@ -115,8 +123,12 @@ export function EditorTabs({
           exportParams={editor.exportParams}
           autoPagination={editor.autoPagination}
           pageCount={pageCount}
-          onParamsChange={actions.setExportParams}
-          onAutoPaginationChange={actions.setAutoPagination}
+          onParamsChange={(params) =>
+            dispatch({ type: "SET_EXPORT_PARAMS", payload: params })
+          }
+          onAutoPaginationChange={(enabled) =>
+            dispatch({ type: "SET_AUTO_PAGINATION", payload: enabled })
+          }
         />
       </TabsContent>
     </Tabs>
