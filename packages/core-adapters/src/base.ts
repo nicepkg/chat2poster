@@ -7,6 +7,7 @@
 import type {
   Adapter,
   AdapterInput,
+  AdapterInputType,
   Conversation,
   Message,
   MessageRole,
@@ -103,6 +104,11 @@ export abstract class BaseDOMAdapter implements Adapter {
   abstract readonly name: string;
 
   /**
+   * Input types this adapter supports
+   */
+  readonly supportedInputTypes: readonly AdapterInputType[] = ["dom"];
+
+  /**
    * URL patterns this adapter handles
    */
   abstract readonly urlPatterns: RegExp[];
@@ -154,6 +160,11 @@ export abstract class BaseShareLinkAdapter implements Adapter {
   abstract readonly id: string;
   abstract readonly version: string;
   abstract readonly name: string;
+
+  /**
+   * Input types this adapter supports
+   */
+  readonly supportedInputTypes: readonly AdapterInputType[] = ["share-link"];
 
   /**
    * URL patterns this adapter handles

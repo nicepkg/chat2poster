@@ -23,6 +23,7 @@ function createMockAdapter(config: {
   id: string;
   version?: string;
   name?: string;
+  supportedInputTypes?: readonly ("dom" | "share-link" | "manual" | "paste")[];
   canHandle?: (input: AdapterInput) => boolean;
   parse?: (input: AdapterInput) => Promise<Conversation>;
 }): Adapter {
@@ -30,6 +31,7 @@ function createMockAdapter(config: {
     id: config.id,
     version: config.version ?? "1.0.0",
     name: config.name ?? "Mock Adapter",
+    supportedInputTypes: config.supportedInputTypes ?? ["dom"],
     canHandle: config.canHandle ?? (() => true),
     parse:
       config.parse ??

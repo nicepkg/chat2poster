@@ -8,6 +8,31 @@ import {
 let highlighterPromise: Promise<Highlighter> | null = null;
 let highlighter: Highlighter | null = null;
 
+// LRU Cache for highlighted code
+const CACHE_SIZE = 100;
+const highlightCache = new Map<string, string>();
+const cacheOrder: string[] = [];
+
+/**
+ * Simple hash function for cache keys
+ */
+function simpleHash(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash |= 0;
+  }
+  return hash;
+}
+
+/**
+ * Generate cache key from code, language, and theme
+ */
+function getCacheKey(code: string, lang: string, theme: string): string {
+  return `${lang}:${theme}:${simpleHash(code)}`;
+}
+
 /**
  * Common languages to pre-load for better performance
  */
@@ -71,17 +96,23 @@ export function getHighlighter(): Highlighter | null {
 }
 
 /**
- * Highlight code with Shiki
+ * Highlight code with Shiki (with LRU caching)
  */
 export async function highlightCode(
   code: string,
   language: string,
   theme: BundledTheme = "github-dark",
 ): Promise<string> {
-  const hl = await initHighlighter();
-
   // Normalize language name
   const lang = normalizeLanguage(language);
+  const key = getCacheKey(code, lang, theme);
+
+  // Check cache first
+  if (highlightCache.has(key)) {
+    return highlightCache.get(key)!;
+  }
+
+  const hl = await initHighlighter();
 
   // Check if language is loaded
   const loadedLangs = hl.getLoadedLanguages();
@@ -91,11 +122,28 @@ export async function highlightCode(
       await hl.loadLanguage(lang as BundledLanguage);
     } catch {
       // Fall back to plaintext if language is not supported
-      return hl.codeToHtml(code, { lang: "text", theme });
+      const html = hl.codeToHtml(code, { lang: "text", theme });
+      addToCache(key, html);
+      return html;
     }
   }
 
-  return hl.codeToHtml(code, { lang, theme });
+  const html = hl.codeToHtml(code, { lang, theme });
+  addToCache(key, html);
+  return html;
+}
+
+/**
+ * Add entry to cache with LRU eviction
+ */
+function addToCache(key: string, html: string): void {
+  // LRU eviction
+  if (cacheOrder.length >= CACHE_SIZE) {
+    const oldest = cacheOrder.shift()!;
+    highlightCache.delete(oldest);
+  }
+  highlightCache.set(key, html);
+  cacheOrder.push(key);
 }
 
 /**

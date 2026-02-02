@@ -97,6 +97,11 @@ export interface Adapter {
   readonly name: string;
 
   /**
+   * Input types this adapter supports
+   */
+  readonly supportedInputTypes: readonly AdapterInputType[];
+
+  /**
    * Check if this adapter can handle the given input
    */
   canHandle(input: AdapterInput): boolean;

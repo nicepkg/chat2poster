@@ -68,69 +68,8 @@ export function getAdaptersMeta(): AdapterMeta[] {
     id: adapter.id,
     version: adapter.version,
     name: adapter.name,
-    supportedInputTypes: getSupportedInputTypes(adapter),
+    supportedInputTypes: [...adapter.supportedInputTypes],
   }));
-}
-
-/**
- * Determine supported input types for an adapter
- * This is a heuristic based on canHandle testing
- */
-function getSupportedInputTypes(
-  adapter: Adapter,
-): ("dom" | "share-link" | "manual" | "paste")[] {
-  const types: ("dom" | "share-link" | "manual" | "paste")[] = [];
-
-  // Test DOM input (create mock document)
-  const mockDOMInput: AdapterInput = {
-    type: "dom",
-    document: typeof document !== "undefined" ? document : ({} as Document),
-    url: "https://example.com",
-  };
-
-  // Test share-link input
-  const mockShareLinkInput: AdapterInput = {
-    type: "share-link",
-    url: "https://example.com/share/123",
-  };
-
-  // Test manual input
-  const mockManualInput: AdapterInput = {
-    type: "manual",
-    messages: [{ role: "user", content: "test" }],
-  };
-
-  // Test paste input
-  const mockPasteInput: AdapterInput = {
-    type: "paste",
-    text: "User: test\nAssistant: test",
-    format: "plain",
-  };
-
-  // Note: This is a simplified check. Adapters should clearly indicate
-  // what input types they support in their implementation.
-  try {
-    if (adapter.canHandle(mockDOMInput)) types.push("dom");
-  } catch {
-    /* ignore */
-  }
-  try {
-    if (adapter.canHandle(mockShareLinkInput)) types.push("share-link");
-  } catch {
-    /* ignore */
-  }
-  try {
-    if (adapter.canHandle(mockManualInput)) types.push("manual");
-  } catch {
-    /* ignore */
-  }
-  try {
-    if (adapter.canHandle(mockPasteInput)) types.push("paste");
-  } catch {
-    /* ignore */
-  }
-
-  return types;
 }
 
 /**

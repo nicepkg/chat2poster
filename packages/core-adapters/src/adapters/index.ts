@@ -12,7 +12,7 @@ export { ChatGPTDOMAdapter, chatGPTDOMAdapter } from "./chatgpt-dom";
 export {
   ChatGPTShareLinkAdapter,
   chatGPTShareLinkAdapter,
-} from "./chatgpt-share-link";
+} from "./chatgpt-share-link/index";
 export {
   ClaudeShareLinkAdapter,
   claudeShareLinkAdapter,

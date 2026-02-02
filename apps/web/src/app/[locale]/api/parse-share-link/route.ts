@@ -7,13 +7,17 @@ import type { Conversation } from "@chat2poster/core-schema";
 import { createTranslator } from "@chat2poster/shared-ui/i18n/core";
 import { mergeAdjacentSameRoleMessages } from "@chat2poster/shared-ui/utils";
 import { type NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 // Register adapters at module load time
 registerBuiltinAdapters();
 
-interface ParseRequest {
-  url: string;
-}
+/**
+ * Request body schema for parse-share-link API
+ */
+const ParseRequestSchema = z.object({
+  url: z.string().min(1).max(2048),
+});
 
 interface ParseResponse {
   success: boolean;
@@ -27,36 +31,6 @@ interface ParseResponse {
 type RouteContext = {
   params: Promise<{ locale: string }>;
 };
-
-// Rate limiting - simple in-memory store (for demo purposes)
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 10; // requests per minute
-const RATE_WINDOW = 60 * 1000; // 1 minute
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const record = rateLimitMap.get(ip);
-
-  if (!record || now > record.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
-    return true;
-  }
-
-  if (record.count >= RATE_LIMIT) {
-    return false;
-  }
-
-  record.count++;
-  return true;
-}
-
-function getClientIp(request: NextRequest): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    request.headers.get("x-real-ip") ??
-    "unknown"
-  );
-}
 
 async function resolveLocale(context: RouteContext): Promise<string> {
   const params = await context.params;
@@ -99,29 +73,20 @@ export async function POST(
 ): Promise<NextResponse<ParseResponse>> {
   const { t } = createTranslator(await resolveLocale(context));
   const startTime = Date.now();
-  const ip = getClientIp(request);
-
-  // Rate limiting
-  if (!checkRateLimit(ip)) {
-    console.log(`[parse-share-link] Rate limit exceeded for ${ip}`);
-    return createErrorResponse(
-      "E-PARSE-RATE-LIMIT",
-      t("api.parseShareLink.rateLimit"),
-      429,
-    );
-  }
 
   try {
-    const body = (await request.json()) as ParseRequest;
-    const { url } = body;
+    const body: unknown = await request.json();
+    const parseResult = ParseRequestSchema.safeParse(body);
 
-    if (!url || typeof url !== "string") {
+    if (!parseResult.success) {
       return createErrorResponse(
         "E-PARSE-INVALID-INPUT",
         t("api.parseShareLink.invalidInput"),
         400,
       );
     }
+
+    const { url } = parseResult.data;
 
     // Validate URL using adapter registry
     if (!canHandleShareLink(url)) {

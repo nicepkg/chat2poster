@@ -2,46 +2,72 @@ import type { Theme, ThemeMode } from "@chat2poster/core-schema";
 import { lightTheme, darkTheme, sunsetTheme } from "./presets";
 
 /**
- * Theme registry - stores all available themes
+ * Theme registry interface
  */
-const themeRegistry = new Map<string, Theme>();
+export interface ThemeRegistry {
+  register: (theme: Theme) => void;
+  get: (id: string) => Theme | undefined;
+  getAll: () => Theme[];
+  getByMode: (mode: ThemeMode) => Theme[];
+  getDefault: () => Theme;
+}
+
+/**
+ * Create a new theme registry instance
+ * @param initialThemes - Optional array of themes to register initially
+ */
+export function createThemeRegistry(
+  initialThemes: Theme[] = [],
+): ThemeRegistry {
+  const registry = new Map<string, Theme>();
+  initialThemes.forEach((t) => registry.set(t.id, t));
+
+  return {
+    register: (theme: Theme) => {
+      registry.set(theme.id, theme);
+    },
+    get: (id: string) => registry.get(id),
+    getAll: () => Array.from(registry.values()),
+    getByMode: (mode: ThemeMode) =>
+      Array.from(registry.values()).filter((t) => t.mode === mode),
+    getDefault: (): Theme => {
+      const light = registry.get("light");
+      if (light) return light;
+      const themes = Array.from(registry.values());
+      // Return first theme or fallback to lightTheme
+      return themes[0] ?? lightTheme;
+    },
+  };
+}
+
+// Create default registry with built-in themes
+const defaultRegistry = createThemeRegistry([
+  lightTheme,
+  darkTheme,
+  sunsetTheme,
+]);
 
 /**
  * Register a theme
  */
-export function registerTheme(theme: Theme): void {
-  themeRegistry.set(theme.id, theme);
-}
+export const registerTheme = defaultRegistry.register;
 
 /**
  * Get a theme by ID
  */
-export function getTheme(id: string): Theme | undefined {
-  return themeRegistry.get(id);
-}
+export const getTheme = defaultRegistry.get;
 
 /**
  * Get all registered themes
  */
-export function getAllThemes(): Theme[] {
-  return Array.from(themeRegistry.values());
-}
+export const getAllThemes = defaultRegistry.getAll;
 
 /**
  * Get themes by mode
  */
-export function getThemesByMode(mode: ThemeMode): Theme[] {
-  return getAllThemes().filter((theme) => theme.mode === mode);
-}
+export const getThemesByMode = defaultRegistry.getByMode;
 
 /**
  * Get the default theme
  */
-export function getDefaultTheme(): Theme {
-  return lightTheme;
-}
-
-// Register built-in themes
-registerTheme(lightTheme);
-registerTheme(darkTheme);
-registerTheme(sunsetTheme);
+export const getDefaultTheme = defaultRegistry.getDefault;
