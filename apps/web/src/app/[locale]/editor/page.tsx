@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  exportToPng,
+  downloadImage,
+  packageAsZip,
+  downloadZip,
+  generateZipFilename,
+} from "@chat2poster/core-export";
 import type { MessageRole } from "@chat2poster/core-schema";
 import {
   Card,
@@ -151,9 +158,65 @@ function EditorContent() {
 
   // Export handler
   const handleExport = useCallback(async () => {
-    // TODO: Implement actual export with core-export
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-  }, []);
+    if (!canvasRef.current) return;
+
+    const pageBreaks = editor.selection?.pageBreaks ?? [];
+    const totalPages = pageBreaks.length + 1;
+    const scale = editor.exportParams.scale ?? 2;
+    const conversationId = editor.conversation?.id ?? "export";
+
+    if (totalPages === 1) {
+      // Single page export
+      const result = await exportToPng(canvasRef.current, { scale });
+      downloadImage(result.blob, `chat2poster-${conversationId}.png`);
+    } else {
+      // Multi-page export: iterate through pages
+      const originalPage = editor.currentPage;
+      const pageResults: Awaited<ReturnType<typeof exportToPng>>[] = [];
+
+      for (let i = 0; i < totalPages; i++) {
+        // Set current page and wait for React to re-render
+        dispatch({ type: "SET_CURRENT_PAGE", payload: i });
+        // Wait for DOM update
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        // Export current page
+        if (canvasRef.current) {
+          const result = await exportToPng(canvasRef.current, { scale });
+          pageResults.push(result);
+        }
+      }
+
+      // Restore original page
+      dispatch({ type: "SET_CURRENT_PAGE", payload: originalPage });
+
+      // Package as ZIP
+      const multiPageResult = {
+        pages: pageResults,
+        totalPages: pageResults.length,
+        cancelled: false,
+        completedAt: new Date().toISOString(),
+      };
+
+      const zipResult = await packageAsZip(multiPageResult, {
+        baseFilename: "page",
+        includeMetadata: true,
+      });
+
+      downloadZip(
+        zipResult,
+        generateZipFilename(`chat2poster-${conversationId}`),
+      );
+    }
+  }, [
+    canvasRef,
+    editor.selection?.pageBreaks,
+    editor.exportParams.scale,
+    editor.conversation?.id,
+    editor.currentPage,
+    dispatch,
+  ]);
 
   // Count selected messages for export disabled state
   const selectedCount = editor.selection?.selectedMessageIds.length ?? 0;

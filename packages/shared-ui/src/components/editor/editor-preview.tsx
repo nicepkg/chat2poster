@@ -385,27 +385,12 @@ export function EditorPreview({
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.03 }}
                           className={cn(
-                            "c2p-message flex gap-3",
+                            "c2p-message flex",
                             isUser
-                              ? "c2p-message-user flex-row-reverse"
-                              : "c2p-message-assistant flex-row",
+                              ? "c2p-message-user justify-end"
+                              : "c2p-message-assistant justify-start",
                           )}
                         >
-                          {/* Avatar - same style for both */}
-                          <div
-                            className="c2p-message-avatar flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-                            style={{
-                              backgroundColor: bubbleBg,
-                              color: mutedFg,
-                            }}
-                          >
-                            {isUser ? (
-                              <User className="h-4 w-4" />
-                            ) : (
-                              <Sparkles className="h-4 w-4" />
-                            )}
-                          </div>
-
                           {/* Message Bubble */}
                           <div
                             className={cn(
@@ -413,24 +398,42 @@ export function EditorPreview({
                               isUser ? "text-right" : "text-left",
                             )}
                           >
-                            {/* Role Label */}
+                            {/* Role Label with Avatar */}
                             <div
                               className={cn(
-                                "c2p-message-role mb-1.5 text-xs font-medium",
-                                isUser ? "pr-1" : "pl-1",
+                                "c2p-message-role mb-1.5 flex items-center gap-1.5 text-xs font-medium mb-2",
+                                isUser
+                                  ? "flex-row-reverse justify-start"
+                                  : "flex-row justify-start",
                               )}
                               style={{ color: mutedFg }}
                             >
-                              {isUser
-                                ? t("role.user")
-                                : message.role === "assistant"
-                                  ? t("role.assistant")
-                                  : t("role.system")}
+                              {/* Avatar - inline with role label */}
+                              <div
+                                className="c2p-message-avatar flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+                                style={{
+                                  backgroundColor: bubbleBg,
+                                  color: mutedFg,
+                                }}
+                              >
+                                {isUser ? (
+                                  <User className="h-3 w-3" />
+                                ) : (
+                                  <Sparkles className="h-3 w-3" />
+                                )}
+                              </div>
+                              <span>
+                                {isUser
+                                  ? t("role.user")
+                                  : message.role === "assistant"
+                                    ? t("role.assistant")
+                                    : t("role.system")}
+                              </span>
                             </div>
 
                             {/* Bubble - same style for both */}
                             <div
-                              className="c2p-message-bubble"
+                              className="c2p-message-bubble overflow-hidden w-fit"
                               style={
                                 {
                                   backgroundColor: bubbleBg,

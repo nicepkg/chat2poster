@@ -17,7 +17,7 @@ export const darkTheme: Theme = {
     lineHeight: 1.65,
     bubbleRadius: 18,
     messagePadding: 16,
-    messageGap: 12,
+    messageGap: 16,
     colors: {
       // Window background
       background: "#0a0a0a",
