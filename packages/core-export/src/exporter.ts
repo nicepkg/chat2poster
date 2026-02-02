@@ -49,6 +49,8 @@ export interface ExportOptions {
   imageTimeout?: number;
   /** Background color (defaults to transparent for PNG) */
   backgroundColor?: string;
+  /** Embed fonts for consistent rendering (default: true) */
+  embedFonts?: boolean;
 }
 
 /**
@@ -62,6 +64,7 @@ export const DEFAULT_EXPORT_OPTIONS: ExportOptions = {
   waitForImages: true,
   fontTimeout: FONT_TIMEOUT_MS,
   imageTimeout: IMAGE_TIMEOUT_MS,
+  embedFonts: true,
 };
 
 /**
@@ -105,19 +108,44 @@ async function getSnapDOM(): Promise<typeof import("@zumer/snapdom")> {
 }
 
 /**
+ * SnapDOM capture options for high-quality export
+ */
+interface SnapDOMCaptureOptions {
+  scale: number;
+  backgroundColor?: string;
+  embedFonts?: boolean;
+}
+
+/**
  * Convert an element to a canvas using SnapDOM
  */
 async function elementToCanvas(
   element: HTMLElement,
-  scale: number,
-  backgroundColor?: string,
+  options: SnapDOMCaptureOptions,
 ): Promise<HTMLCanvasElement> {
   const { snapdom } = await getSnapDOM();
 
-  // Capture the element and convert to canvas
+  // Wait a frame to ensure all styles are computed
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+
+  // Capture the element with high-quality settings
   const result = await snapdom(element, {
-    scale,
-    backgroundColor,
+    // Scale multiplier for output resolution
+    scale: options.scale,
+    // Set dpr to 1 so scale fully controls output resolution
+    dpr: 1,
+    // Background color
+    backgroundColor: options.backgroundColor,
+    // Embed fonts for consistent text rendering (prevents misalignment)
+    embedFonts: options.embedFonts ?? true,
+    // Preserve outer transforms for accurate positioning (default: true)
+    outerTransforms: true,
+    // Keep shadows/blur/outline effects (default: false means keep them)
+    outerShadows: false,
+    // Enable fast mode for better performance
+    fast: true,
+    // Use full caching for better performance on repeated captures
+    cache: "full",
   });
 
   return result.toCanvas();
@@ -230,11 +258,11 @@ export async function exportElement(
   // Export using SnapDOM
   let canvas: HTMLCanvasElement;
   try {
-    canvas = await elementToCanvas(
-      element,
-      options.scale,
-      options.backgroundColor,
-    );
+    canvas = await elementToCanvas(element, {
+      scale: options.scale,
+      backgroundColor: options.backgroundColor,
+      embedFonts: options.embedFonts,
+    });
   } catch (error) {
     const detail = error instanceof Error ? error.message : "Unknown error";
     throw createAppError("E-EXPORT-002", `SnapDOM render failed: ${detail}`);
