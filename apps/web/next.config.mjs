@@ -54,14 +54,6 @@ const config = {
     "@chat2poster/core-export",
     "@chat2poster/shared-ui",
   ],
-
-  // Enable development condition exports for faster HMR (no build needed)
-  ...(isDev && {
-    experimental: {
-      exportsFieldConditions: ["development", "browser"],
-    },
-  }),
-
   // Required for image optimization
   images: {
     unoptimized: true,

@@ -5,6 +5,7 @@
  * Supports text and image_asset_pointer parts.
  */
 
+import { fetchExternal } from "../../../network";
 import { ApiEndpoint, AssetPointerPrefix, ContentType } from "../constants";
 import { createScopedLogger } from "../logger";
 import { stripPrivateUse } from "../text-processor";
@@ -48,25 +49,27 @@ async function fetchDownloadUrl(
   try {
     logger.debug("Fetching download URL", apiUrl);
 
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-      "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    };
-
+    const customHeaders: Record<string, string> = {};
     if (cookies) {
-      headers.Cookie = cookies;
+      customHeaders.Cookie = cookies;
     }
 
-    const response = await fetch(apiUrl, { headers });
-    logger.debug("Response status", response.status);
+    const result = await fetchExternal(apiUrl, {
+      headers: {
+        preset: "json",
+        custom: customHeaders,
+      },
+      timeout: 10000,
+    });
 
-    if (!response.ok) {
+    logger.debug("Response status", result.status);
+
+    if (!result.ok) {
       logger.debug("Response not ok");
       return null;
     }
 
-    const data = (await response.json()) as FileDownloadResponse;
+    const data = await result.json<FileDownloadResponse>();
     logger.debug("Got download_url", data.download_url ? "yes" : "no");
     return data.download_url || null;
   } catch (err) {
