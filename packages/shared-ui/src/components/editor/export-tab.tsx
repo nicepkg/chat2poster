@@ -4,7 +4,6 @@ import type { ExportParams } from "@chat2poster/core-schema";
 import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
 import { motion } from "framer-motion";
-import * as React from "react";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Slider } from "../ui/slider";

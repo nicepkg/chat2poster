@@ -2,7 +2,6 @@
 
 import { cn } from "@ui/utils/common";
 import { motion } from "framer-motion";
-import * as React from "react";
 
 export interface MacOSBarProps {
   className?: string;

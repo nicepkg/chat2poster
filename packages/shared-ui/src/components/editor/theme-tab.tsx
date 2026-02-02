@@ -6,7 +6,6 @@ import { BACKGROUND_PRESETS } from "@ui/themes/backgrounds";
 import { cn } from "@ui/utils/common";
 import { motion } from "framer-motion";
 import { Monitor } from "lucide-react";
-import * as React from "react";
 import { Label } from "../ui/label";
 import { Slider } from "../ui/slider";
 import { Switch } from "../ui/switch";

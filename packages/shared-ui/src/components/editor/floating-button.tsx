@@ -2,7 +2,6 @@
 
 import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
-import * as React from "react";
 
 export interface FloatingButtonProps {
   onClick: () => void;

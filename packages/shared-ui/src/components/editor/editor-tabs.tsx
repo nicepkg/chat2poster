@@ -4,7 +4,6 @@ import { useEditor, THEME_PRESETS } from "@ui/contexts/editor-context";
 import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
 import { MessageSquare, Palette, Settings2 } from "lucide-react";
-import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { ExportTab } from "./export-tab";
 import { MessagesTab } from "./messages-tab";
