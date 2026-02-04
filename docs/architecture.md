@@ -138,7 +138,7 @@ eslint/ (shared flat config helpers)
 
 输入类型：
 
-- DOMInput（扩展端）
+- ExtInput（扩展端）
 - ShareLinkInput（官网端）
 - ManualInput（官网端）
 - PasteTextInput（官网端）

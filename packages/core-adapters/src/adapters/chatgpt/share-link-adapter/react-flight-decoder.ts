@@ -4,7 +4,7 @@
  * Decodes React Flight loader payloads from ChatGPT share pages.
  */
 
-import type { JsonValue, DecodedLoader } from "./types";
+import type { JsonValue, DecodedLoader } from "../shared/types";
 
 /**
  * Decode a flattened React Flight loader array into structured data.

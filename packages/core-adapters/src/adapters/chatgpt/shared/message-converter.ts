@@ -5,7 +5,7 @@
  * Used by both modern and legacy parsing strategies.
  */
 
-import type { RawMessage } from "../../base";
+import type { RawMessage } from "../../../base";
 import { ContentType, MessageRole } from "./constants";
 import {
   flattenMessageContent,

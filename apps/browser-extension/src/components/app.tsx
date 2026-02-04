@@ -64,7 +64,7 @@ function ExtensionShell({
 
   const handleParseConversation = useCallback(async () => {
     const result = await parseWithAdapters({
-      type: "dom",
+      type: "ext",
       document,
       url: window.location.href,
     });

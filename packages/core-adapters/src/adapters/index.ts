@@ -5,14 +5,14 @@
  * Import individual adapters or use the registerBuiltinAdapters function.
  */
 
-// DOM adapters (for browser extension)
-export { ChatGPTDOMAdapter, chatGPTDOMAdapter } from "./chatgpt-dom";
+// Extension adapters (for browser extension)
+export { ChatGPTExtAdapter, chatGPTExtAdapter } from "./chatgpt/ext-adapter";
 
 // Share link adapters (for web app)
 export {
   ChatGPTShareLinkAdapter,
   chatGPTShareLinkAdapter,
-} from "./chatgpt-share-link/index";
+} from "./chatgpt/share-link-adapter";
 export {
   ClaudeShareLinkAdapter,
   claudeShareLinkAdapter,

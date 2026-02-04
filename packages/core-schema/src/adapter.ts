@@ -7,7 +7,7 @@ import { MessageRole } from "./message";
  * Single source of truth for input type values
  */
 export const AdapterInputType = z.enum([
-  "dom",
+  "ext",
   "share-link",
   "manual",
   "paste",
@@ -15,16 +15,16 @@ export const AdapterInputType = z.enum([
 export type AdapterInputType = z.infer<typeof AdapterInputType>;
 
 /**
- * Input type for DOM-based parsing (extension)
+ * Input type for extension-based parsing
  */
-export const DOMInput = z
+export const ExtInput = z
   .object({
-    type: z.literal(AdapterInputType.enum.dom),
+    type: z.literal(AdapterInputType.enum.ext),
     document: z.custom<Document>(),
     url: z.string().url(),
   })
   .strict();
-export type DOMInput = z.infer<typeof DOMInput>;
+export type ExtInput = z.infer<typeof ExtInput>;
 
 /**
  * Input type for share link parsing (web)
@@ -69,7 +69,7 @@ export type PasteTextInput = z.infer<typeof PasteTextInput>;
  * Union of all adapter input types
  */
 export const AdapterInput = z.discriminatedUnion("type", [
-  DOMInput,
+  ExtInput,
   ShareLinkInput,
   ManualInput,
   PasteTextInput,

@@ -47,6 +47,13 @@ export class TextFlattener implements ContentFlattener {
       }
     }
 
+    if (textParts.length === 0 && typeof content.text === "string") {
+      const cleaned = stripPrivateUse(content.text).trim();
+      if (cleaned) {
+        textParts.push(cleaned);
+      }
+    }
+
     return textParts.join("\n\n");
   }
 }

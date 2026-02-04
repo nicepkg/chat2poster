@@ -142,7 +142,7 @@ export interface ExportParams {
 - [x] Define Adapter interface (using core-schema's Adapter interface)
 - [x] Implement adapter registry (registerAdapter, getAdapters, unregisterAdapter)
 - [x] Implement parseWithAdapters() function
-- [x] Input types defined in core-schema: DOMInput, ShareLinkInput, ManualInput, PasteTextInput
+- [x] Input types defined in core-schema: ExtInput, ShareLinkInput, ManualInput, PasteTextInput
 - [x] Write registry tests (14 tests passing)
 
 **Files created:**

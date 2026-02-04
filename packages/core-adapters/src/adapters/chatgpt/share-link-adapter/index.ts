@@ -18,9 +18,9 @@
 
 import type { Provider } from "@chat2poster/core-schema";
 import { createAppError } from "@chat2poster/core-schema";
-import { BaseShareLinkAdapter, type RawMessage } from "../../base";
-import { fetchHtmlWithCookies } from "../../network";
-import { error as logError } from "./logger";
+import { BaseShareLinkAdapter, type RawMessage } from "../../../base";
+import { fetchHtmlWithCookies } from "../../../network";
+import { error as logError } from "../shared/logger";
 import { parseShareHtml } from "./parsing-strategies";
 
 // Re-export types for external use
@@ -33,7 +33,7 @@ export type {
   ServerResponse,
   LoaderData,
   DecodedLoader,
-} from "./types";
+} from "../shared/types";
 
 // Re-export constants
 export {
@@ -41,7 +41,7 @@ export {
   MessageRole,
   AssetPointerPrefix,
   ApiEndpoint,
-} from "./constants";
+} from "../shared/constants";
 
 // Re-export logger utilities
 export {
@@ -49,10 +49,10 @@ export {
   disableDebugLogging,
   isDebugEnabled,
   createScopedLogger,
-} from "./logger";
+} from "../shared/logger";
 
 // Re-export text processor utilities
-export { stripPrivateUse, stripCitationTokens } from "./text-processor";
+export { stripPrivateUse, stripCitationTokens } from "../shared/text-processor";
 
 // Re-export React Flight decoder utilities
 export {
@@ -70,7 +70,7 @@ export {
   getAllContentFlatteners,
   type ContentFlattener,
   type FlattenContext,
-} from "./content-flatteners";
+} from "../shared/content-flatteners";
 
 // Re-export parsing strategies
 export {
@@ -80,7 +80,7 @@ export {
 } from "./parsing-strategies";
 
 // Re-export message converter
-export { convertShareDataToMessages } from "./message-converter";
+export { convertShareDataToMessages } from "../shared/message-converter";
 
 /**
  * ChatGPT Share Link Adapter

@@ -5,7 +5,7 @@
  * Supports text and image_asset_pointer parts.
  */
 
-import { fetchExternal } from "../../../network";
+import { fetchExternal } from "../../../../network";
 import { ApiEndpoint, AssetPointerPrefix, ContentType } from "../constants";
 import { createScopedLogger } from "../logger";
 import { stripPrivateUse } from "../text-processor";

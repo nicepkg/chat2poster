@@ -10,7 +10,7 @@
  * import {
  *   registerAdapter,
  *   parseWithAdapters,
- *   chatGPTDOMAdapter,
+ *   chatGPTExtAdapter,
  *   registerBuiltinAdapters,
  * } from '@chat2poster/core-adapters';
  *
@@ -18,11 +18,11 @@
  * registerBuiltinAdapters();
  *
  * // Or register individual adapters
- * registerAdapter(chatGPTDOMAdapter);
+ * registerAdapter(chatGPTExtAdapter);
  *
  * // Parse input
  * const result = await parseWithAdapters({
- *   type: 'dom',
+ *   type: 'ext',
  *   document: document,
  *   url: 'https://chat.openai.com/c/xxx',
  * });
@@ -31,7 +31,7 @@
 
 // Internal imports for registerBuiltinAdapters
 import {
-  chatGPTDOMAdapter as _chatGPTDOMAdapter,
+  chatGPTExtAdapter as _chatGPTExtAdapter,
   chatGPTShareLinkAdapter as _chatGPTShareLinkAdapter,
   claudeShareLinkAdapter as _claudeShareLinkAdapter,
   geminiShareLinkAdapter as _geminiShareLinkAdapter,
@@ -57,7 +57,7 @@ export type { ParseResult } from "./registry";
 
 // Base classes and utilities
 export {
-  BaseDOMAdapter,
+  BaseExtAdapter,
   BaseShareLinkAdapter,
   buildMessages,
   buildConversation,
@@ -90,9 +90,9 @@ export type {
 
 // Adapter implementations
 export {
-  // DOM adapters
-  ChatGPTDOMAdapter,
-  chatGPTDOMAdapter,
+  // Extension adapters
+  ChatGPTExtAdapter,
+  chatGPTExtAdapter,
   // Share link adapters
   ChatGPTShareLinkAdapter,
   chatGPTShareLinkAdapter,
@@ -116,9 +116,9 @@ export {
  * ```
  */
 export function registerBuiltinAdapters(): void {
-  // DOM adapters
-  if (!_getAdapter(_chatGPTDOMAdapter.id)) {
-    _registerAdapter(_chatGPTDOMAdapter);
+  // Extension adapters
+  if (!_getAdapter(_chatGPTExtAdapter.id)) {
+    _registerAdapter(_chatGPTExtAdapter);
   }
 
   // Share link adapters

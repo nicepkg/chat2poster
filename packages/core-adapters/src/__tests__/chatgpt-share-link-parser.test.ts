@@ -13,7 +13,7 @@ import {
   flattenMessageContent,
   ContentType,
   disableDebugLogging,
-} from "../adapters/chatgpt-share-link";
+} from "../adapters/chatgpt/share-link-adapter";
 
 // Load fixtures
 const FIXTURES_DIR = join(__dirname, "__fixtures__");

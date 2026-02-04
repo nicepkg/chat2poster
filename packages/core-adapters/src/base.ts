@@ -9,6 +9,7 @@ import type {
   AdapterInput,
   AdapterInputType,
   Conversation,
+  ExtInput,
   Message,
   MessageRole,
   Provider,
@@ -96,9 +97,9 @@ export function buildConversation(
 }
 
 /**
- * Abstract base for DOM-based adapters
+ * Abstract base for extension adapters
  */
-export abstract class BaseDOMAdapter implements Adapter {
+export abstract class BaseExtAdapter implements Adapter {
   abstract readonly id: string;
   abstract readonly version: string;
   abstract readonly name: string;
@@ -106,7 +107,7 @@ export abstract class BaseDOMAdapter implements Adapter {
   /**
    * Input types this adapter supports
    */
-  readonly supportedInputTypes: readonly AdapterInputType[] = ["dom"];
+  readonly supportedInputTypes: readonly AdapterInputType[] = ["ext"];
 
   /**
    * URL patterns this adapter handles
@@ -122,7 +123,7 @@ export abstract class BaseDOMAdapter implements Adapter {
    * Check if this adapter can handle the given input
    */
   canHandle(input: AdapterInput): boolean {
-    if (input.type !== "dom") {
+    if (input.type !== "ext") {
       return false;
     }
 
@@ -133,11 +134,11 @@ export abstract class BaseDOMAdapter implements Adapter {
    * Parse the input into a Conversation
    */
   async parse(input: AdapterInput): Promise<Conversation> {
-    if (input.type !== "dom") {
-      throw new Error(`${this.name} only handles DOM input`);
+    if (input.type !== "ext") {
+      throw new Error(`${this.name} only handles ext input`);
     }
 
-    const rawMessages = this.extractMessages(input.document);
+    const rawMessages = await this.getRawMessages(input);
     return buildConversation(rawMessages, {
       sourceType: "extension-current",
       provider: this.provider,
@@ -147,10 +148,10 @@ export abstract class BaseDOMAdapter implements Adapter {
   }
 
   /**
-   * Extract messages from the document
+   * Fetch or extract messages from the input
    * Subclasses must implement this
    */
-  abstract extractMessages(document: Document): RawMessage[];
+  abstract getRawMessages(input: ExtInput): Promise<RawMessage[]>;
 }
 
 /**

@@ -23,7 +23,7 @@ function createMockAdapter(config: {
   id: string;
   version?: string;
   name?: string;
-  supportedInputTypes?: readonly ("dom" | "share-link" | "manual" | "paste")[];
+  supportedInputTypes?: readonly ("ext" | "share-link" | "manual" | "paste")[];
   canHandle?: (input: AdapterInput) => boolean;
   parse?: (input: AdapterInput) => Promise<Conversation>;
 }): Adapter {
@@ -31,7 +31,7 @@ function createMockAdapter(config: {
     id: config.id,
     version: config.version ?? "1.0.0",
     name: config.name ?? "Mock Adapter",
-    supportedInputTypes: config.supportedInputTypes ?? ["dom"],
+    supportedInputTypes: config.supportedInputTypes ?? ["ext"],
     canHandle: config.canHandle ?? (() => true),
     parse:
       config.parse ??
@@ -139,7 +139,7 @@ describe("Adapter Registry", () => {
       registerAdapter(adapter);
 
       const input: AdapterInput = {
-        type: "dom",
+        type: "ext",
         document: document,
         url: "https://example.com",
       };
@@ -182,7 +182,7 @@ describe("Adapter Registry", () => {
       registerAdapter(adapter2);
 
       const input: AdapterInput = {
-        type: "dom",
+        type: "ext",
         document: document,
         url: "https://example.com",
       };
@@ -221,7 +221,7 @@ describe("Adapter Registry", () => {
       registerAdapter(adapter2);
 
       const input: AdapterInput = {
-        type: "dom",
+        type: "ext",
         document: document,
         url: "https://example.com",
       };
@@ -239,7 +239,7 @@ describe("Adapter Registry", () => {
       registerAdapter(adapter);
 
       const input: AdapterInput = {
-        type: "dom",
+        type: "ext",
         document: document,
         url: "https://example.com",
       };

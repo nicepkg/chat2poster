@@ -5,11 +5,11 @@
  * Each strategy extracts ShareData, then delegates to message-converter.
  */
 
-import type { RawMessage } from "../../base";
-import { createScopedLogger } from "./logger";
-import { convertShareDataToMessages } from "./message-converter";
+import type { RawMessage } from "../../../base";
+import { createScopedLogger } from "../shared/logger";
+import { convertShareDataToMessages } from "../shared/message-converter";
+import type { ShareData } from "../shared/types";
 import { decodeLoader, extractLoaderPayload } from "./react-flight-decoder";
-import type { ShareData } from "./types";
 
 const logger = createScopedLogger("ParsingStrategies");
 
