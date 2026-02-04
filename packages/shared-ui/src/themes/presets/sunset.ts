@@ -1,4 +1,5 @@
 import type { Theme } from "@chat2poster/core-schema";
+import { MESH_BACKGROUND_VALUES } from "../backgrounds";
 
 /**
  * Sunset gradient theme preset
@@ -38,7 +39,7 @@ export const sunsetTheme: Theme = {
     canvasRadiusPx: 20,
     shadowLevel: "xl",
     backgroundType: "gradient",
-    backgroundValue: "linear-gradient(135deg, #fef3c7 0%, #fce7f3 100%)",
+    backgroundValue: MESH_BACKGROUND_VALUES.solarPunch,
     macosBarEnabled: true,
   },
 };

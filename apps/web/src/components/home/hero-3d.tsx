@@ -46,7 +46,7 @@ export function Hero3D() {
         <PerspectiveCamera makeDefault position={[0, 0, 6]} />
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1.5} />
-        <pointLight position={[-10, -10, -10]} color="#fb7185" intensity={1} />
+        <pointLight position={[-10, -10, -10]} color="#818cf8" intensity={1} />
 
         <Stars
           radius={100}

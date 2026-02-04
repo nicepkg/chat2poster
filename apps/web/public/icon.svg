@@ -2,7 +2,7 @@
   <defs>
     <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#6366f1" />
-      <stop offset="100%" stop-color="#fb7185" />
+      <stop offset="100%" stop-color="#818cf8" />
     </linearGradient>
   </defs>
 
@@ -35,5 +35,5 @@
 
   <!-- Image placeholder mountain/sun -->
   <circle cx="168" cy="182" r="8" fill="#6366f1" opacity="0.6" />
-  <path d="M156 208 L184 184 L200 196 L212 208 Z" fill="#fb7185" opacity="0.6" />
+  <path d="M156 208 L184 184 L200 196 L212 208 Z" fill="#818cf8" opacity="0.6" />
 </svg>

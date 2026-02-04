@@ -29,7 +29,7 @@
 ## Theme Colors
 
 - **Primary Color**: Indigo (#6366F1) / hsl(239.76, 84.21%, 67.45%) / oklch(0.619 0.202 268.7)
-- **Secondary Color**: Rose (#FB7185) / hsl(351.34, 95.18%, 71.18%) / oklch(0.749 0.164 14.2)
+- **Secondary Color**: Violet (#818CF8) / hsl(234.94, 89.47%, 73.92%) / oklch(0.685 0.17 277)
 
 ## Notes
 

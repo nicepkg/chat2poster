@@ -324,6 +324,9 @@ export function EditorPreview({
             style={{
               width: desktopWidth,
               background: decoration.backgroundValue,
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
               padding: decoration.canvasPaddingPx,
             }}
           >

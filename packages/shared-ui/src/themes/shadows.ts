@@ -36,8 +36,8 @@ export const GLOW_STYLES = {
   /** Primary color glow */
   primary: "0 0 20px oklch(0.619 0.202 268.7 / 0.25)",
 
-  /** Secondary/rose color glow */
-  secondary: "0 0 20px oklch(0.749 0.164 14.2 / 0.25)",
+  /** Secondary/violet color glow */
+  secondary: "0 0 20px oklch(0.685 0.17 277 / 0.25)",
 
   /** Soft primary glow for subtle emphasis */
   primarySoft: "0 0 15px oklch(0.619 0.202 268.7 / 0.15)",

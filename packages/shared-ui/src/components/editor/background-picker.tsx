@@ -37,31 +37,37 @@ export function BackgroundPicker({
           {resolvedLabel}
         </Label>
       )}
-      <div className="c2p-bg-grid grid grid-cols-10 gap-1">
+      <div className="c2p-bg-grid grid grid-cols-4 gap-1.5">
         {presets.map((preset) => {
           const isSelected = value === preset.value;
           return (
             <motion.button
               key={preset.id}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              type="button"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => onChange(preset.value, preset.type)}
               className={cn(
-                "c2p-bg-option relative h-5 w-5 rounded border transition-all",
+                "c2p-bg-option group relative aspect-[5/4] w-full overflow-hidden rounded-md border transition-all",
                 isSelected
-                  ? "c2p-bg-option-selected border-primary ring-primary/30 ring-2"
-                  : "border-border/50 hover:border-border",
+                  ? "c2p-bg-option-selected border-primary ring-primary/25 ring-2"
+                  : "border-border/60 hover:border-border",
               )}
-              style={{ background: preset.value }}
+              style={{
+                background: preset.value,
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+              }}
               title={preset.label}
             >
               {isSelected && (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="c2p-bg-option-check absolute inset-0 flex items-center justify-center"
+                  className="c2p-bg-option-check absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-black/45"
                 >
-                  <Check className="h-3 w-3 text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]" />
+                  <Check className="h-3 w-3 text-white" />
                 </motion.div>
               )}
             </motion.button>

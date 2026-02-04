@@ -69,8 +69,8 @@ const defaultDecoration: Decoration = {
   canvasPaddingPx: 24,
   canvasRadiusPx: 12,
   shadowLevel: "md",
-  backgroundType: "solid",
-  backgroundValue: "#ffffff",
+  backgroundType: "gradient",
+  backgroundValue: BACKGROUND_PRESETS[0]?.value ?? "#ffffff",
   macosBarEnabled: true,
 };
 

@@ -1,4 +1,5 @@
 import type { Theme } from "@chat2poster/core-schema";
+import { MESH_BACKGROUND_VALUES } from "../backgrounds";
 
 /**
  * Light theme preset
@@ -46,8 +47,8 @@ export const lightTheme: Theme = {
     canvasPaddingPx: 48,
     canvasRadiusPx: 20,
     shadowLevel: "lg",
-    backgroundType: "solid",
-    backgroundValue: "#f5f5f4",
+    backgroundType: "gradient",
+    backgroundValue: MESH_BACKGROUND_VALUES.sonomaDawn,
     macosBarEnabled: true,
   },
 };

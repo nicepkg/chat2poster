@@ -38,7 +38,7 @@ export function Logo({
             y2="100%"
           >
             <stop offset="0%" stopColor="#6366f1" />
-            <stop offset="100%" stopColor="#fb7185" />
+            <stop offset="100%" stopColor="#818cf8" />
           </linearGradient>
         </defs>
 

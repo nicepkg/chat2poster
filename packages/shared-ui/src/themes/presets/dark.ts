@@ -1,4 +1,5 @@
 import type { Theme } from "@chat2poster/core-schema";
+import { MESH_BACKGROUND_VALUES } from "../backgrounds";
 
 /**
  * Dark theme preset
@@ -46,8 +47,8 @@ export const darkTheme: Theme = {
     canvasPaddingPx: 48,
     canvasRadiusPx: 20,
     shadowLevel: "xl",
-    backgroundType: "solid",
-    backgroundValue: "#1f2937",
+    backgroundType: "gradient",
+    backgroundValue: MESH_BACKGROUND_VALUES.graphiteAurora,
     macosBarEnabled: true,
   },
 };
