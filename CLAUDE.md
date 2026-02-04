@@ -882,9 +882,9 @@ chat2poster/
 pnpm build              # Build all packages and apps
 pnpm build:packages     # Build packages only
 pnpm build:web          # Build web app
-pnpm build:extension    # Build browser extension
+pnpm build:ext    # Build browser extension
 pnpm dev:web            # Dev server for web
-pnpm dev:extension      # Dev server for extension
+pnpm dev:ext      # Dev server for extension
 pnpm lint               # Lint all packages
 pnpm typecheck          # Type check all packages
 pnpm test               # Run all tests

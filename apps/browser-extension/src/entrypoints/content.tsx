@@ -2,6 +2,12 @@ import "./styles/globals.css";
 
 import { createRoot } from "react-dom/client";
 import App from "~/components/app";
+import {
+  CHAT2POSTER_COMPONENT_NAME,
+  EXTENSION_RUNTIME_MESSAGE,
+  EXTENSION_WINDOW_EVENT,
+  type ExtensionRuntimeMessageType,
+} from "~/constants/extension-runtime";
 
 export default defineContentScript({
   matches: [
@@ -14,9 +20,11 @@ export default defineContentScript({
 
   async main(ctx) {
     const ui = await createShadowRootUi(ctx, {
-      name: "chat2poster-panel",
-      position: "inline",
+      name: CHAT2POSTER_COMPONENT_NAME,
+      position: "overlay",
       anchor: "body",
+      append: "first",
+      zIndex: 99999,
       onMount(container) {
         const wrapper = document.createElement("div");
         wrapper.id = "chat2poster-root";
@@ -45,10 +53,39 @@ export default defineContentScript({
 
         const root = createRoot(wrapper);
         root.render(<App />);
+
+        const runtimeListener = (message: unknown, _sender: unknown) => {
+          const messageType =
+            typeof message === "object" && message !== null && "type" in message
+              ? (message.type as ExtensionRuntimeMessageType)
+              : null;
+
+          if (!messageType) return undefined;
+
+          if (messageType === EXTENSION_RUNTIME_MESSAGE.TOGGLE_PANEL) {
+            window.dispatchEvent(
+              new Event(EXTENSION_WINDOW_EVENT.TOGGLE_PANEL),
+            );
+            return undefined;
+          }
+          if (messageType === EXTENSION_RUNTIME_MESSAGE.OPEN_PANEL) {
+            window.dispatchEvent(new Event(EXTENSION_WINDOW_EVENT.OPEN_PANEL));
+            return undefined;
+          }
+          if (messageType === EXTENSION_RUNTIME_MESSAGE.CLOSE_PANEL) {
+            window.dispatchEvent(new Event(EXTENSION_WINDOW_EVENT.CLOSE_PANEL));
+            return undefined;
+          }
+
+          return undefined;
+        };
+
+        browser.runtime.onMessage.addListener(runtimeListener);
         return {
           root,
           wrapper,
           cleanup: () => {
+            browser.runtime.onMessage.removeListener(runtimeListener);
             observer.disconnect();
             prefersDark.removeEventListener("change", updateTheme);
           },

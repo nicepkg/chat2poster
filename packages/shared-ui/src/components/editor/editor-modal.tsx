@@ -7,10 +7,16 @@ import { useEditorData } from "@ui/contexts/editor-data-context";
 import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
 import { useCallback, useEffect, useMemo, type RefObject } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 import { EditorWorkspace } from "./editor-workspace";
 
-export interface EditorModalProps {
+export interface EditorModalProps extends React.ComponentProps<typeof Dialog> {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onParse?: () => Promise<Conversation>;
@@ -18,6 +24,7 @@ export interface EditorModalProps {
   title?: string;
   canvasRef?: RefObject<HTMLDivElement | null>;
   className?: string;
+  mountedTo?: Element | DocumentFragment | null | undefined;
 }
 
 export function EditorModal({
@@ -28,6 +35,8 @@ export function EditorModal({
   title = "Chat2Poster",
   canvasRef,
   className,
+  mountedTo,
+  ...props
 }: EditorModalProps) {
   const { t } = useI18n();
   const { editor, runtime, dispatch, runtimeDispatch } = useEditor();
@@ -127,9 +136,10 @@ export function EditorModal({
   ]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} {...props}>
       <DialogContent
         showCloseButton={false}
+        mountedTo={mountedTo}
         className={cn(
           "c2p-editor-modal bg-background/95 backdrop-blur-xl border-border/60 h-[min(92vh,960px)] w-[min(96vw,1280px)] !max-w-none overflow-hidden border p-0 shadow-2xl flex flex-col min-h-0",
           className,
@@ -137,6 +147,7 @@ export function EditorModal({
       >
         <DialogHeader className="sr-only">
           <DialogTitle>{title}</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="h-full w-full">{content}</div>
       </DialogContent>

@@ -12,11 +12,11 @@
   "license": "MIT",
   "scripts": {
     "dev": "turbo run dev",
-    "dev:extension": "turbo run dev --filter=@chat2poster/extension",
+    "dev:ext": "turbo run dev --filter=@chat2poster/extension",
     "dev:web": "turbo run dev --filter=@chat2poster/web",
     "dev:packages": "turbo run dev --filter='./packages/*'",
     "build": "turbo run build",
-    "build:extension": "turbo run build --filter=@chat2poster/extension",
+    "build:ext": "turbo run build --filter=@chat2poster/extension",
     "build:web": "turbo run build --filter=@chat2poster/web",
     "build:packages": "turbo run build --filter='./packages/*'",
     "build:packages:watch": "turbo watch build --filter='./packages/*'",

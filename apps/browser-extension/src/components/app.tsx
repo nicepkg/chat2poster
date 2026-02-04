@@ -11,7 +11,9 @@ import {
   useConversationExport,
 } from "@chat2poster/shared-ui";
 import { getLocaleFromNavigator } from "@chat2poster/shared-ui/i18n/core";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { getChat2posterBodyNode } from "../lib/utils";
+import { EXTENSION_WINDOW_EVENT } from "~/constants/extension-runtime";
 
 registerBuiltinAdapters();
 
@@ -28,6 +30,34 @@ export default function App() {
 
   const handleOpenPanel = useCallback(() => {
     setIsPanelOpen(true);
+  }, []);
+
+  useEffect(() => {
+    const handleToggle = () => {
+      setIsPanelOpen((prev) => !prev);
+    };
+    const handleOpen = () => {
+      setIsPanelOpen(true);
+    };
+    const handleClose = () => {
+      setIsPanelOpen(false);
+    };
+
+    window.addEventListener(EXTENSION_WINDOW_EVENT.TOGGLE_PANEL, handleToggle);
+    window.addEventListener(EXTENSION_WINDOW_EVENT.OPEN_PANEL, handleOpen);
+    window.addEventListener(EXTENSION_WINDOW_EVENT.CLOSE_PANEL, handleClose);
+
+    return () => {
+      window.removeEventListener(
+        EXTENSION_WINDOW_EVENT.TOGGLE_PANEL,
+        handleToggle,
+      );
+      window.removeEventListener(EXTENSION_WINDOW_EVENT.OPEN_PANEL, handleOpen);
+      window.removeEventListener(
+        EXTENSION_WINDOW_EVENT.CLOSE_PANEL,
+        handleClose,
+      );
+    };
   }, []);
 
   return (
@@ -71,6 +101,7 @@ function ExtensionShell({
     >
       <FloatingButton onClick={onOpenPanel} visible={!isPanelOpen} />
       <EditorModal
+        mountedTo={getChat2posterBodyNode()}
         open={isPanelOpen}
         onOpenChange={onOpenChange}
         canvasRef={canvasRef}

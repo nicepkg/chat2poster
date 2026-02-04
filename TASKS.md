@@ -236,7 +236,7 @@ packages/core-adapters/src/adapters/gemini/
 - [x] Create `adapters/chatgpt/share-link-adapter/` module (v2.0.0)
   - [x] Implement share link URL validation (chatgpt.com/share/_, chatgpt.com/s/_)
   - [x] **Modern parsing**: React Flight decoder for streaming payloads
-  - [x] **Legacy fallback**: __NEXT_DATA__ extraction
+  - [x] **Legacy fallback**: **NEXT_DATA** extraction
   - [x] Parse mapping tree and linear_conversation formats
   - [x] Reuse shared content flatteners from ext-adapter
 - [x] Create `adapters/claude/share-link-adapter/` (v2.0.0)
@@ -253,14 +253,14 @@ packages/core-adapters/src/adapters/gemini/
 
 **Adapter Versions:**
 
-| Adapter | Type | Version | Notes |
-|---------|------|---------|-------|
-| ChatGPT | ext | 1.0.0 | API-based parsing |
-| ChatGPT | share-link | 2.0.0 | React Flight decoder |
-| Claude | ext | 1.0.0 | Cookie-based auth |
-| Claude | share-link | 2.0.0 | Public API |
-| Gemini | ext | 1.0.0 | batchexecute RPC |
-| Gemini | share-link | 1.0.0 | batchexecute RPC |
+| Adapter | Type       | Version | Notes                |
+| ------- | ---------- | ------- | -------------------- |
+| ChatGPT | ext        | 1.0.0   | API-based parsing    |
+| ChatGPT | share-link | 2.0.0   | React Flight decoder |
+| Claude  | ext        | 1.0.0   | Cookie-based auth    |
+| Claude  | share-link | 2.0.0   | Public API           |
+| Gemini  | ext        | 1.0.0   | batchexecute RPC     |
+| Gemini  | share-link | 1.0.0   | batchexecute RPC     |
 
 **Files created:**
 
@@ -768,14 +768,14 @@ This monorepo uses **pnpm + Turborepo** for package management and task orchestr
 ```bash
 # Development
 pnpm dev:web            # Start web dev server
-pnpm dev:extension      # Start extension dev server
+pnpm dev:ext      # Start extension dev server
 pnpm dev:packages       # Watch mode for all packages
 
 # Building (Turbo manages dependency order and caching)
 pnpm build              # Build everything
 pnpm build:packages     # Build packages only
 pnpm build:web          # Build web app
-pnpm build:extension    # Build browser extension
+pnpm build:ext    # Build browser extension
 
 # Quality
 pnpm lint               # Lint all packages

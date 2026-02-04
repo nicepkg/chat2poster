@@ -32,9 +32,9 @@
 pnpm build              # 构建所有包和应用（Turbo 管理依赖顺序）
 pnpm build:packages     # 仅构建 packages/*
 pnpm build:web          # 构建 web 应用
-pnpm build:extension    # 构建浏览器扩展
+pnpm build:ext    # 构建浏览器扩展
 pnpm dev:web            # 启动 web 开发服务器
-pnpm dev:extension      # 启动扩展开发服务器
+pnpm dev:ext      # 启动扩展开发服务器
 pnpm lint               # Lint 所有包
 pnpm typecheck          # 类型检查所有包
 pnpm test               # 运行所有测试
@@ -160,6 +160,7 @@ eslint/ (shared flat config helpers)
 **CSS 类命名规则：**
 
 所有组件使用 `c2p-*` 前缀实现作用域隔离：
+
 - `c2p-editor-tabs`, `c2p-preview-container`, `c2p-messages-tab`
 - `c2p-message`, `c2p-message-user`, `c2p-message-assistant`
 - `c2p-window`, `c2p-desktop`, `c2p-macos-bar`
@@ -193,19 +194,19 @@ EditorContext (中央状态管理)
 
 **组件清单：**
 
-| 组件 | 用途 |
-|------|------|
-| `EditorWorkspace` | Web 主布局容器，响应式两栏 |
-| `EditorPanel` | 扩展/嵌入式固定面板 (w-96) |
-| `EditorModal` | 对话框包装 EditorWorkspace |
-| `EditorTabs` | Tab 容器 (Messages/Theme/Export) |
-| `EditorPreview` | 预览画布 + 设备选择 + 分页导航 |
-| `MessagesTab` | 消息选择与分页线管理 |
-| `ThemeTab` | 主题选择与装饰参数 |
-| `ExportTab` | 导出参数 (倍率/自动分页/最大高度) |
-| `BackgroundPicker` | 背景选择器 (预设网格) |
-| `MacOSBar` | macOS 窗口交通灯 |
-| `FloatingButton` | 移动端浮动按钮 |
+| 组件               | 用途                              |
+| ------------------ | --------------------------------- |
+| `EditorWorkspace`  | Web 主布局容器，响应式两栏        |
+| `EditorPanel`      | 扩展/嵌入式固定面板 (w-96)        |
+| `EditorModal`      | 对话框包装 EditorWorkspace        |
+| `EditorTabs`       | Tab 容器 (Messages/Theme/Export)  |
+| `EditorPreview`    | 预览画布 + 设备选择 + 分页导航    |
+| `MessagesTab`      | 消息选择与分页线管理              |
+| `ThemeTab`         | 主题选择与装饰参数                |
+| `ExportTab`        | 导出参数 (倍率/自动分页/最大高度) |
+| `BackgroundPicker` | 背景选择器 (预设网格)             |
+| `MacOSBar`         | macOS 窗口交通灯                  |
+| `FloatingButton`   | 移动端浮动按钮                    |
 
 ### 3.4 导出（packages/core-export）
 
@@ -248,26 +249,26 @@ EditorContext (中央状态管理)
 
 ```typescript
 // 对话数据
-SET_CONVERSATION      // 设置解析后的对话
-SET_SELECTION         // 设置选择状态
+SET_CONVERSATION; // 设置解析后的对话
+SET_SELECTION; // 设置选择状态
 
 // 消息选择
-TOGGLE_MESSAGE        // 切换单条消息选中
-SELECT_ALL_MESSAGES   // 全选
-DESELECT_ALL_MESSAGES // 全不选
+TOGGLE_MESSAGE; // 切换单条消息选中
+SELECT_ALL_MESSAGES; // 全选
+DESELECT_ALL_MESSAGES; // 全不选
 
 // 分页线
-ADD_PAGE_BREAK        // 添加分页线
-REMOVE_PAGE_BREAK     // 删除分页线
+ADD_PAGE_BREAK; // 添加分页线
+REMOVE_PAGE_BREAK; // 删除分页线
 
 // 主题与装饰
-SET_THEME             // 设置主题
-SET_DECORATION        // 设置装饰参数
+SET_THEME; // 设置主题
+SET_DECORATION; // 设置装饰参数
 
 // 导出参数
-SET_EXPORT_PARAMS     // 设置导出参数
-SET_AUTO_PAGINATION   // 设置自动分页开关
-SET_CURRENT_PAGE      // 设置当前预览页
+SET_EXPORT_PARAMS; // 设置导出参数
+SET_AUTO_PAGINATION; // 设置自动分页开关
+SET_CURRENT_PAGE; // 设置当前预览页
 ```
 
 ---
