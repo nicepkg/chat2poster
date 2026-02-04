@@ -52,6 +52,7 @@ const en = {
   "preview.dimensions": "{{width}}px × auto",
   "exportButton.exporting": "Exporting...",
   "exportButton.done": "Done!",
+  "exportButton.exportCurrentPage": "Export This Page",
   "exportButton.exportPages": "Export {{count}} Pages",
   "exportButton.exportPng": "Export PNG",
   "floatingButton.title": "Export to Poster",

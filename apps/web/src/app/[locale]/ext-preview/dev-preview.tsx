@@ -13,9 +13,10 @@ import {
   EditorProvider,
   FloatingButton,
   generateUUID,
+  useConversationExport,
   useI18n,
 } from "@chat2poster/shared-ui";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 const SAMPLE_MESSAGES: Array<{ role: MessageRole; content: string }> = [
   {
@@ -67,65 +68,89 @@ function buildFakeConversation(): Conversation {
 }
 
 export default function DevPreview() {
-  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const conversation = useMemo(() => buildFakeConversation(), []);
+
+  return (
+    <EditorProvider>
+      <DevPreviewShell
+        conversation={conversation}
+        open={open}
+        onOpenChange={setOpen}
+      />
+    </EditorProvider>
+  );
+}
+
+function DevPreviewShell({
+  conversation,
+  open,
+  onOpenChange,
+}: {
+  conversation: Conversation;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { t } = useI18n();
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const { exportConversation } = useConversationExport({
+    canvasRef,
+    filenamePrefix: "chat2poster",
+  });
 
   const handleParseConversation = useCallback(
     async () => conversation,
     [conversation],
   );
 
-  const handleExportConversation = useCallback(async () => {
-    // Dev preview only
-  }, []);
-
   return (
-    <EditorProvider>
-      <EditorDataProvider
-        parseConversation={handleParseConversation}
-        exportConversation={handleExportConversation}
-      >
-        <div className="bg-muted/30 min-h-[calc(100vh-64px)]">
-          <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-12">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <Badge variant="secondary">{t("web.extPreview.devOnly")}</Badge>
-                <h1 className="text-2xl font-semibold tracking-tight">
-                  {t("web.extPreview.title")}
-                </h1>
-              </div>
-              <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
-                {t("web.extPreview.subtitle")}
-              </p>
+    <EditorDataProvider
+      parseConversation={handleParseConversation}
+      exportConversation={exportConversation}
+    >
+      <div className="bg-muted/30 min-h-[calc(100vh-64px)]">
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-12">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <Badge variant="secondary">{t("web.extPreview.devOnly")}</Badge>
+              <h1 className="text-2xl font-semibold tracking-tight">
+                {t("web.extPreview.title")}
+              </h1>
             </div>
+            <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
+              {t("web.extPreview.subtitle")}
+            </p>
+          </div>
 
-            <div className="relative overflow-hidden rounded-2xl border bg-background/80 p-6 shadow-lg backdrop-blur">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
-              <div className="relative space-y-4">
-                <div className="flex justify-end">
-                  <div className="bg-primary/10 text-primary max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed">
-                    这里是聊天区域的占位内容，用来模拟扩展浮窗出现时的视觉层级。
-                  </div>
+          <div className="relative overflow-hidden rounded-2xl border bg-background/80 p-6 shadow-lg backdrop-blur">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
+            <div className="relative space-y-4">
+              <div className="flex justify-end">
+                <div className="bg-primary/10 text-primary max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed">
+                  这里是聊天区域的占位内容，用来模拟扩展浮窗出现时的视觉层级。
                 </div>
-                <div className="flex justify-start">
-                  <div className="bg-muted/70 text-foreground max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed">
-                    点击右下角浮动按钮，就能打开居中弹窗的核心面板。
-                  </div>
+              </div>
+              <div className="flex justify-start">
+                <div className="bg-muted/70 text-foreground max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed">
+                  点击右下角浮动按钮，就能打开居中弹窗的核心面板。
                 </div>
-                <div className="flex justify-end">
-                  <div className="bg-primary/10 text-primary max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed">
-                    模态层使用真实的 Editor 面板，数据来自 Context。
-                  </div>
+              </div>
+              <div className="flex justify-end">
+                <div className="bg-primary/10 text-primary max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed">
+                  模态层使用真实的 Editor 面板，数据来自 Context。
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <FloatingButton onClick={() => setOpen(true)} visible={!open} />
-        <EditorModal open={open} onOpenChange={setOpen} />
-      </EditorDataProvider>
-    </EditorProvider>
+      <FloatingButton onClick={() => onOpenChange(true)} visible={!open} />
+      <EditorModal
+        open={open}
+        onOpenChange={onOpenChange}
+        canvasRef={canvasRef}
+      />
+    </EditorDataProvider>
   );
 }

@@ -3,6 +3,7 @@
 import type { DeviceType } from "@chat2poster/core-schema";
 import { DEVICE_WIDTHS } from "@chat2poster/core-schema";
 import { useEditor } from "@ui/contexts/editor-context";
+import type { ExportScope } from "@ui/contexts/editor-data-context";
 import { useI18n } from "@ui/i18n";
 import { SHADOW_STYLES } from "@ui/themes/shadows";
 import { cn } from "@ui/utils/common";
@@ -24,6 +25,7 @@ import {
   SlidersHorizontal,
   ZoomIn,
   ZoomOut,
+  FileImage,
 } from "lucide-react";
 import { useRef, useMemo, useEffect, useState, useCallback } from "react";
 import * as React from "react";
@@ -60,7 +62,7 @@ export interface EditorPreviewProps {
   /** Ref to the preview canvas element for export */
   canvasRef?: React.RefObject<HTMLDivElement | null>;
   /** Export handler - called when export button is clicked */
-  onExport?: () => Promise<void>;
+  onExport?: (scope?: ExportScope) => Promise<void>;
   /** Whether export is disabled */
   exportDisabled?: boolean;
 }
@@ -91,20 +93,23 @@ export function EditorPreview({
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
 
-  const handleExport = useCallback(async () => {
-    if (isExporting || exportDisabled || !onExport) return;
+  const handleExport = useCallback(
+    async (scope: ExportScope = "all-pages") => {
+      if (isExporting || exportDisabled || !onExport) return;
 
-    setIsExporting(true);
-    try {
-      await onExport();
-      setExportSuccess(true);
-      setTimeout(() => setExportSuccess(false), 2000);
-    } catch (error) {
-      console.error("Export failed:", error);
-    } finally {
-      setIsExporting(false);
-    }
-  }, [isExporting, exportDisabled, onExport]);
+      setIsExporting(true);
+      try {
+        await onExport(scope);
+        setExportSuccess(true);
+        setTimeout(() => setExportSuccess(false), 2000);
+      } catch (error) {
+        console.error("Export failed:", error);
+      } finally {
+        setIsExporting(false);
+      }
+    },
+    [isExporting, exportDisabled, onExport],
+  );
 
   const messages = editor.conversation?.messages ?? [];
   const selectedIds = editor.selection?.selectedMessageIds ?? [];
@@ -252,6 +257,39 @@ export function EditorPreview({
     (canvasSize.width > 0 ? canvasSize.width : desktopWidth) * previewScale;
   const scaledCanvasHeight =
     canvasSize.height > 0 ? canvasSize.height * previewScale : undefined;
+  const desktopCanvasStyle = useMemo<React.CSSProperties>(() => {
+    const baseStyle: React.CSSProperties = {
+      width: desktopWidth,
+      padding: decoration.canvasPaddingPx,
+    };
+
+    if (decoration.backgroundType === "solid") {
+      return {
+        ...baseStyle,
+        backgroundColor: decoration.backgroundValue,
+      };
+    }
+
+    const normalizedBackground = decoration.backgroundValue.trim();
+    const backgroundImage =
+      decoration.backgroundType === "image" &&
+      !normalizedBackground.startsWith("url(")
+        ? `url("${normalizedBackground}")`
+        : normalizedBackground;
+
+    return {
+      ...baseStyle,
+      backgroundImage,
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
+    };
+  }, [
+    decoration.backgroundType,
+    decoration.backgroundValue,
+    decoration.canvasPaddingPx,
+    desktopWidth,
+  ]);
 
   const handleZoomModeChange = useCallback(
     (mode: PreviewZoomMode) => {
@@ -371,60 +409,77 @@ export function EditorPreview({
 
           {/* Right: Export button */}
           {onExport && (
-            <Button
-              onClick={handleExport}
-              disabled={exportDisabled || isExporting}
-              size="sm"
-              className={cn(
-                "c2p-export-btn h-8 gap-1.5 px-3 text-xs",
-                exportSuccess && "c2p-export-btn-success",
+            <div className="flex items-center gap-2">
+              {totalPages > 1 && (
+                <Button
+                  onClick={() => void handleExport("current-page")}
+                  disabled={exportDisabled || isExporting}
+                  variant="outline"
+                  size="sm"
+                  className="c2p-export-current-btn h-8 gap-1.5 px-3 text-xs"
+                >
+                  <FileImage className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">
+                    {t("exportButton.exportCurrentPage")}
+                  </span>
+                </Button>
               )}
-            >
-              <AnimatePresence mode="wait">
-                {isExporting ? (
-                  <motion.span
-                    key="loading"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex items-center gap-1.5"
-                  >
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    <span className="hidden sm:inline">
-                      {t("exportButton.exporting")}
-                    </span>
-                  </motion.span>
-                ) : exportSuccess ? (
-                  <motion.span
-                    key="success"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex items-center gap-1.5 text-green-500"
-                  >
-                    <Check className="h-3.5 w-3.5" />
-                    <span className="hidden sm:inline">
-                      {t("exportButton.done")}
-                    </span>
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="default"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex items-center gap-1.5"
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                    <span className="hidden sm:inline">
-                      {totalPages > 1
-                        ? t("exportButton.exportPages", { count: totalPages })
-                        : t("exportButton.exportPng")}
-                    </span>
-                  </motion.span>
+
+              <Button
+                onClick={() => void handleExport("all-pages")}
+                disabled={exportDisabled || isExporting}
+                size="sm"
+                className={cn(
+                  "c2p-export-btn h-8 gap-1.5 px-3 text-xs",
+                  exportSuccess && "c2p-export-btn-success",
                 )}
-              </AnimatePresence>
-            </Button>
+              >
+                <AnimatePresence mode="wait">
+                  {isExporting ? (
+                    <motion.span
+                      key="loading"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-1.5"
+                    >
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <span className="hidden sm:inline">
+                        {t("exportButton.exporting")}
+                      </span>
+                    </motion.span>
+                  ) : exportSuccess ? (
+                    <motion.span
+                      key="success"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-1.5 text-green-500"
+                    >
+                      <Check className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">
+                        {t("exportButton.done")}
+                      </span>
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="default"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-1.5"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">
+                        {totalPages > 1
+                          ? t("exportButton.exportPages", { count: totalPages })
+                          : t("exportButton.exportPng")}
+                      </span>
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </Button>
+            </div>
           )}
         </div>
 
@@ -455,14 +510,7 @@ export function EditorPreview({
                     ref={canvasRef as React.RefObject<HTMLDivElement>}
                     layout
                     className="c2p-desktop mx-auto"
-                    style={{
-                      width: desktopWidth,
-                      background: decoration.backgroundValue,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                      padding: decoration.canvasPaddingPx,
-                    }}
+                    style={desktopCanvasStyle}
                   >
                     {/* Window */}
                     <div

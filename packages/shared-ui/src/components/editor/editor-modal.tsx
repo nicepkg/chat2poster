@@ -2,6 +2,7 @@
 
 import type { Conversation } from "@chat2poster/core-schema";
 import { useEditor } from "@ui/contexts/editor-context";
+import type { ExportScope } from "@ui/contexts/editor-data-context";
 import { useEditorData } from "@ui/contexts/editor-data-context";
 import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
@@ -13,7 +14,7 @@ export interface EditorModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onParse?: () => Promise<Conversation>;
-  onExport?: () => Promise<void>;
+  onExport?: (scope?: ExportScope) => Promise<void>;
   title?: string;
   canvasRef?: RefObject<HTMLDivElement | null>;
   className?: string;

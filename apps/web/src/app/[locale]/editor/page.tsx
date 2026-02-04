@@ -1,16 +1,10 @@
 "use client";
 
-import {
-  exportToPng,
-  downloadImage,
-  packageAsZip,
-  downloadZip,
-  generateZipFilename,
-} from "@chat2poster/core-export";
 import type { MessageRole } from "@chat2poster/core-schema";
 import {
   EditorProvider,
   EditorWorkspace,
+  useConversationExport,
   useEditor,
   useI18n,
   generateUUID,
@@ -20,7 +14,7 @@ import "@chat2poster/shared-ui/styles/renderer.css";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect } from "react";
 
 /** Message role for editor (excludes system messages) */
 type EditorMessageRole = Exclude<MessageRole, "system">;
@@ -81,7 +75,8 @@ function EditorContent() {
   const { t, locale } = useI18n();
   const router = useRouter();
   const canvasRef = useRef<HTMLDivElement>(null);
-  const { editor, dispatch, runtimeDispatch } = useEditor();
+  const { editor, dispatch } = useEditor();
+  const { exportConversation } = useConversationExport({ canvasRef });
 
   // Load conversation on mount
   useEffect(() => {
@@ -117,88 +112,6 @@ function EditorContent() {
     });
   }, [router, dispatch, locale]);
 
-  const waitForPreviewReady = useCallback(async () => {
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => resolve()),
-    );
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => resolve()),
-    );
-    await new Promise((resolve) => setTimeout(resolve, 30));
-  }, []);
-
-  // Export handler
-  const handleExport = useCallback(async () => {
-    if (!canvasRef.current) return;
-
-    const pageBreaks = editor.selection?.pageBreaks ?? [];
-    const totalPages = pageBreaks.length + 1;
-    const scale = editor.exportParams.scale ?? 2;
-    const conversationId = editor.conversation?.id ?? "export";
-
-    runtimeDispatch({ type: "SET_EXPORTING", payload: true });
-    runtimeDispatch({ type: "SET_EXPORT_PROGRESS", payload: 0 });
-
-    try {
-      if (totalPages === 1) {
-        const result = await exportToPng(canvasRef.current, { scale });
-        downloadImage(result.blob, `chat2poster-${conversationId}.png`);
-        runtimeDispatch({ type: "SET_EXPORT_PROGRESS", payload: 100 });
-        return;
-      }
-
-      const originalPage = editor.currentPage;
-      const pageResults: Awaited<ReturnType<typeof exportToPng>>[] = [];
-
-      try {
-        for (let i = 0; i < totalPages; i += 1) {
-          dispatch({ type: "SET_CURRENT_PAGE", payload: i });
-          await waitForPreviewReady();
-
-          if (canvasRef.current) {
-            const result = await exportToPng(canvasRef.current, { scale });
-            pageResults.push(result);
-          }
-
-          runtimeDispatch({
-            type: "SET_EXPORT_PROGRESS",
-            payload: Math.round(((i + 1) / totalPages) * 100),
-          });
-        }
-      } finally {
-        dispatch({ type: "SET_CURRENT_PAGE", payload: originalPage });
-      }
-
-      const multiPageResult = {
-        pages: pageResults,
-        totalPages: pageResults.length,
-        cancelled: false,
-        completedAt: new Date().toISOString(),
-      };
-
-      const zipResult = await packageAsZip(multiPageResult, {
-        baseFilename: "page",
-        includeMetadata: true,
-      });
-
-      downloadZip(
-        zipResult,
-        generateZipFilename(`chat2poster-${conversationId}`),
-      );
-    } finally {
-      runtimeDispatch({ type: "SET_EXPORTING", payload: false });
-    }
-  }, [
-    canvasRef,
-    editor.selection?.pageBreaks,
-    editor.exportParams.scale,
-    editor.conversation?.id,
-    editor.currentPage,
-    dispatch,
-    runtimeDispatch,
-    waitForPreviewReady,
-  ]);
-
   // Loading state
   if (!editor.conversation) {
     return (
@@ -220,7 +133,7 @@ function EditorContent() {
   return (
     <EditorWorkspace
       canvasRef={canvasRef}
-      onExport={handleExport}
+      onExport={exportConversation}
       className="bg-muted/30"
       containerClassName="h-[calc(100vh-64px)] max-w-7xl"
       settingsTitle={t("web.editor.settings")}

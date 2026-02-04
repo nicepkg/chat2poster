@@ -3,9 +3,11 @@
 import type { Conversation } from "@chat2poster/core-schema";
 import { createContext, useContext, type ReactNode } from "react";
 
+export type ExportScope = "all-pages" | "current-page";
+
 export interface EditorDataContextValue {
   parseConversation?: () => Promise<Conversation>;
-  exportConversation?: () => Promise<void>;
+  exportConversation?: (scope?: ExportScope) => Promise<void>;
 }
 
 const EditorDataContext = createContext<EditorDataContextValue | null>(null);
@@ -17,7 +19,7 @@ export function EditorDataProvider({
 }: {
   children: ReactNode;
   parseConversation?: () => Promise<Conversation>;
-  exportConversation?: () => Promise<void>;
+  exportConversation?: (scope?: ExportScope) => Promise<void>;
 }) {
   return (
     <EditorDataContext.Provider

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditor } from "@ui/contexts/editor-context";
+import type { ExportScope } from "@ui/contexts/editor-data-context";
 import { useIsMobile } from "@ui/hooks";
 import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
@@ -21,7 +22,7 @@ import { EditorTabs } from "./editor-tabs";
 
 export interface EditorWorkspaceProps {
   canvasRef?: RefObject<HTMLDivElement | null>;
-  onExport?: () => Promise<void>;
+  onExport?: (scope?: ExportScope) => Promise<void>;
   className?: string;
   containerClassName?: string;
   settingsTitle?: string;

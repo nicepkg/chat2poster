@@ -53,6 +53,7 @@ const zh: LocaleMessages = {
   "preview.dimensions": "{{width}}px × 自动",
   "exportButton.exporting": "导出中...",
   "exportButton.done": "完成！",
+  "exportButton.exportCurrentPage": "导出当前页",
   "exportButton.exportPages": "导出 {{count}} 页",
   "exportButton.exportPng": "导出 PNG",
   "floatingButton.title": "导出为海报",
