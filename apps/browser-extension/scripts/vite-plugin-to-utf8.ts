@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // see: https://github.com/qiweiii/markdown-sticky-notes/blob/master/scripts/vite-plugin-to-utf8.ts
 import { type PluginOption } from "vite";
 
@@ -19,7 +18,7 @@ export const toUtf8 = (): PluginOption => ({
     for (const fileName in bundle) {
       if (bundle[fileName]?.type === "chunk") {
         // Assuming you want to convert the chunk's code
-        const originalCode = bundle[fileName].code as string;
+        const originalCode = bundle[fileName].code;
         const modifiedCode = strToUtf8(originalCode);
 
         // Update the chunk's code with the modified version
