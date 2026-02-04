@@ -83,10 +83,13 @@ export function MessagesTab({
             const isLast = index === messages.length - 1;
 
             return (
-              <div key={message.id} className="c2p-message-wrapper">
+              <div
+                key={message.id}
+                className="c2p-message-wrapper group/item relative"
+              >
                 <label
                   className={cn(
-                    "c2p-message-item group relative flex w-full cursor-pointer items-start gap-3 rounded-md py-3 transition-all duration-200",
+                    "c2p-message-item relative flex w-full cursor-pointer items-start gap-3 rounded-md py-3 transition-all duration-200",
                     isSelected
                       ? "c2p-message-selected"
                       : "c2p-message-excluded bg-muted/40 opacity-50 hover:opacity-70",
@@ -134,22 +137,29 @@ export function MessagesTab({
                       {message.contentMarkdown}
                     </p>
                   </div>
-
-                  {/* Page break button */}
-                  {!isLast && !pageBreak && (
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        onAddPageBreak(message.id);
-                      }}
-                      className="c2p-pagebreak-btn text-muted-foreground hover:text-primary absolute right-2 top-2 h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                    >
-                      <Scissors className="h-3 w-3" />
-                    </Button>
-                  )}
                 </label>
+
+                {/* Page break action (show near actual page break position) */}
+                {!isLast && !pageBreak && (
+                  <div className="c2p-pagebreak-action pointer-events-none relative h-0 overflow-visible">
+                    <div className="absolute inset-x-0 top-0 z-10 flex -translate-y-1/2 items-center gap-2 opacity-0 transition-opacity duration-200 group-hover/item:opacity-100 group-focus-within/item:opacity-100">
+                      <div className="from-transparent via-border to-transparent h-px flex-1 bg-gradient-to-r" />
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          onAddPageBreak(message.id);
+                        }}
+                        className="c2p-pagebreak-btn pointer-events-auto h-6 w-6 rounded-full border border-border/60 bg-background/80 text-muted-foreground shadow-sm backdrop-blur transition-all hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+                      >
+                        <Scissors className="h-3 w-3" />
+                      </Button>
+                      <div className="from-transparent via-border to-transparent h-px flex-1 bg-gradient-to-r" />
+                    </div>
+                  </div>
+                )}
 
                 {/* Page break indicator */}
                 <AnimatePresence>
