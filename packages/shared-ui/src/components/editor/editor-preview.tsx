@@ -360,6 +360,7 @@ export function EditorPreview({
                 style={{
                   backgroundColor: contentBg,
                   color: contentFg,
+                  fontFamily: selectedTheme.tokens.fontFamily,
                   display: "flex",
                   flexDirection: "column",
                   gap: messageGap,
@@ -397,7 +398,7 @@ export function EditorPreview({
                           {/* Message Bubble */}
                           <div
                             className={cn(
-                              "c2p-message-wrapper max-w-[80%]",
+                              "c2p-message-wrapper min-w-0",
                               isUser ? "text-right" : "text-left",
                             )}
                           >
@@ -436,11 +437,13 @@ export function EditorPreview({
 
                             {/* Bubble - same style for both */}
                             <div
-                              className="c2p-message-bubble overflow-hidden w-fit"
+                              className="c2p-message-bubble inline-block max-w-full overflow-hidden align-top"
                               style={
                                 {
                                   backgroundColor: bubbleBg,
                                   color: bubbleFg,
+                                  width: "fit-content",
+                                  maxWidth: "100%",
                                   borderRadius: bubbleRadius,
                                   padding: messagePadding,
                                   // Chat bubble tail effect via border-radius
@@ -468,6 +471,8 @@ export function EditorPreview({
                                   fontSize: selectedTheme.tokens.baseFontSize,
                                   textAlign: "left",
                                   color: bubbleFg,
+                                  maxWidth: "100%",
+                                  overflowWrap: "anywhere",
                                 }}
                               >
                                 <MarkdownRenderer

@@ -142,8 +142,8 @@ async function elementToCanvas(
     outerTransforms: true,
     // Keep shadows/blur/outline effects (default: false means keep them)
     outerShadows: false,
-    // Enable fast mode for better performance
-    fast: true,
+    // Prefer accurate layout/text metrics over speed for WYSIWYG exports
+    fast: false,
     // Use full caching for better performance on repeated captures
     cache: "full",
   });

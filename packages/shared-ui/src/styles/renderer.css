@@ -12,7 +12,10 @@
   font-size: 16px;
   line-height: 1.6;
   color: inherit; /* Inherit from parent for theme support */
+  max-width: 100%;
+  overflow-wrap: anywhere;
   word-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ============================================================================
@@ -154,6 +157,7 @@
 
 .c2p-markdown-code-block {
   position: relative;
+  max-width: 100%;
   border-radius: 10px;
   overflow: hidden;
   font-size: 13px;
