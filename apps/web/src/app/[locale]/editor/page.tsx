@@ -81,7 +81,7 @@ function EditorContent() {
   const { t, locale } = useI18n();
   const router = useRouter();
   const canvasRef = useRef<HTMLDivElement>(null);
-  const { editor, dispatch } = useEditor();
+  const { editor, dispatch, runtimeDispatch } = useEditor();
 
   // Load conversation on mount
   useEffect(() => {
@@ -117,6 +117,16 @@ function EditorContent() {
     });
   }, [router, dispatch, locale]);
 
+  const waitForPreviewReady = useCallback(async () => {
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => resolve()),
+    );
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => resolve()),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 30));
+  }, []);
+
   // Export handler
   const handleExport = useCallback(async () => {
     if (!canvasRef.current) return;
@@ -126,33 +136,39 @@ function EditorContent() {
     const scale = editor.exportParams.scale ?? 2;
     const conversationId = editor.conversation?.id ?? "export";
 
-    if (totalPages === 1) {
-      // Single page export
-      const result = await exportToPng(canvasRef.current, { scale });
-      downloadImage(result.blob, `chat2poster-${conversationId}.png`);
-    } else {
-      // Multi-page export: iterate through pages
+    runtimeDispatch({ type: "SET_EXPORTING", payload: true });
+    runtimeDispatch({ type: "SET_EXPORT_PROGRESS", payload: 0 });
+
+    try {
+      if (totalPages === 1) {
+        const result = await exportToPng(canvasRef.current, { scale });
+        downloadImage(result.blob, `chat2poster-${conversationId}.png`);
+        runtimeDispatch({ type: "SET_EXPORT_PROGRESS", payload: 100 });
+        return;
+      }
+
       const originalPage = editor.currentPage;
       const pageResults: Awaited<ReturnType<typeof exportToPng>>[] = [];
 
-      for (let i = 0; i < totalPages; i++) {
-        // Set current page and wait for React to re-render
-        dispatch({ type: "SET_CURRENT_PAGE", payload: i });
-        // Wait for DOM update
-        await new Promise((resolve) => requestAnimationFrame(resolve));
-        await new Promise((resolve) => setTimeout(resolve, 100));
+      try {
+        for (let i = 0; i < totalPages; i += 1) {
+          dispatch({ type: "SET_CURRENT_PAGE", payload: i });
+          await waitForPreviewReady();
 
-        // Export current page
-        if (canvasRef.current) {
-          const result = await exportToPng(canvasRef.current, { scale });
-          pageResults.push(result);
+          if (canvasRef.current) {
+            const result = await exportToPng(canvasRef.current, { scale });
+            pageResults.push(result);
+          }
+
+          runtimeDispatch({
+            type: "SET_EXPORT_PROGRESS",
+            payload: Math.round(((i + 1) / totalPages) * 100),
+          });
         }
+      } finally {
+        dispatch({ type: "SET_CURRENT_PAGE", payload: originalPage });
       }
 
-      // Restore original page
-      dispatch({ type: "SET_CURRENT_PAGE", payload: originalPage });
-
-      // Package as ZIP
       const multiPageResult = {
         pages: pageResults,
         totalPages: pageResults.length,
@@ -169,6 +185,8 @@ function EditorContent() {
         zipResult,
         generateZipFilename(`chat2poster-${conversationId}`),
       );
+    } finally {
+      runtimeDispatch({ type: "SET_EXPORTING", payload: false });
     }
   }, [
     canvasRef,
@@ -177,6 +195,8 @@ function EditorContent() {
     editor.conversation?.id,
     editor.currentPage,
     dispatch,
+    runtimeDispatch,
+    waitForPreviewReady,
   ]);
 
   // Loading state
