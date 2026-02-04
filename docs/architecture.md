@@ -157,11 +157,55 @@ eslint/ (shared flat config helpers)
 - 代码高亮：Shiki（建议在导出前确保高亮资源就绪，避免导出时闪烁）。
 - 注：渲染组件已合并到 shared-ui 包中，便于 web 和 extension 复用。
 
+**CSS 类命名规则：**
+
+所有组件使用 `c2p-*` 前缀实现作用域隔离：
+- `c2p-editor-tabs`, `c2p-preview-container`, `c2p-messages-tab`
+- `c2p-message`, `c2p-message-user`, `c2p-message-assistant`
+- `c2p-window`, `c2p-desktop`, `c2p-macos-bar`
+- `c2p-panel`, `c2p-panel-header`, `c2p-panel-export-btn`
+
 性能建议（长对话）：
 
 - message 级别 memo：每条 MessageItem 对 contentMarkdown 做 memo，避免无关 re-render。
 - 列表虚拟化（可选但强烈建议）：消息缩略列表与预览列表可用虚拟滚动（实现可在 apps 层决定）。
 - 高度估算缓存：Message.contentMeta.approxHeightPx 用于分页估算。
+- 使用 Set 存储 selectedMessageIds 和 pageBreaks 实现 O(1) 查找。
+
+### 3.3.1 Editor 组件架构（packages/shared-ui/components/editor）
+
+Editor 采用多入口设计，支持不同场景：
+
+```
+EditorContext (中央状态管理)
+├── EditorWorkspace (web 主布局 - 响应式两栏)
+│   ├── EditorTabs (左侧设置面板 - 桌面端)
+│   │   └── Tab 切换: Messages | Theme | Export
+│   ├── EditorPreview (右侧预览画布)
+│   └── Mobile Drawer (移动端底部抽屉)
+│
+├── EditorPanel (扩展/嵌入式 - 固定侧边栏)
+│   └── Tab 切换 + 内置解析/导出处理
+│
+└── EditorModal (对话框包装器)
+    └── EditorWorkspace
+```
+
+**组件清单：**
+
+| 组件 | 用途 |
+|------|------|
+| `EditorWorkspace` | Web 主布局容器，响应式两栏 |
+| `EditorPanel` | 扩展/嵌入式固定面板 (w-96) |
+| `EditorModal` | 对话框包装 EditorWorkspace |
+| `EditorTabs` | Tab 容器 (Messages/Theme/Export) |
+| `EditorPreview` | 预览画布 + 设备选择 + 分页导航 |
+| `MessagesTab` | 消息选择与分页线管理 |
+| `ThemeTab` | 主题选择与装饰参数 |
+| `ExportTab` | 导出参数 (倍率/自动分页/最大高度) |
+| `BackgroundPicker` | 背景选择器 (预设网格) |
+| `MacOSBar` | macOS 窗口交通灯 |
+| `FloatingButton` | 移动端浮动按钮 |
 
 ### 3.4 导出（packages/core-export）
 
@@ -195,10 +239,36 @@ eslint/ (shared flat config helpers)
 
 ## 4) 状态管理（hooks + context）
 
-- 建议分 2 个 context：
-  - EditorContext：selection/theme/decoration/export params
-  - RuntimeContext：loading/error/exportJob status
-- 不要把 adapter/导出实现塞进 context：只放“状态与动作接口”，具体实现由依赖注入（参数传入）或模块 import 提供。
+- 分 2 个 context：
+  - **EditorContext**：conversation/selection/theme/decoration/exportParams/autoPagination/currentPage
+  - **RuntimeContext**：isParsing/isExporting/exportProgress/error
+- 不要把 adapter/导出实现塞进 context：只放"状态与动作接口"，具体实现由依赖注入（参数传入）或模块 import 提供。
+
+**EditorContext Dispatch Actions:**
+
+```typescript
+// 对话数据
+SET_CONVERSATION      // 设置解析后的对话
+SET_SELECTION         // 设置选择状态
+
+// 消息选择
+TOGGLE_MESSAGE        // 切换单条消息选中
+SELECT_ALL_MESSAGES   // 全选
+DESELECT_ALL_MESSAGES // 全不选
+
+// 分页线
+ADD_PAGE_BREAK        // 添加分页线
+REMOVE_PAGE_BREAK     // 删除分页线
+
+// 主题与装饰
+SET_THEME             // 设置主题
+SET_DECORATION        // 设置装饰参数
+
+// 导出参数
+SET_EXPORT_PARAMS     // 设置导出参数
+SET_AUTO_PAGINATION   // 设置自动分页开关
+SET_CURRENT_PAGE      // 设置当前预览页
+```
 
 ---
 

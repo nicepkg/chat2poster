@@ -159,73 +159,126 @@ packages/core-adapters/src/adapters/index.ts
 packages/core-adapters/src/__tests__/registry.test.ts
 ```
 
-### T2.2 - ChatGPT DOM Adapter (Extension) ✅
+### T2.2 - ChatGPT Extension Adapter ✅
 
-- [x] Create `adapters/chatgpt-dom.ts`
-- [x] Implement DOM selectors for ChatGPT conversation page
-- [x] Extract messages from DOM structure
-- [x] Handle code blocks, images, markdown content (HTML to Markdown conversion)
+- [x] Create `adapters/chatgpt/ext-adapter/`
+- [x] Implement API-based conversation fetching (backend-api/conversation)
+- [x] Extract messages from tree-structured mapping
+- [x] Handle code blocks, images, multimodal content
 - [x] Implement canHandle() for ChatGPT page detection
-- [x] Write fixture-based tests (mock DOM with jsdom, 15 tests passing)
-- [x] Document known DOM structure patterns (in code comments)
+- [x] Support content flatteners (8 types: text, code, multimodal_text, tool_response, thoughts, reasoning_recap, model_editable_context, image_asset_pointer)
+- [x] Document known API structure patterns (in code comments)
 
 **Files created:**
 
 ```
-packages/core-adapters/src/adapters/chatgpt-dom.ts
-packages/core-adapters/src/__tests__/chatgpt-dom.test.ts
+packages/core-adapters/src/adapters/chatgpt/
+├── ext-adapter/
+│   └── index.ts              # ChatGPT extension adapter (v1.0.0)
+└── shared/
+    ├── constants.ts          # URL patterns, API endpoints
+    ├── logger.ts             # Debug logging
+    ├── message-converter.ts  # Message tree traversal
+    ├── text-processor.ts     # Text cleanup, citation removal
+    ├── types.ts              # ChatGPT-specific types
+    └── content-flatteners/   # 8 content type handlers
+        ├── index.ts
+        ├── text.ts
+        ├── code.ts
+        ├── multimodal-text.ts
+        ├── tool-response.ts
+        ├── thoughts.ts
+        ├── reasoning-recap.ts
+        └── model-editable-context.ts
 ```
 
-### T2.3 - Claude DOM Adapter (Extension)
+### T2.3 - Claude Extension Adapter ✅
 
-- [ ] Create `adapters/claude-dom.ts`
-- [ ] Implement DOM selectors for Claude conversation page
-- [ ] Handle Claude-specific message structure
-- [ ] Write fixture-based tests
+- [x] Create `adapters/claude/ext-adapter/`
+- [x] Implement API-based conversation fetching (claude.ai/api)
+- [x] Extract org ID from browser cookies
+- [x] Handle Claude-specific message structure with artifacts
+- [x] Convert `<antArtifact>` XML to markdown code blocks
 
-### T2.4 - Gemini DOM Adapter (Extension)
+**Files created:**
 
-- [ ] Create `adapters/gemini-dom.ts`
-- [ ] Implement DOM selectors for Gemini conversation page
-- [ ] Write fixture-based tests
+```
+packages/core-adapters/src/adapters/claude/
+├── ext-adapter/
+│   └── index.ts              # Claude extension adapter (v1.0.0)
+└── shared/
+    ├── message-converter.ts  # Artifact normalization, message grouping
+    └── types.ts              # Claude-specific types
+```
+
+### T2.4 - Gemini Extension Adapter ✅
+
+- [x] Create `adapters/gemini/ext-adapter/`
+- [x] Implement batchexecute RPC protocol
+- [x] Extract runtime tokens from HTML (SNlM0e, cfb2h, FdrFJe)
+- [x] Parse nested Gemini payload structure
+
+**Files created:**
+
+```
+packages/core-adapters/src/adapters/gemini/
+├── ext-adapter/
+│   └── index.ts              # Gemini extension adapter (v1.0.0)
+└── shared/
+    ├── api.ts                # batchexecute RPC wrapper
+    ├── parser.ts             # Payload extraction
+    ├── runtime.ts            # HTML runtime token extraction
+    └── types.ts              # Gemini-specific types
+```
 
 ### T2.5 - Share Link Adapters (Web) ✅
 
-- [x] Create `adapters/chatgpt-share-link/` module (split into multiple files)
+- [x] Create `adapters/chatgpt/share-link-adapter/` module (v2.0.0)
   - [x] Implement share link URL validation (chatgpt.com/share/_, chatgpt.com/s/_)
-  - [x] Multiple extraction strategies (HTML parsing, API fallback)
-  - [x] Handle **NEXT_DATA**, React streaming, embedded JSON
+  - [x] **Modern parsing**: React Flight decoder for streaming payloads
+  - [x] **Legacy fallback**: __NEXT_DATA__ extraction
   - [x] Parse mapping tree and linear_conversation formats
-- [x] Create `adapters/claude-share-link.ts`
+  - [x] Reuse shared content flatteners from ext-adapter
+- [x] Create `adapters/claude/share-link-adapter/` (v2.0.0)
   - [x] Implement share link URL validation (claude.ai/share/\*)
-  - [x] Handle Cloudflare protection detection
-  - [x] Multiple extraction strategies
-  - [x] Parse chat_messages and messages formats
-- [x] Create `adapters/gemini-share-link.ts`
-  - [x] Implement share link URL validation (gemini.google.com/share/\*)
-  - [x] Handle WIZ framework data patterns
-  - [x] Parse AF_initDataCallback and proto-style data
+  - [x] Direct API access to chat_snapshots endpoint
+  - [x] Reuse message-converter from ext-adapter
+- [x] Create `adapters/gemini/share-link-adapter/` (v1.0.0)
+  - [x] Implement share link URL validation (gemini.google.com/share/\*, g.co/gemini/share/\*)
+  - [x] Handle short link redirects
+  - [x] Use batchexecute RPC with ujx1Bf endpoint
 - [x] Register all adapters in registerBuiltinAdapters()
-- [x] Write comprehensive tests (24 tests passing)
+- [x] Write comprehensive tests
 - [x] Integrate with web app API route
 
-**Note:** Share link pages use dynamic JavaScript loading. Adapters attempt
-multiple extraction strategies but may require browser-based parsing for
-some pages. Full conversation extraction may require headless browser support.
+**Adapter Versions:**
+
+| Adapter | Type | Version | Notes |
+|---------|------|---------|-------|
+| ChatGPT | ext | 1.0.0 | API-based parsing |
+| ChatGPT | share-link | 2.0.0 | React Flight decoder |
+| Claude | ext | 1.0.0 | Cookie-based auth |
+| Claude | share-link | 2.0.0 | Public API |
+| Gemini | ext | 1.0.0 | batchexecute RPC |
+| Gemini | share-link | 1.0.0 | batchexecute RPC |
 
 **Files created:**
 
 ```
-packages/core-adapters/src/adapters/chatgpt-share-link/
-├── index.ts
-├── types.ts
-├── text-processor.ts
-├── react-flight-decoder.ts
-├── content-flattener.ts
-└── parsing-strategies.ts
-packages/core-adapters/src/adapters/claude-share-link.ts
-packages/core-adapters/src/adapters/gemini-share-link.ts
-packages/core-adapters/src/__tests__/share-link-adapters.test.ts
+packages/core-adapters/src/adapters/
+├── chatgpt/
+│   ├── ext-adapter/index.ts
+│   ├── share-link-adapter/index.ts
+│   └── shared/                    # Shared between ext & share-link
+├── claude/
+│   ├── ext-adapter/index.ts
+│   ├── share-link-adapter/index.ts
+│   └── shared/
+├── gemini/
+│   ├── ext-adapter/index.ts
+│   ├── share-link-adapter/index.ts
+│   └── shared/
+└── index.ts                       # Central exports & registration
 ```
 
 ### T2.6 - Manual Input Adapter (Web)

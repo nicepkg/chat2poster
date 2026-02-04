@@ -58,12 +58,16 @@ Default behavior:
 
 Adapters (implemented):
 
-- ChatGPT DOM adapter (extension - in-page DOM parsing)
-- ChatGPT share link adapter (web - URL: chatgpt.com/share/*, chatgpt.com/s/*)
-- Claude share link adapter (web - URL: claude.ai/share/*)
-- Gemini share link adapter (web - URL: gemini.google.com/share/*)
-- Manual builder (web - user creates messages)
-- Paste text import (web - parses User:/Assistant: prefixes)
+| Adapter | Type | Version | URL Pattern / Notes |
+|---------|------|---------|---------------------|
+| ChatGPT ext | extension | 1.0.0 | `chatgpt.com/c/*` - API-based parsing |
+| ChatGPT share-link | web | 2.0.0 | `chatgpt.com/share/*`, `chatgpt.com/s/*` - React Flight decoder |
+| Claude ext | extension | 1.0.0 | `claude.ai/chat/*` - Cookie-based auth |
+| Claude share-link | web | 2.0.0 | `claude.ai/share/*` - Public API |
+| Gemini ext | extension | 1.0.0 | `gemini.google.com/app/*` - batchexecute RPC |
+| Gemini share-link | web | 1.0.0 | `gemini.google.com/share/*`, `g.co/gemini/share/*` |
+| Manual builder | web | - | User creates messages manually |
+| Paste text import | web | - | Parses User:/Assistant: prefixes |
 
 Non-goals (MVP):
 

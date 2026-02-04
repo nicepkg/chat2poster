@@ -38,42 +38,52 @@
 
 ### 2.1 扩展：Editor（核心）
 
-布局建议（响应式）：
+**组件入口选择：**
 
-- 窄屏：上方预览，下方 tabs（消息/主题/导出）。
-- 宽屏：左侧设置 tabs，右侧预览。
-- 页面高度：Header + Editor = 100vh，Footer 在下方（滚动可见）。
+| 组件 | 使用场景 | 特点 |
+|------|---------|------|
+| `EditorWorkspace` | Web 主页面 | 响应式两栏布局 |
+| `EditorPanel` | 扩展侧边栏 | 固定宽度 (w-96)，自带解析/导出逻辑 |
+| `EditorModal` | 快速导出对话框 | 包装 EditorWorkspace |
+
+**布局（响应式）：**
+
+- **桌面端 (≥ lg)：** 左侧固定设置栏 (w-80) + 右侧弹性预览区
+- **移动端 (< lg)：** 预览全宽 + 底部浮动按钮触发设置抽屉
 
 区块：
 
-1. 左侧设置面板（Tabs）
-   - **消息 Tab**：
-     - 顶部全选 checkbox + 已选数量
-     - 消息列表（可滚动）
-       - 每条：checkbox + role 图标/文字 + 内容摘要（两行）
-       - 选中状态：简洁干净（默认大部分选中）
-       - 未选中状态：半透明 + 背景灰
-       - Hover 显示分页按钮
-     - 分页线：渐变分隔条 + 删除按钮
-   - **主题 Tab**（默认显示）：
-     - 主题选择（暗/亮 + 预设）
-     - 装饰参数：圆角/padding/阴影/背景/macos 条
-   - **导出 Tab**：
-     - 倍率选择 1x/2x/3x（默认 2x）
-     - 自动分页开关 + 最大页高（默认 4096）
-     - 导出信息预览
-2. 右侧预览区
+1. 左侧设置面板（EditorTabs）
+   - **消息 Tab (MessagesTab)**：
+     - 顶部全选 checkbox + 已选数量统计
+     - 消息列表（可滚动，使用 Set 实现 O(1) 查找）
+       - 每条：checkbox + role badge + 内容摘要
+       - 选中状态：100% 不透明
+       - 未选中状态：50% 透明度
+       - Hover 显示剪刀图标（插入分页线）
+     - 分页线：渐变分隔条 + X 按钮删除
+   - **主题 Tab (ThemeTab)**（默认显示）：
+     - 主题选择网格（2列，带颜色预览点）
+     - BackgroundPicker（4列预设网格）
+     - 装饰参数滑块：圆角 (0-40px) / padding (0-32px) / 阴影 (none/sm/md/lg/xl)
+     - macOS 条开关
+   - **导出 Tab (ExportTab)**：
+     - 倍率按钮组 1x/2x/3x（默认 2x）
+     - 自动分页开关
+     - 最大页高滑块（2000-8000px，仅开启自动分页时可编辑）
+     - 导出信息预览文本
+2. 右侧预览区（EditorPreview）
    - **预览头部**（控件集中在此）：
-     - 左侧：设备尺寸选择器（手机/平板/电脑图标按钮）+ 当前宽度
-     - 中间：页面导航（仅多页时显示）- 点状指示器 + 左右箭头
-     - 右侧：导出按钮（带 loading/success 状态）
+     - 左侧：DeviceSelector（手机/平板/电脑图标按钮）
+     - 中间：PageNavigation（点状指示器 + 左右箭头 + 页码，仅多页时显示）
+     - 右侧：ExportButton（带 loading → success → default 动画状态）
    - **预览内容**（CleanShot X 风格层级）：
-     - c2p-desktop：桌面画布（渐变背景，宽度由 deviceType 决定）
-     - c2p-window：窗口（宽度 = desktop - padding×2）
-     - c2p-window-bar：macOS 标题栏（可选）
-     - c2p-window-content：消息内容区域
-   - 棋盘格背景（显示透明度）
-   - 内部滚动（超长内容不撑开页面）
+     - `c2p-desktop`：桌面画布（渐变背景，宽度由 DEVICE_WIDTHS[deviceType] 决定）
+     - `c2p-window`：窗口（宽度 = desktop - padding×2，应用 contentBg）
+     - `c2p-window-bar`：MacOSBar 组件（可选）
+     - `c2p-window-content`：消息内容区域 + MarkdownRenderer
+   - 棋盘格背景（base64 SVG）
+   - 内部滚动（overflow-auto）
 
 设备尺寸预设：
 

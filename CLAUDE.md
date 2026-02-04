@@ -611,6 +611,18 @@ const [copied, setCopied] = useState(false);
 
 ### Editor Layout (Chat2Poster Specific)
 
+**Component Entry Points:**
+
+| Component | Use Case | Layout |
+|-----------|----------|--------|
+| `EditorWorkspace` | Web main page | Responsive 2-column (settings + preview) |
+| `EditorPanel` | Extension sidebar | Fixed w-96, built-in parse/export |
+| `EditorModal` | Quick export dialog | Wraps EditorWorkspace in dialog |
+
+**Responsive Behavior:**
+- Desktop (≥ lg): Left settings panel (w-80) + Right preview
+- Mobile (< lg): Full-width preview + Floating button opens settings drawer
+
 ```tsx
 /* Two-column layout - Settings Tabs / Preview */
 /* Header + Editor = 100vh, Footer below (scrollable) */
