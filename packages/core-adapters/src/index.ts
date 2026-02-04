@@ -32,8 +32,8 @@
 // Internal imports for registerBuiltinAdapters
 import {
   chatGPTExtAdapter as _chatGPTExtAdapter,
+  claudeExtAdapter as _claudeExtAdapter,
   chatGPTShareLinkAdapter as _chatGPTShareLinkAdapter,
-  claudeShareLinkAdapter as _claudeShareLinkAdapter,
   geminiShareLinkAdapter as _geminiShareLinkAdapter,
 } from "./adapters";
 import {
@@ -93,11 +93,11 @@ export {
   // Extension adapters
   ChatGPTExtAdapter,
   chatGPTExtAdapter,
+  ClaudeExtAdapter,
+  claudeExtAdapter,
   // Share link adapters
   ChatGPTShareLinkAdapter,
   chatGPTShareLinkAdapter,
-  ClaudeShareLinkAdapter,
-  claudeShareLinkAdapter,
   GeminiShareLinkAdapter,
   geminiShareLinkAdapter,
 } from "./adapters";
@@ -120,14 +120,13 @@ export function registerBuiltinAdapters(): void {
   if (!_getAdapter(_chatGPTExtAdapter.id)) {
     _registerAdapter(_chatGPTExtAdapter);
   }
+  if (!_getAdapter(_claudeExtAdapter.id)) {
+    _registerAdapter(_claudeExtAdapter);
+  }
 
   // Share link adapters
   if (!_getAdapter(_chatGPTShareLinkAdapter.id)) {
     _registerAdapter(_chatGPTShareLinkAdapter);
-  }
-
-  if (!_getAdapter(_claudeShareLinkAdapter.id)) {
-    _registerAdapter(_claudeShareLinkAdapter);
   }
 
   if (!_getAdapter(_geminiShareLinkAdapter.id)) {
