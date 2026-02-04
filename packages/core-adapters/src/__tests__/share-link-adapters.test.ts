@@ -76,51 +76,6 @@ describe("ChatGPTShareLinkAdapter", () => {
   });
 });
 
-describe("GeminiShareLinkAdapter", () => {
-  describe("canHandle", () => {
-    it("should handle gemini.google.com share links", () => {
-      expect(
-        geminiShareLinkAdapter.canHandle({
-          type: "share-link",
-          url: "https://gemini.google.com/share/abc123",
-        }),
-      ).toBe(true);
-    });
-
-    it("should not handle non-share URLs", () => {
-      expect(
-        geminiShareLinkAdapter.canHandle({
-          type: "share-link",
-          url: "https://gemini.google.com/app/abc123",
-        }),
-      ).toBe(false);
-    });
-
-    it("should not handle other domains", () => {
-      expect(
-        geminiShareLinkAdapter.canHandle({
-          type: "share-link",
-          url: "https://chatgpt.com/share/abc123",
-        }),
-      ).toBe(false);
-    });
-  });
-
-  describe("adapter properties", () => {
-    it("should have correct id", () => {
-      expect(geminiShareLinkAdapter.id).toBe("gemini-share-link");
-    });
-
-    it("should have correct provider", () => {
-      expect(geminiShareLinkAdapter.provider).toBe("gemini");
-    });
-
-    it("should have version", () => {
-      expect(geminiShareLinkAdapter.version).toBe("1.0.0");
-    });
-  });
-});
-
 describe("ClaudeShareLinkAdapter", () => {
   describe("canHandle", () => {
     it("should handle claude.ai share links", () => {
@@ -157,6 +112,51 @@ describe("ClaudeShareLinkAdapter", () => {
   });
 });
 
+describe("GeminiShareLinkAdapter", () => {
+  describe("canHandle", () => {
+    it("should handle gemini.google.com share links", () => {
+      expect(
+        geminiShareLinkAdapter.canHandle({
+          type: "share-link",
+          url: "https://gemini.google.com/share/836fffdbab41",
+        }),
+      ).toBe(true);
+    });
+
+    it("should handle g.co short share links", () => {
+      expect(
+        geminiShareLinkAdapter.canHandle({
+          type: "share-link",
+          url: "https://g.co/gemini/share/836fffdbab41",
+        }),
+      ).toBe(true);
+    });
+
+    it("should not handle app URLs", () => {
+      expect(
+        geminiShareLinkAdapter.canHandle({
+          type: "share-link",
+          url: "https://gemini.google.com/app/d54c429fda42be39",
+        }),
+      ).toBe(false);
+    });
+  });
+
+  describe("adapter properties", () => {
+    it("should have correct id", () => {
+      expect(geminiShareLinkAdapter.id).toBe("gemini-share-link");
+    });
+
+    it("should have correct provider", () => {
+      expect(geminiShareLinkAdapter.provider).toBe("gemini");
+    });
+
+    it("should have version", () => {
+      expect(geminiShareLinkAdapter.version).toBe("1.0.0");
+    });
+  });
+});
+
 describe("Share link adapter registration", () => {
   beforeEach(() => {
     clearAdapters();
@@ -174,17 +174,6 @@ describe("Share link adapter registration", () => {
     expect(chatGPTShareLinkAdapter.canHandle(input)).toBe(true);
   });
 
-  it("should register Gemini share link adapter", () => {
-    registerAdapter(geminiShareLinkAdapter);
-
-    const input = {
-      type: "share-link" as const,
-      url: "https://gemini.google.com/share/abc123",
-    };
-
-    expect(geminiShareLinkAdapter.canHandle(input)).toBe(true);
-  });
-
   it("should register Claude share link adapter", () => {
     registerAdapter(claudeShareLinkAdapter);
 
@@ -196,8 +185,20 @@ describe("Share link adapter registration", () => {
     expect(claudeShareLinkAdapter.canHandle(input)).toBe(true);
   });
 
+  it("should register Gemini share link adapter", () => {
+    registerAdapter(geminiShareLinkAdapter);
+
+    const input = {
+      type: "share-link" as const,
+      url: "https://gemini.google.com/share/836fffdbab41",
+    };
+
+    expect(geminiShareLinkAdapter.canHandle(input)).toBe(true);
+  });
+
   it("should find correct adapter for each provider", () => {
     registerAdapter(chatGPTShareLinkAdapter);
+    registerAdapter(claudeShareLinkAdapter);
     registerAdapter(geminiShareLinkAdapter);
 
     // ChatGPT
@@ -207,17 +208,10 @@ describe("Share link adapter registration", () => {
         url: "https://chatgpt.com/share/test",
       }),
     ).toBe(true);
-    // Gemini
-    expect(
-      geminiShareLinkAdapter.canHandle({
-        type: "share-link",
-        url: "https://gemini.google.com/share/xyz",
-      }),
-    ).toBe(true);
     expect(
       chatGPTShareLinkAdapter.canHandle({
         type: "share-link",
-        url: "https://gemini.google.com/share/xyz",
+        url: "https://claude.ai/share/3745d94b-a9cc-405f-93f8-c67b24fc205c",
       }),
     ).toBe(false);
 
@@ -226,6 +220,14 @@ describe("Share link adapter registration", () => {
       claudeShareLinkAdapter.canHandle({
         type: "share-link",
         url: "https://claude.ai/share/3745d94b-a9cc-405f-93f8-c67b24fc205c",
+      }),
+    ).toBe(true);
+
+    // Gemini
+    expect(
+      geminiShareLinkAdapter.canHandle({
+        type: "share-link",
+        url: "https://gemini.google.com/share/836fffdbab41",
       }),
     ).toBe(true);
   });
