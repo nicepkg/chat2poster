@@ -62,6 +62,7 @@ async function fetchGeminiShareMessages(url: string): Promise<RawMessage[]> {
 
   const payloadString = await fetchBatchExecutePayload({
     rpcId: READ_SHARE_RPC_ID,
+    rpcPayload: JSON.stringify([null, shareId]),
     sourcePath: `/share/${shareId}`,
     referrerUrl: normalizedUrl,
     runtimeParams,

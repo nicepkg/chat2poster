@@ -19,7 +19,9 @@ export async function fetchBatchExecutePayload(
     rt: "c",
   });
 
-  const fReq = JSON.stringify([[[request.rpcId, "[]", null, "generic"]]]);
+  const fReq = JSON.stringify([
+    [[request.rpcId, request.rpcPayload ?? "[]", null, "generic"]],
+  ]);
   const body = new URLSearchParams({ "f.req": fReq });
   if (request.runtimeParams.at) {
     body.set("at", request.runtimeParams.at);

@@ -90,6 +90,7 @@ describe("GeminiExtAdapter", () => {
 
       expect(fetchMock).toHaveBeenCalledOnce();
       const [firstUrl] = fetchMock.mock.calls[0] ?? [];
+      const [, firstInit] = fetchMock.mock.calls[0] ?? [];
       const requestUrl =
         typeof firstUrl === "string"
           ? firstUrl
@@ -100,6 +101,17 @@ describe("GeminiExtAdapter", () => {
               : "";
       expect(requestUrl).toContain("rpcids=hNvQHb");
       expect(requestUrl).toContain(`source-path=%2Fapp%2F${CONVERSATION_ID}`);
+
+      const requestBody = firstInit?.body;
+      const body =
+        typeof requestBody === "string"
+          ? requestBody
+          : requestBody instanceof URLSearchParams
+            ? requestBody.toString()
+            : "";
+      const fReq = new URLSearchParams(body).get("f.req");
+      const parsedFReq = JSON.parse(fReq ?? "[]") as unknown[][][];
+      expect(parsedFReq[0]?.[0]?.[1]).toBe(`[null,"${CONVERSATION_ID}"]`);
 
       expect(conversation.messages).toHaveLength(2);
       expect(conversation.messages[0]?.role).toBe("user");

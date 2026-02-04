@@ -78,6 +78,7 @@ describe("GeminiShareLinkAdapter", () => {
 
       expect(fetchMock).toHaveBeenCalledTimes(2);
       const [batchedUrl] = fetchMock.mock.calls[1] ?? [];
+      const [, batchedInit] = fetchMock.mock.calls[1] ?? [];
       const requestUrl =
         typeof batchedUrl === "string"
           ? batchedUrl
@@ -88,6 +89,17 @@ describe("GeminiShareLinkAdapter", () => {
               : "";
       expect(requestUrl).toContain("rpcids=ujx1Bf");
       expect(requestUrl).toContain(`source-path=%2Fshare%2F${SHARE_ID}`);
+
+      const requestBody = batchedInit?.body;
+      const body =
+        typeof requestBody === "string"
+          ? requestBody
+          : requestBody instanceof URLSearchParams
+            ? requestBody.toString()
+            : "";
+      const fReq = new URLSearchParams(body).get("f.req");
+      const parsedFReq = JSON.parse(fReq ?? "[]") as unknown[][][];
+      expect(parsedFReq[0]?.[0]?.[1]).toBe(`[null,"${SHARE_ID}"]`);
 
       expect(conversation.sourceType).toBe("web-share-link");
       expect(conversation.sourceMeta?.provider).toBe("gemini");

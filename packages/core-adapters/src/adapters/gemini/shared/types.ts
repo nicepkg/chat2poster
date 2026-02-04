@@ -7,6 +7,7 @@ export interface GeminiRuntimeParams {
 
 export interface GeminiBatchExecuteRequest {
   rpcId: string;
+  rpcPayload?: string;
   sourcePath: string;
   referrerUrl: string;
   runtimeParams: GeminiRuntimeParams;

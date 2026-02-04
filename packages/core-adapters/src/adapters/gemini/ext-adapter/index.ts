@@ -61,6 +61,7 @@ async function fetchGeminiConversation(
 ): Promise<RawMessage[]> {
   const payloadString = await fetchBatchExecutePayload({
     rpcId: READ_CHAT_RPC_ID,
+    rpcPayload: JSON.stringify([null, conversationId]),
     sourcePath: `/app/${conversationId}`,
     referrerUrl: `https://gemini.google.com/app/${conversationId}`,
     runtimeParams,
