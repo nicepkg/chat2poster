@@ -200,6 +200,10 @@ const en = {
   "web.editor.back": "Back to Import",
   "web.editor.settings": "Settings",
   "web.editor.loading": "Loading...",
+  "web.extPreview.title": "Extension Preview",
+  "web.extPreview.subtitle":
+    "Floating button + modal, powered by editor context data.",
+  "web.extPreview.devOnly": "Dev Only",
   "web.docs.editLink": "Edit this page on GitHub",
   "web.docs.feedback": "Question? Give us feedback →",
   "api.parseShareLink.rateLimit": "Too many requests. Please try again later.",

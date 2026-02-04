@@ -9,27 +9,18 @@ import {
 } from "@chat2poster/core-export";
 import type { MessageRole } from "@chat2poster/core-schema";
 import {
-  Card,
   EditorProvider,
-  EditorTabs,
-  EditorPreview,
+  EditorWorkspace,
   useEditor,
-  useIsMobile,
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-  Button,
   useI18n,
   generateUUID,
   STORAGE_KEYS,
 } from "@chat2poster/shared-ui";
 import "@chat2poster/shared-ui/styles/renderer.css";
 import { motion } from "framer-motion";
-import { Loader2, Settings2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useEffect, useCallback, useState } from "react";
+import { useRef, useEffect, useCallback } from "react";
 
 /** Message role for editor (excludes system messages) */
 type EditorMessageRole = Exclude<MessageRole, "system">;
@@ -84,35 +75,6 @@ function loadConversationFromStorage() {
 }
 
 /**
- * Mobile drawer for settings
- */
-function MobileSettingsDrawer({ title }: { title: string }) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full shadow-lg lg:hidden"
-        >
-          <Settings2 className="h-6 w-6" />
-        </Button>
-      </DrawerTrigger>
-      <DrawerContent className="max-h-[85vh]">
-        <DrawerHeader className="border-b">
-          <DrawerTitle>{title}</DrawerTitle>
-        </DrawerHeader>
-        <div className="flex-1 overflow-y-auto">
-          <EditorTabs defaultTab="theme" />
-        </div>
-      </DrawerContent>
-    </Drawer>
-  );
-}
-
-/**
  * Inner editor content that uses EditorContext
  */
 function EditorContent() {
@@ -120,7 +82,6 @@ function EditorContent() {
   const router = useRouter();
   const canvasRef = useRef<HTMLDivElement>(null);
   const { editor, dispatch } = useEditor();
-  const isMobile = useIsMobile();
 
   // Load conversation on mount
   useEffect(() => {
@@ -218,9 +179,6 @@ function EditorContent() {
     dispatch,
   ]);
 
-  // Count selected messages for export disabled state
-  const selectedCount = editor.selection?.selectedMessageIds.length ?? 0;
-
   // Loading state
   if (!editor.conversation) {
     return (
@@ -240,41 +198,13 @@ function EditorContent() {
   }
 
   return (
-    <main className="bg-muted/30">
-      <div className="mx-auto flex h-[calc(100vh-64px)] w-full max-w-7xl gap-4 p-4">
-        {/* Left Panel - Settings (Desktop only) */}
-        {!isMobile && (
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-            className="hidden w-80 shrink-0 lg:block"
-          >
-            <Card className="bg-card/80 h-full overflow-hidden backdrop-blur-sm py-0">
-              <EditorTabs defaultTab="theme" />
-            </Card>
-          </motion.div>
-        )}
-
-        {/* Right Panel - Preview */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-          className="min-h-0 flex-1 overflow-hidden"
-        >
-          <EditorPreview
-            canvasRef={canvasRef}
-            onExport={handleExport}
-            exportDisabled={selectedCount === 0}
-            className="h-full"
-          />
-        </motion.div>
-      </div>
-
-      {/* Mobile Settings Drawer */}
-      {isMobile && <MobileSettingsDrawer title={t("web.editor.settings")} />}
-    </main>
+    <EditorWorkspace
+      canvasRef={canvasRef}
+      onExport={handleExport}
+      className="bg-muted/30"
+      containerClassName="h-[calc(100vh-64px)] max-w-7xl"
+      settingsTitle={t("web.editor.settings")}
+    />
   );
 }
 

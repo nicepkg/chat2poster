@@ -1,4 +1,6 @@
 export * from "./editor-panel";
+export * from "./editor-modal";
+export * from "./editor-workspace";
 export * from "./floating-button";
 export * from "./messages-tab";
 export * from "./theme-tab";

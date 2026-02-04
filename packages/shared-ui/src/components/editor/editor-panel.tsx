@@ -2,6 +2,7 @@
 
 import type { Conversation } from "@chat2poster/core-schema";
 import { useEditor } from "@ui/contexts/editor-context";
+import { useEditorData } from "@ui/contexts/editor-data-context";
 import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
 import { useState, useCallback, useEffect } from "react";
@@ -35,6 +36,7 @@ export interface EditorPanelProps {
   onClose: () => void;
   onParse?: () => Promise<Conversation>;
   onExport?: () => Promise<void>;
+  variant?: "panel" | "modal";
   className?: string;
 }
 
@@ -43,14 +45,18 @@ export function EditorPanel({
   onClose,
   onParse,
   onExport,
+  variant = "panel",
   className,
 }: EditorPanelProps) {
   const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<PanelTab>("messages");
   const { editor, runtime, dispatch, runtimeDispatch } = useEditor();
+  const editorData = useEditorData();
+  const parseHandler = onParse ?? editorData?.parseConversation;
+  const exportHandler = onExport ?? editorData?.exportConversation;
 
   const handleParseConversation = useCallback(async () => {
-    if (!onParse) {
+    if (!parseHandler) {
       runtimeDispatch({
         type: "SET_ERROR",
         payload: "No parse handler provided",
@@ -62,7 +68,7 @@ export function EditorPanel({
     runtimeDispatch({ type: "SET_ERROR", payload: null });
 
     try {
-      const conversation = await onParse();
+      const conversation = await parseHandler();
       const messageIds = conversation.messages.map((m) => m.id);
 
       dispatch({ type: "SET_CONVERSATION", payload: conversation });
@@ -83,7 +89,7 @@ export function EditorPanel({
     } finally {
       runtimeDispatch({ type: "SET_PARSING", payload: false });
     }
-  }, [dispatch, runtimeDispatch, onParse, t]);
+  }, [dispatch, runtimeDispatch, parseHandler, t]);
 
   useEffect(() => {
     if (isOpen && !editor.conversation && !runtime.isParsing) {
@@ -92,7 +98,7 @@ export function EditorPanel({
   }, [isOpen, editor.conversation, runtime.isParsing, handleParseConversation]);
 
   const handleExport = useCallback(async () => {
-    if (!onExport) {
+    if (!exportHandler) {
       runtimeDispatch({
         type: "SET_ERROR",
         payload: "No export handler provided",
@@ -104,7 +110,7 @@ export function EditorPanel({
     runtimeDispatch({ type: "SET_EXPORT_PROGRESS", payload: 0 });
 
     try {
-      await onExport();
+      await exportHandler();
     } catch (err) {
       runtimeDispatch({
         type: "SET_ERROR",
@@ -114,7 +120,7 @@ export function EditorPanel({
     } finally {
       runtimeDispatch({ type: "SET_EXPORTING", payload: false });
     }
-  }, [onExport, runtimeDispatch, t]);
+  }, [exportHandler, runtimeDispatch, t]);
 
   if (!isOpen) return null;
 
@@ -127,7 +133,9 @@ export function EditorPanel({
   return (
     <div
       className={cn(
-        "c2p-panel fixed inset-y-0 right-0 z-50 flex w-96 flex-col bg-background shadow-2xl",
+        variant === "panel"
+          ? "c2p-panel fixed inset-y-0 right-0 z-50 flex w-96 flex-col bg-background shadow-2xl"
+          : "c2p-panel relative flex h-full w-full flex-col bg-transparent",
         className,
       )}
     >
