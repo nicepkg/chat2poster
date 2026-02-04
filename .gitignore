@@ -132,6 +132,9 @@ logs/
 **/.vitepress/.temp
 **.tmp.md
 
+# for codex
+tasks
+
 # ====================
 # AI Memory System
 # ====================

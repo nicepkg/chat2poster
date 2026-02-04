@@ -1,4 +1,4 @@
-import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "wxt";
 import { toUtf8 } from "./scripts/vite-plugin-to-utf8";
@@ -35,11 +35,14 @@ export default defineConfig({
   outDir: "dist",
   modules: ["@wxt-dev/module-react"],
   vite: () => ({
-    plugins: [toUtf8(), react(), tsconfigPaths()],
+    plugins: [toUtf8(), tailwindcss(), tsconfigPaths()],
     resolve: {
       // Force package imports to use published/dist branches instead of
       // `development` source conditions in workspace packages.
-      conditions: ["import", "browser", "default"],
+      conditions: ["development", "import", "browser", "default"],
+    },
+    optimizeDeps: {
+      exclude: ["@chat2poster/shared-ui"],
     },
     build: {
       sourcemap: false,

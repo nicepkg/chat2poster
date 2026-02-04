@@ -1,14 +1,30 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
 @import "@chat2poster/shared-ui/styles/globals.css";
 @import "@chat2poster/shared-ui/styles/renderer.css";
-@import "tw-animate-css";
 
 @source "../../../../../packages/shared-ui/src/**/*.{ts,tsx,js,jsx}";
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+
+@layer base {
+  :root * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
 :host {
-  all: initial;
+  /* all: initial; */
   font-family:
     "PingFang SC",
     "Hiragino Sans GB",
@@ -23,14 +39,10 @@
 html,
 html > body,
 #app {
-  --radius: 0.5rem;
   color: var(--color-foreground);
   background-color: var(--color-background);
   pointer-events: auto;
   user-select: auto;
-
-  /* Apply the system font variables */
-  font-family: var(--font-sans);
 }
 
 html,
