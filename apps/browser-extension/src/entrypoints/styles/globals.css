@@ -10,10 +10,13 @@
 :host {
   all: initial;
   font-family:
-    "Inter var",
-    "SF Pro Display",
-    -apple-system,
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
     "Noto Sans SC",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
     sans-serif;
 }
 

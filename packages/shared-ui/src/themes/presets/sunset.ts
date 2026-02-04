@@ -11,7 +11,7 @@ export const sunsetTheme: Theme = {
   mode: "light",
   tokens: {
     fontFamily:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      '"PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     baseFontSize: 16,
     lineHeight: 1.6,
     bubbleRadius: 16,

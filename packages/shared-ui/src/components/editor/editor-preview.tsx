@@ -642,7 +642,6 @@ export function EditorPreview({
                                         {
                                           backgroundColor: bubbleBg,
                                           color: bubbleFg,
-                                          width: "fit-content",
                                           maxWidth: "100%",
                                           borderRadius: bubbleRadius,
                                           padding: messagePadding,
@@ -667,6 +666,8 @@ export function EditorPreview({
                                           isWindowDark && "c2p-markdown-dark",
                                         )}
                                         style={{
+                                          fontFamily:
+                                            selectedTheme.tokens.fontFamily,
                                           lineHeight:
                                             selectedTheme.tokens.lineHeight,
                                           fontSize:
@@ -674,7 +675,7 @@ export function EditorPreview({
                                           textAlign: "left",
                                           color: bubbleFg,
                                           maxWidth: "100%",
-                                          overflowWrap: "anywhere",
+                                          overflowWrap: "break-word",
                                         }}
                                       >
                                         <MarkdownRenderer

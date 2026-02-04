@@ -13,7 +13,7 @@ export const lightTheme: Theme = {
   mode: "light",
   tokens: {
     fontFamily:
-      '"Inter var", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Noto Sans SC", sans-serif',
+      '"PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     baseFontSize: 15,
     lineHeight: 1.65,
     bubbleRadius: 18,
