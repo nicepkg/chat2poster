@@ -123,14 +123,16 @@ export async function highlightCode(
     } catch {
       // Fall back to plaintext if language is not supported
       const html = hl.codeToHtml(code, { lang: "text", theme });
-      addToCache(key, html);
-      return html;
+      const sanitized = sanitizeShikiHtml(html);
+      addToCache(key, sanitized);
+      return sanitized;
     }
   }
 
   const html = hl.codeToHtml(code, { lang, theme });
-  addToCache(key, html);
-  return html;
+  const sanitized = sanitizeShikiHtml(html);
+  addToCache(key, sanitized);
+  return sanitized;
 }
 
 /**
@@ -204,4 +206,41 @@ function escapeHtml(str: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+/**
+ * Remove Shiki pre background styles so code block background is controlled
+ * by chat2poster theme tokens consistently in preview/export.
+ */
+function sanitizeShikiHtml(html: string): string {
+  return html.replace(
+    /<pre([^>]*\bclass="[^"]*\bshiki\b[^"]*"[^>]*)>/g,
+    (match, attrs: string) => {
+      const styleRegex = /\sstyle="([^"]*)"/;
+      const styleMatch = styleRegex.exec(attrs);
+      if (!styleMatch) return match;
+
+      const styleValue = styleMatch[1];
+      if (typeof styleValue !== "string") return match;
+
+      const cleanedStyle = styleValue
+        .split(";")
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .filter((decl) => {
+          const lowerDecl = decl.toLowerCase();
+          return (
+            !lowerDecl.startsWith("background:") &&
+            !lowerDecl.startsWith("background-color:")
+          );
+        })
+        .join("; ");
+
+      if (!cleanedStyle) {
+        return `<pre${attrs.replace(styleRegex, "")}>`;
+      }
+
+      return `<pre${attrs.replace(styleRegex, ` style="${cleanedStyle}"`)}>`;
+    },
+  );
 }

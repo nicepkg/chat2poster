@@ -207,6 +207,11 @@
   background: transparent !important;
 }
 
+.c2p-markdown-code-block-content .shiki {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 .c2p-markdown-code-block-content code {
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 13px;
