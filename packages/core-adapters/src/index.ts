@@ -34,6 +34,7 @@ import {
   chatGPTExtAdapter as _chatGPTExtAdapter,
   claudeExtAdapter as _claudeExtAdapter,
   chatGPTShareLinkAdapter as _chatGPTShareLinkAdapter,
+  claudeShareLinkAdapter as _claudeShareLinkAdapter,
   geminiShareLinkAdapter as _geminiShareLinkAdapter,
 } from "./adapters";
 import {
@@ -98,6 +99,8 @@ export {
   // Share link adapters
   ChatGPTShareLinkAdapter,
   chatGPTShareLinkAdapter,
+  ClaudeShareLinkAdapter,
+  claudeShareLinkAdapter,
   GeminiShareLinkAdapter,
   geminiShareLinkAdapter,
 } from "./adapters";
@@ -127,6 +130,9 @@ export function registerBuiltinAdapters(): void {
   // Share link adapters
   if (!_getAdapter(_chatGPTShareLinkAdapter.id)) {
     _registerAdapter(_chatGPTShareLinkAdapter);
+  }
+  if (!_getAdapter(_claudeShareLinkAdapter.id)) {
+    _registerAdapter(_claudeShareLinkAdapter);
   }
 
   if (!_getAdapter(_geminiShareLinkAdapter.id)) {

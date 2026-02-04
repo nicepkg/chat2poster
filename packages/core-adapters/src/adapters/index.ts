@@ -15,6 +15,10 @@ export {
   chatGPTShareLinkAdapter,
 } from "./chatgpt/share-link-adapter";
 export {
+  ClaudeShareLinkAdapter,
+  claudeShareLinkAdapter,
+} from "./claude/share-link-adapter";
+export {
   GeminiShareLinkAdapter,
   geminiShareLinkAdapter,
 } from "./gemini-share-link";

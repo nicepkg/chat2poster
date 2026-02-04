@@ -1,10 +1,19 @@
 export interface ClaudeConversationResponse {
   uuid?: string;
   name?: string;
+  snapshot_name?: string;
+  created_by?: string;
+  creator?: {
+    uuid?: string;
+    full_name?: string;
+  };
   summary?: string;
   created_at?: string;
   updated_at?: string;
+  project_uuid?: string | null;
   current_leaf_message_uuid?: string;
+  up_to_date?: boolean;
+  is_public?: boolean;
   chat_messages?: ClaudeMessage[];
 }
 
