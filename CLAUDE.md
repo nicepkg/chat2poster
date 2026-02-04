@@ -87,8 +87,8 @@ Chat2Poster's design character:
 --primary-hover: oklch(0.55 0.22 268.7);
 --primary-glow: oklch(0.619 0.202 268.7 / 0.15);
 
-/* Secondary: Rose - warm accent */
---secondary: oklch(0.749 0.164 14.2); /* #FB7185 */
+/* Secondary: Violet - complementary to indigo */
+--secondary: oklch(0.685 0.17 277); /* #818CF8 */
 
 /* Background layers */
 --bg-base: oklch(0.985 0.002 240); /* Not pure white, slight blue tint */
@@ -174,7 +174,7 @@ Chat2Poster's design character:
 
 /* Glow effects for emphasis */
 --shadow-glow: 0 0 20px oklch(0.619 0.202 268.7 / 0.25);
---shadow-glow-rose: 0 0 20px oklch(0.749 0.164 14.2 / 0.25);
+--shadow-glow-violet: 0 0 20px oklch(0.685 0.17 277 / 0.25);
 ```
 
 ---
