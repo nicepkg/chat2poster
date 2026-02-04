@@ -1,5 +1,8 @@
 import type { RawMessage } from "../../../base";
 
+const GEMINI_IMAGE_URL_PATTERN =
+  /^https:\/\/lh3\.googleusercontent\.com\/gg(?:-dl)?\//;
+
 function findRpcPayload(node: unknown, rpcId: string): string | null {
   if (!Array.isArray(node)) {
     return null;
@@ -54,6 +57,57 @@ function normalizeText(content: string): string {
     .replace(/\r\n/g, "\n")
     .replace(/\u00a0/g, " ")
     .trim();
+}
+
+function findAllStrings(root: unknown): string[] {
+  const out: string[] = [];
+  const stack: unknown[] = [root];
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+
+    if (typeof current === "string") {
+      out.push(current);
+      continue;
+    }
+
+    if (Array.isArray(current)) {
+      for (let i = current.length - 1; i >= 0; i -= 1) {
+        stack.push(current[i]);
+      }
+      continue;
+    }
+
+    if (current && typeof current === "object") {
+      const values = Object.values(current as Record<string, unknown>);
+      for (let i = values.length - 1; i >= 0; i -= 1) {
+        stack.push(values[i]);
+      }
+    }
+  }
+
+  return out;
+}
+
+function extractGeminiImageUrls(node: unknown): string[] {
+  const seen = new Set<string>();
+  const urls: string[] = [];
+
+  for (const value of findAllStrings(node)) {
+    const url = value.trim();
+    if (!GEMINI_IMAGE_URL_PATTERN.test(url)) {
+      continue;
+    }
+
+    if (seen.has(url)) {
+      continue;
+    }
+
+    seen.add(url);
+    urls.push(url);
+  }
+
+  return urls;
 }
 
 function isLikelyMessageText(content: string): boolean {
@@ -113,10 +167,9 @@ function findFirstString(node: unknown): string | null {
 
 function tryExtractUserMessage(node: unknown[]): string | null {
   if (
-    node.length < 4 ||
+    node.length < 3 ||
     node[1] !== 1 ||
     node[2] !== null ||
-    node[3] !== 0 ||
     !Array.isArray(node[0])
   ) {
     return null;
@@ -134,10 +187,34 @@ function tryExtractAssistantMessage(node: unknown[]): string | null {
     return null;
   }
 
-  const content = findFirstString(node[1]);
-  return content && isLikelyMessageText(content)
-    ? normalizeText(content)
-    : null;
+  const text = findFirstString(node[1]);
+  const normalizedText =
+    text && isLikelyMessageText(text) ? normalizeText(text) : "";
+  // Image URLs for generated images are often nested outside node[1].
+  // Parse the whole assistant node to avoid dropping image-only turns.
+  const imageUrls = extractGeminiImageUrls(node);
+
+  if (!normalizedText && imageUrls.length === 0) {
+    return null;
+  }
+
+  const imageMarkdown = imageUrls.map((url) => `![Generated image](${url})`);
+  // Gemini image-generation turns may carry historical image URLs in the same
+  // payload node. For image-only assistant turns, keep only the latest URL.
+  const effectiveImageMarkdown =
+    !normalizedText && imageMarkdown.length > 1
+      ? [imageMarkdown[imageMarkdown.length - 1]!]
+      : imageMarkdown;
+
+  if (normalizedText && imageMarkdown.length > 0) {
+    return `${normalizedText}\n\n${effectiveImageMarkdown.join("\n")}`;
+  }
+
+  if (normalizedText) {
+    return normalizedText;
+  }
+
+  return effectiveImageMarkdown.join("\n");
 }
 
 function dedupeMessages(messages: RawMessage[]): RawMessage[] {

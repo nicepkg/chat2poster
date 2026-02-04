@@ -50,7 +50,6 @@ export class ClaudeShareLinkAdapter extends BaseShareLinkAdapter {
     }
 
     const snapshot = await fetchSnapshot(shareId);
-    console.log("snapshot", snapshot);
     const chatMessages = snapshot.chat_messages ?? [];
     const messages = convertClaudeMessagesToRawMessages(chatMessages);
 

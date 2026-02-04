@@ -45,10 +45,41 @@ describe("GeminiShareLinkAdapter", () => {
     it("should parse messages from Gemini share batchexecute endpoint", async () => {
       const payload = [
         [
-          [["今天有什么重大新闻？"], 1, null, 0, "fbb127bbb056c959", 0],
+          [
+            [
+              "今天有什么重大新闻？",
+              null,
+              null,
+              null,
+              [[null, null, null, [[null, 1, "test.jpg"]]]],
+            ],
+            1,
+            null,
+            1,
+            "fbb127bbb056c959",
+            0,
+          ],
           [
             "rc_25fb82d970a49f0d",
             ["今天是2026年2月4日，今天国内外有不少重磅消息。"],
+          ],
+        ],
+        [
+          [["生成一张图片给我"], 1, null, 0, "fbb127bbb056c959", 0],
+          [
+            "rc_c78a0ec82a0629e3",
+            ["http://googleusercontent.com/image_generation_content/0\n\n"],
+            [
+              null,
+              null,
+              null,
+              [
+                null,
+                1,
+                "10554311303739222653.png",
+                "https://lh3.googleusercontent.com/gg/AMW1TPovStbeRIj7Yh8s-aiKNfLZXi0Xk-izUlxCIWHFkAYOC0WWNM3S4S8V_zObZg7hoGrSalgvczG_sUj0OHZP597ujzDbia94CgKoidNfiohgkOxpRnzU_UZ0GCg3TaucLIj_7k8kDrkejO3WM6Ys0X-CvFxkDoyjRK5oTDd0M90YJs9LSA0",
+              ],
+            ],
           ],
         ],
       ];
@@ -103,7 +134,7 @@ describe("GeminiShareLinkAdapter", () => {
 
       expect(conversation.sourceType).toBe("web-share-link");
       expect(conversation.sourceMeta?.provider).toBe("gemini");
-      expect(conversation.messages).toHaveLength(2);
+      expect(conversation.messages).toHaveLength(4);
       expect(conversation.messages[0]?.role).toBe("user");
       expect(conversation.messages[0]?.contentMarkdown).toBe(
         "今天有什么重大新闻？",
@@ -111,6 +142,14 @@ describe("GeminiShareLinkAdapter", () => {
       expect(conversation.messages[1]?.role).toBe("assistant");
       expect(conversation.messages[1]?.contentMarkdown).toContain(
         "今天是2026年2月4日",
+      );
+      expect(conversation.messages[2]?.role).toBe("user");
+      expect(conversation.messages[2]?.contentMarkdown).toBe(
+        "生成一张图片给我",
+      );
+      expect(conversation.messages[3]?.role).toBe("assistant");
+      expect(conversation.messages[3]?.contentMarkdown).toContain(
+        "![Generated image](https://lh3.googleusercontent.com/gg/",
       );
     });
   });
