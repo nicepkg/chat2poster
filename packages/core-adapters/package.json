@@ -79,7 +79,7 @@
     "@esbuild-plugins/tsconfig-paths": "^0.1.2",
     "@types/jsdom": "^27.0.0",
     "@types/node": "catalog:tooling",
-    "jsdom": "^27.4.0",
+    "jsdom": "^28.0.0",
     "tsup": "catalog:tooling",
     "typescript": "catalog:tooling",
     "vitest": "catalog:tooling"
