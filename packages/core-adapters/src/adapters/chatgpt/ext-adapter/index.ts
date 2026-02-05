@@ -7,6 +7,7 @@
 import type { ExtInput, Provider } from "@chat2poster/core-schema";
 import { createAppError } from "@chat2poster/core-schema";
 import { BaseExtAdapter, type RawMessage } from "../../../base";
+import type { ExtensionSiteConfig } from "../../../extension-site-types";
 import { convertShareDataToMessages } from "../shared/message-converter";
 import type { MessageNode, ShareData } from "../shared/types";
 
@@ -186,18 +187,45 @@ export function resetChatGPTExtAdapterTokenCacheForTests(): void {
   accessTokenPromise = null;
 }
 
+export const CHATGPT_EXT_SITE = {
+  id: "chatgpt",
+  provider: "chatgpt",
+  name: "ChatGPT",
+  hostPermissions: ["https://chatgpt.com/*", "https://chat.openai.com/*"],
+  hostPatterns: [
+    /^https:\/\/chatgpt\.com\//i,
+    /^https:\/\/chat\.openai\.com\//i,
+  ],
+  conversationUrlPatterns: [
+    /^https?:\/\/(chat\.openai\.com|chatgpt\.com)\/c\/[a-zA-Z0-9-]+/,
+  ],
+  getConversationId: extractConversationId,
+  theme: {
+    light: {
+      primary: "#10a37f",
+      secondary: "#d1fae5",
+      primaryForeground: "#ffffff",
+      secondaryForeground: "#065f46",
+    },
+    dark: {
+      primary: "#34d399",
+      secondary: "#064e3b",
+      primaryForeground: "#052e16",
+      secondaryForeground: "#ecfdf5",
+    },
+  },
+} satisfies ExtensionSiteConfig;
+
 export class ChatGPTExtAdapter extends BaseExtAdapter {
   readonly id = "chatgpt-ext";
   readonly version = "1.0.0";
   readonly name = "ChatGPT Extension Parser";
   readonly provider: Provider = "chatgpt";
 
-  readonly urlPatterns = [
-    /^https?:\/\/(chat\.openai\.com|chatgpt\.com)\/c\/[a-zA-Z0-9-]+/,
-  ];
+  readonly urlPatterns = CHATGPT_EXT_SITE.conversationUrlPatterns;
 
   async getRawMessages(input: ExtInput): Promise<RawMessage[]> {
-    const conversationId = extractConversationId(input.url);
+    const conversationId = CHATGPT_EXT_SITE.getConversationId(input.url);
     if (!conversationId) {
       throw createAppError("E-PARSE-001", "Invalid ChatGPT conversation URL");
     }

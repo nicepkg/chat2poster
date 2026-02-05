@@ -1,18 +1,33 @@
 import { defineConfig } from "tsup";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const { TsconfigPathsPlugin } = require("@esbuild-plugins/tsconfig-paths");
 
 export default defineConfig({
-  entry: ["src/index.ts"],
+  entry: [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "!src/**/*.test.*",
+    "!src/**/*.spec.*",
+    "!src/**/*.stories.*",
+  ],
   format: ["esm"],
+  bundle: true,
+  tsconfig: "tsconfig.json",
   dts: {
     compilerOptions: {
       composite: false,
     },
   },
-  clean: true,
-  sourcemap: true,
   treeshake: true,
   splitting: false,
+  sourcemap: true,
   minify: false,
-  tsconfig: "tsconfig.json",
+  clean: true,
+  esbuildOptions(options) {
+    options.jsx = "automatic";
+  },
+  esbuildPlugins: [TsconfigPathsPlugin({ tsconfig: "tsconfig.json" })],
   external: ["@chat2poster/core-schema"],
 });

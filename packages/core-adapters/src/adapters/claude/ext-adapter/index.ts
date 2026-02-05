@@ -7,6 +7,7 @@
 import type { ExtInput, Provider } from "@chat2poster/core-schema";
 import { createAppError } from "@chat2poster/core-schema";
 import { BaseExtAdapter, type RawMessage } from "../../../base";
+import type { ExtensionSiteConfig } from "../../../extension-site-types";
 import { convertClaudeMessagesToRawMessages } from "../shared/message-converter";
 import type { ClaudeConversationResponse } from "../shared/types";
 
@@ -56,16 +57,40 @@ async function fetchConversation(
   return (await response.json()) as ClaudeConversationResponse;
 }
 
+export const CLAUDE_EXT_SITE = {
+  id: "claude",
+  provider: "claude",
+  name: "Claude",
+  hostPermissions: ["https://claude.ai/*"],
+  hostPatterns: [/^https:\/\/claude\.ai\//i],
+  conversationUrlPatterns: [/^https?:\/\/claude\.ai\/chat\/[a-zA-Z0-9-]+/],
+  getConversationId: extractConversationId,
+  theme: {
+    light: {
+      primary: "#f97316",
+      secondary: "#ffedd5",
+      primaryForeground: "#ffffff",
+      secondaryForeground: "#9a3412",
+    },
+    dark: {
+      primary: "#fb923c",
+      secondary: "#7c2d12",
+      primaryForeground: "#431407",
+      secondaryForeground: "#ffedd5",
+    },
+  },
+} satisfies ExtensionSiteConfig;
+
 export class ClaudeExtAdapter extends BaseExtAdapter {
   readonly id = "claude-ext";
   readonly version = "1.0.0";
   readonly name = "Claude Extension Parser";
   readonly provider: Provider = "claude";
 
-  readonly urlPatterns = [/^https?:\/\/claude\.ai\/chat\/[a-zA-Z0-9-]+/];
+  readonly urlPatterns = CLAUDE_EXT_SITE.conversationUrlPatterns;
 
   async getRawMessages(input: ExtInput): Promise<RawMessage[]> {
-    const conversationId = extractConversationId(input.url);
+    const conversationId = CLAUDE_EXT_SITE.getConversationId(input.url);
     if (!conversationId) {
       throw createAppError("E-PARSE-001", "Invalid Claude conversation URL");
     }

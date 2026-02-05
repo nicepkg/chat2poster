@@ -45,6 +45,7 @@ export interface RuntimeState {
 
 export type EditorAction =
   | { type: "SET_CONVERSATION"; payload: Conversation }
+  | { type: "CLEAR_CONVERSATION" }
   | { type: "SET_SELECTION"; payload: Selection }
   | { type: "TOGGLE_MESSAGE"; payload: string }
   | { type: "SELECT_ALL_MESSAGES" }
@@ -103,6 +104,9 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
   switch (action.type) {
     case "SET_CONVERSATION":
       return { ...state, conversation: action.payload };
+
+    case "CLEAR_CONVERSATION":
+      return { ...state, conversation: null, selection: null, currentPage: 0 };
 
     case "SET_SELECTION":
       return { ...state, selection: action.payload };

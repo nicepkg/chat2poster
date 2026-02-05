@@ -19,6 +19,9 @@ export const STORAGE_KEYS = {
 
   /** Manual message builder data - stored in sessionStorage */
   MANUAL_MESSAGES: "chat2poster:manual-messages",
+
+  /** Extension floating button position - stored in localStorage */
+  EXT_FLOATING_BUTTON_POSITION: "chat2poster:ext-floating-button-position",
 } as const;
 
 /** Type for storage key values */

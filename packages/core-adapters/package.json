@@ -10,7 +10,38 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
       "import": "./dist/index.js"
+    },
+    "./adapters/*": {
+      "types": "./dist/adapters/*.d.ts",
+      "development": "./src/adapters/*.ts",
+      "import": "./dist/adapters/*.js"
+    },
+    "./network/*": {
+      "types": "./dist/network/*.d.ts",
+      "development": "./src/network/*.ts",
+      "import": "./dist/network/*.js"
+    },
+    "./extension-sites": {
+      "types": "./dist/extension-sites/index.d.ts",
+      "development": "./src/extension-sites/index.ts",
+      "import": "./dist/extension-sites/index.js"
+    },
+    "./extension-types": {
+      "types": "./dist/extension-types.d.ts",
+      "development": "./src/extension-types.ts",
+      "import": "./dist/extension-types.js"
+    },
+    "./registry": {
+      "types": "./dist/registry.d.ts",
+      "development": "./src/registry.ts",
+      "import": "./dist/registry.js"
+    },
+    "./base": {
+      "types": "./dist/base.d.ts",
+      "development": "./src/base.ts",
+      "import": "./dist/base.js"
     }
   },
   "files": [
@@ -32,6 +63,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@esbuild-plugins/tsconfig-paths": "^0.1.2",
     "@types/jsdom": "^27.0.0",
     "@types/node": "catalog:tooling",
     "jsdom": "^27.4.0",

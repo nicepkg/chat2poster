@@ -67,6 +67,24 @@ export {
 } from "./base";
 export type { AdapterConfig, ConversationOptions, RawMessage } from "./base";
 
+// Extension site metadata
+export {
+  EXTENSION_SITE_CONFIGS,
+  EXTENSION_HOST_PERMISSIONS,
+  EXTENSION_CONTENT_MATCHES,
+  EXTENSION_HOST_PATTERNS,
+  getExtensionSiteByUrl,
+  getExtensionSiteByHost,
+  resolveExtensionTheme,
+  CHATGPT_EXT_SITE,
+  CLAUDE_EXT_SITE,
+  GEMINI_EXT_SITE,
+} from "./extension-sites";
+export type {
+  ExtensionSiteConfig,
+  ExtensionSiteThemeTokens,
+} from "./extension-sites";
+
 // Network utilities
 export {
   generateChromeUserAgent,

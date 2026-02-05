@@ -1,5 +1,10 @@
 import "./styles/globals.css";
 
+import {
+  EXTENSION_CONTENT_MATCHES,
+  getExtensionSiteByHost,
+  resolveExtensionTheme,
+} from "@chat2poster/core-adapters";
 import { createRoot } from "react-dom/client";
 import App from "~/components/app";
 import {
@@ -10,12 +15,7 @@ import {
 } from "~/constants/extension-runtime";
 
 export default defineContentScript({
-  matches: [
-    "https://chatgpt.com/*",
-    "https://chat.openai.com/*",
-    "https://claude.ai/*",
-    "https://gemini.google.com/*",
-  ],
+  matches: EXTENSION_CONTENT_MATCHES,
   cssInjectionMode: "ui",
 
   async main(ctx) {
@@ -29,14 +29,41 @@ export default defineContentScript({
         const wrapper = document.createElement("div");
         wrapper.id = "chat2poster-root";
         container.appendChild(wrapper);
+        const themeTarget =
+          container instanceof HTMLElement ? container : wrapper;
 
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+        let activeSite = getExtensionSiteByHost(window.location.href);
+
+        const applySiteTheme = (isDark: boolean) => {
+          const theme = resolveExtensionTheme(activeSite, isDark);
+          if (!theme) {
+            themeTarget.style.removeProperty("--primary");
+            themeTarget.style.removeProperty("--primary-foreground");
+            themeTarget.style.removeProperty("--secondary");
+            themeTarget.style.removeProperty("--secondary-foreground");
+            return;
+          }
+
+          themeTarget.style.setProperty("--primary", theme.primary);
+          themeTarget.style.setProperty(
+            "--primary-foreground",
+            theme.primaryForeground,
+          );
+          themeTarget.style.setProperty("--secondary", theme.secondary);
+          themeTarget.style.setProperty(
+            "--secondary-foreground",
+            theme.secondaryForeground,
+          );
+        };
+
         const updateTheme = () => {
           const isDark =
             document.documentElement.classList.contains("dark") ||
             document.body.classList.contains("dark") ||
             prefersDark.matches;
-          wrapper.classList.toggle("dark", isDark);
+          themeTarget.classList.toggle("dark", isDark);
+          applySiteTheme(isDark);
         };
         updateTheme();
 
@@ -50,6 +77,29 @@ export default defineContentScript({
           attributeFilter: ["class"],
         });
         prefersDark.addEventListener("change", updateTheme);
+
+        const notifyUrlChange = () => {
+          activeSite = getExtensionSiteByHost(window.location.href);
+          updateTheme();
+          window.dispatchEvent(
+            new CustomEvent(EXTENSION_WINDOW_EVENT.URL_CHANGE, {
+              detail: { url: window.location.href },
+            }),
+          );
+        };
+
+        const originalPushState = history.pushState.bind(history);
+        const originalReplaceState = history.replaceState.bind(history);
+        history.pushState = function (...args) {
+          originalPushState.apply(this, args);
+          notifyUrlChange();
+        };
+        history.replaceState = function (...args) {
+          originalReplaceState.apply(this, args);
+          notifyUrlChange();
+        };
+        window.addEventListener("popstate", notifyUrlChange);
+        notifyUrlChange();
 
         const root = createRoot(wrapper);
         root.render(<App />);
@@ -88,6 +138,9 @@ export default defineContentScript({
             browser.runtime.onMessage.removeListener(runtimeListener);
             observer.disconnect();
             prefersDark.removeEventListener("change", updateTheme);
+            window.removeEventListener("popstate", notifyUrlChange);
+            history.pushState = originalPushState;
+            history.replaceState = originalReplaceState;
           },
         };
       },

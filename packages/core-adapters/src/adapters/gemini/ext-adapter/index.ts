@@ -7,6 +7,7 @@
 import type { ExtInput, Provider } from "@chat2poster/core-schema";
 import { createAppError } from "@chat2poster/core-schema";
 import { BaseExtAdapter, type RawMessage } from "../../../base";
+import type { ExtensionSiteConfig } from "../../../extension-site-types";
 import { fetchHtml } from "../../../network";
 import {
   extractMessagesFromPayload,
@@ -85,18 +86,42 @@ async function fetchGeminiConversation(
   return messages;
 }
 
+export const GEMINI_EXT_SITE = {
+  id: "gemini",
+  provider: "gemini",
+  name: "Gemini",
+  hostPermissions: ["https://gemini.google.com/*"],
+  hostPatterns: [/^https:\/\/gemini\.google\.com\//i],
+  conversationUrlPatterns: [
+    /^https?:\/\/gemini\.google\.com\/(?:u\/\d+\/)?app\/[a-zA-Z0-9]+/,
+  ],
+  getConversationId: extractConversationId,
+  theme: {
+    light: {
+      primary: "#4285f4",
+      secondary: "#e0ecff",
+      primaryForeground: "#ffffff",
+      secondaryForeground: "#1d4ed8",
+    },
+    dark: {
+      primary: "#8ab4f8",
+      secondary: "#1e3a8a",
+      primaryForeground: "#0b1537",
+      secondaryForeground: "#e0ecff",
+    },
+  },
+} satisfies ExtensionSiteConfig;
+
 export class GeminiExtAdapter extends BaseExtAdapter {
   readonly id = "gemini-ext";
   readonly version = "1.0.0";
   readonly name = "Gemini Extension Parser";
   readonly provider: Provider = "gemini";
 
-  readonly urlPatterns = [
-    /^https?:\/\/gemini\.google\.com\/(?:u\/\d+\/)?app\/[a-zA-Z0-9]+/,
-  ];
+  readonly urlPatterns = GEMINI_EXT_SITE.conversationUrlPatterns;
 
   async getRawMessages(input: ExtInput): Promise<RawMessage[]> {
-    const conversationId = extractConversationId(input.url);
+    const conversationId = GEMINI_EXT_SITE.getConversationId(input.url);
     if (!conversationId) {
       throw createAppError("E-PARSE-001", "Invalid Gemini conversation URL");
     }

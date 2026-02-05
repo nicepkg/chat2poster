@@ -1,3 +1,4 @@
+import { EXTENSION_HOST_PERMISSIONS } from "@chat2poster/core-adapters";
 import tailwindcss from "@tailwindcss/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "wxt";
@@ -12,12 +13,7 @@ export default defineConfig({
       extension_pages: "script-src 'self'; object-src 'self';",
     },
     permissions: ["activeTab", "storage", "tabs"],
-    host_permissions: [
-      "https://chatgpt.com/*",
-      "https://chat.openai.com/*",
-      "https://claude.ai/*",
-      "https://gemini.google.com/*",
-    ],
+    host_permissions: EXTENSION_HOST_PERMISSIONS,
     action: {
       default_title: "Chat2Poster",
     },
@@ -42,7 +38,7 @@ export default defineConfig({
       conditions: ["development", "import", "browser", "default"],
     },
     optimizeDeps: {
-      exclude: ["@chat2poster/shared-ui"],
+      exclude: ["@chat2poster/shared-ui", "@chat2poster/core-adapters"],
     },
     build: {
       sourcemap: false,
