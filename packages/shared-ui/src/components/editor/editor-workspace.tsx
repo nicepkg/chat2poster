@@ -7,7 +7,7 @@ import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
 import { motion } from "framer-motion";
 import { Settings2 } from "lucide-react";
-import type { RefObject } from "react";
+import { type RefObject } from "react";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import {
@@ -27,6 +27,7 @@ export interface EditorWorkspaceProps {
   containerClassName?: string;
   settingsTitle?: string;
   showMobileDrawer?: boolean;
+  mountedTo?: Element | DocumentFragment | null | undefined;
 }
 
 export function EditorWorkspace({
@@ -36,6 +37,7 @@ export function EditorWorkspace({
   containerClassName,
   settingsTitle,
   showMobileDrawer = true,
+  mountedTo,
 }: EditorWorkspaceProps) {
   const { t } = useI18n();
   const isMobile = useIsMobile();
@@ -45,6 +47,8 @@ export function EditorWorkspace({
 
   const drawerTitle = settingsTitle ?? t("web.editor.settings");
 
+  const showDrawer = showMobileDrawer && isMobile;
+
   return (
     <div className={cn("bg-muted/30", className)}>
       <div className={cn("mx-auto flex w-full gap-4 p-4", containerClassName)}>
@@ -53,7 +57,7 @@ export function EditorWorkspace({
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
-            className="hidden w-80 shrink-0 lg:block"
+            className="w-80 shrink-0"
           >
             <Card className="bg-card/80 h-full overflow-hidden backdrop-blur-sm py-0">
               <EditorTabs defaultTab="theme" />
@@ -67,36 +71,46 @@ export function EditorWorkspace({
           transition={{ delay: 0.2 }}
           className="min-h-0 flex-1 overflow-hidden"
         >
-          <EditorPreview
-            canvasRef={canvasRef}
-            onExport={onExport}
-            exportDisabled={selectedCount === 0}
-            className="h-full"
-          />
+          {showDrawer ? (
+            <Drawer direction="left">
+              <EditorPreview
+                canvasRef={canvasRef}
+                onExport={onExport}
+                exportDisabled={selectedCount === 0}
+                className="h-full"
+                headerLeftAddon={
+                  <DrawerTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="h-8 w-8 rounded-full shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-md"
+                      title={drawerTitle}
+                      aria-label={drawerTitle}
+                    >
+                      <Settings2 className="h-4 w-4" />
+                    </Button>
+                  </DrawerTrigger>
+                }
+              />
+              <DrawerContent mountedTo={mountedTo}>
+                <DrawerHeader className="border-b">
+                  <DrawerTitle>{drawerTitle}</DrawerTitle>
+                </DrawerHeader>
+                <div className="flex-1 overflow-y-auto">
+                  <EditorTabs defaultTab="theme" />
+                </div>
+              </DrawerContent>
+            </Drawer>
+          ) : (
+            <EditorPreview
+              canvasRef={canvasRef}
+              onExport={onExport}
+              exportDisabled={selectedCount === 0}
+              className="h-full"
+            />
+          )}
         </motion.div>
       </div>
-
-      {showMobileDrawer && isMobile && (
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full shadow-lg lg:hidden"
-            >
-              <Settings2 className="h-6 w-6" />
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent className="max-h-[85vh]">
-            <DrawerHeader className="border-b">
-              <DrawerTitle>{drawerTitle}</DrawerTitle>
-            </DrawerHeader>
-            <div className="flex-1 overflow-y-auto">
-              <EditorTabs defaultTab="theme" />
-            </div>
-          </DrawerContent>
-        </Drawer>
-      )}
     </div>
   );
 }

@@ -6,14 +6,17 @@ import type { ExportScope } from "@ui/contexts/editor-data-context";
 import { useEditorData } from "@ui/contexts/editor-data-context";
 import { useI18n } from "@ui/i18n";
 import { cn } from "@ui/utils/common";
-import { useCallback, useEffect, useMemo, type RefObject } from "react";
+import { X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, type RefObject } from "react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import { VisuallyHidden } from "../ui/visually-hidden";
 import { EditorWorkspace } from "./editor-workspace";
 
 export interface EditorModalProps extends React.ComponentProps<typeof Dialog> {
@@ -22,6 +25,7 @@ export interface EditorModalProps extends React.ComponentProps<typeof Dialog> {
   onParse?: () => Promise<Conversation>;
   onExport?: (scope?: ExportScope) => Promise<void>;
   title?: string;
+  forceParseOnOpen?: boolean;
   canvasRef?: RefObject<HTMLDivElement | null>;
   className?: string;
   mountedTo?: Element | DocumentFragment | null | undefined;
@@ -33,6 +37,7 @@ export function EditorModal({
   onParse,
   onExport,
   title = "Chat2Poster",
+  forceParseOnOpen = false,
   canvasRef,
   className,
   mountedTo,
@@ -80,11 +85,28 @@ export function EditorModal({
     }
   }, [dispatch, parseHandler, runtimeDispatch, t]);
 
+  const lastOpenRef = useRef(open);
+
   useEffect(() => {
-    if (open && !editor.conversation && !runtime.isParsing) {
+    const justOpened = open && !lastOpenRef.current;
+    lastOpenRef.current = open;
+    if (!open || runtime.isParsing) return;
+
+    if (!editor.conversation) {
+      void handleParseConversation();
+      return;
+    }
+
+    if (forceParseOnOpen && justOpened) {
       void handleParseConversation();
     }
-  }, [open, editor.conversation, runtime.isParsing, handleParseConversation]);
+  }, [
+    open,
+    editor.conversation,
+    runtime.isParsing,
+    forceParseOnOpen,
+    handleParseConversation,
+  ]);
 
   const content = useMemo(() => {
     if (runtime.isParsing || (!editor.conversation && !runtime.error)) {
@@ -123,6 +145,7 @@ export function EditorModal({
         containerClassName="h-full max-w-none"
         settingsTitle={t("web.editor.settings")}
         showMobileDrawer
+        mountedTo={mountedTo}
       />
     );
   }, [
@@ -140,14 +163,37 @@ export function EditorModal({
       <DialogContent
         showCloseButton={false}
         mountedTo={mountedTo}
+        overlayProps={{
+          onPointerDown: () => onOpenChange(false),
+        }}
+        onPointerDownOutside={(event) => {
+          const original = event.detail.originalEvent;
+          const isRightClick =
+            original instanceof PointerEvent
+              ? original.button === 2 ||
+                (original.button === 0 && original.ctrlKey === true)
+              : false;
+          if (isRightClick) return;
+          onOpenChange(false);
+        }}
         className={cn(
           "c2p-editor-modal bg-background/95 backdrop-blur-xl border-border/60 h-[min(92vh,960px)] w-[min(96vw,1280px)] !max-w-none overflow-hidden border p-0 shadow-2xl flex flex-col min-h-0",
           className,
         )}
       >
+        <DialogClose
+          className="absolute right-0 top-0 z-10 inline-flex size-6 items-center justify-center rounded-full text-foreground/7 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15"
+          aria-label={t("editor.panel.close")}
+        >
+          <X className="h-4 w-4" />
+        </DialogClose>
         <DialogHeader className="sr-only">
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <VisuallyHidden>
+            <DialogTitle>{title}</DialogTitle>
+          </VisuallyHidden>
+          <VisuallyHidden>
+            <DialogDescription></DialogDescription>
+          </VisuallyHidden>
         </DialogHeader>
         <div className="h-full w-full">{content}</div>
       </DialogContent>

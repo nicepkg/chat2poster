@@ -43,6 +43,7 @@ export async function fetchBatchExecutePayload(
       method: "POST",
       mode: "cors",
       credentials: "include",
+      cache: "no-store",
       referrer: request.referrerUrl,
       referrerPolicy: "strict-origin-when-cross-origin",
       headers,

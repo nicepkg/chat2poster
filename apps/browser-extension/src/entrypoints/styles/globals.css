@@ -36,6 +36,11 @@
     sans-serif;
 }
 
+#chat2poster-root,
+#chat2poster-root * {
+  overscroll-behavior: contain;
+}
+
 html,
 html > body,
 #app {

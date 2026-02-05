@@ -65,6 +65,8 @@ export interface EditorPreviewProps {
   onExport?: (scope?: ExportScope) => Promise<void>;
   /** Whether export is disabled */
   exportDisabled?: boolean;
+  /** Optional header addon rendered left of the device selector */
+  headerLeftAddon?: React.ReactNode;
 }
 
 /**
@@ -78,6 +80,7 @@ export function EditorPreview({
   canvasRef: externalCanvasRef,
   onExport,
   exportDisabled = false,
+  headerLeftAddon,
 }: EditorPreviewProps) {
   const { t } = useI18n();
   const internalCanvasRef = useRef<HTMLDivElement>(null);
@@ -323,35 +326,38 @@ export function EditorPreview({
       <CardContent className="flex h-full flex-col p-0">
         {/* Preview Header */}
         <div className="c2p-preview-header flex shrink-0 items-center justify-between gap-2 border-b px-3 py-2">
-          {/* Left: Device selector */}
-          <div className="c2p-device-selector flex items-center gap-1">
-            {(["mobile", "tablet", "desktop"] as const).map((device) => {
-              const Icon = DEVICE_ICONS[device];
-              const isSelected = exportParams.deviceType === device;
-              return (
-                <Button
-                  key={device}
-                  variant={isSelected ? "default" : "ghost"}
-                  size="icon-sm"
-                  onClick={() =>
-                    dispatch({
-                      type: "SET_EXPORT_PARAMS",
-                      payload: { deviceType: device },
-                    })
-                  }
-                  className={cn(
-                    "c2p-device-btn h-8 w-8",
-                    isSelected && "c2p-device-selected shadow-sm",
-                  )}
-                  title={`${DEVICE_WIDTHS[device]}px`}
-                >
-                  <Icon className="h-4 w-4" />
-                </Button>
-              );
-            })}
-            <span className="text-muted-foreground ml-1 text-xs tabular-nums">
-              {desktopWidth}px
-            </span>
+          {/* Left: Settings + device selector */}
+          <div className="c2p-preview-header-left flex items-center gap-2">
+            {headerLeftAddon}
+            <div className="c2p-device-selector flex items-center gap-1">
+              {(["mobile", "tablet", "desktop"] as const).map((device) => {
+                const Icon = DEVICE_ICONS[device];
+                const isSelected = exportParams.deviceType === device;
+                return (
+                  <Button
+                    key={device}
+                    variant={isSelected ? "default" : "ghost"}
+                    size="icon-sm"
+                    onClick={() =>
+                      dispatch({
+                        type: "SET_EXPORT_PARAMS",
+                        payload: { deviceType: device },
+                      })
+                    }
+                    className={cn(
+                      "c2p-device-btn h-8 w-8",
+                      isSelected && "c2p-device-selected shadow-sm",
+                    )}
+                    title={`${DEVICE_WIDTHS[device]}px`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </Button>
+                );
+              })}
+              <span className="text-muted-foreground ml-1 text-xs tabular-nums">
+                {desktopWidth}px
+              </span>
+            </div>
           </div>
 
           {/* Center: Page navigation */}

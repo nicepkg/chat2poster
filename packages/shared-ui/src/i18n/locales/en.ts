@@ -9,6 +9,7 @@ const en = {
   "editor.tabs.export": "Export",
   "editor.panel.errorTitle": "Error",
   "editor.panel.retry": "Retry",
+  "editor.panel.close": "Close",
   "editor.panel.parseError": "Failed to parse conversation",
   "editor.panel.exportError": "Export failed",
   "editor.panel.exportSoon": "Export functionality coming soon!",

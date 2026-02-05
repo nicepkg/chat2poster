@@ -11,6 +11,7 @@ const zh: LocaleMessages = {
   "editor.tabs.export": "导出",
   "editor.panel.errorTitle": "错误",
   "editor.panel.retry": "重试",
+  "editor.panel.close": "关闭",
   "editor.panel.parseError": "解析对话失败",
   "editor.panel.exportError": "导出失败",
   "editor.panel.exportSoon": "导出功能即将上线！",

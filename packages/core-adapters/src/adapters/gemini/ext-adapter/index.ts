@@ -98,14 +98,14 @@ export const GEMINI_EXT_SITE = {
   getConversationId: extractConversationId,
   theme: {
     light: {
-      primary: "#4285f4",
-      secondary: "#e0ecff",
+      primary: "#0842a0",
+      secondary: "#d3e3fd",
       primaryForeground: "#ffffff",
       secondaryForeground: "#1d4ed8",
     },
     dark: {
-      primary: "#8ab4f8",
-      secondary: "#1e3a8a",
+      primary: "#d3e3fd",
+      secondary: "#0842a0",
       primaryForeground: "#0b1537",
       secondaryForeground: "#e0ecff",
     },

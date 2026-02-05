@@ -31,6 +31,15 @@ export default defineContentScript({
         container.appendChild(wrapper);
         const themeTarget =
           container instanceof HTMLElement ? container : wrapper;
+        const eventTarget =
+          container instanceof EventTarget ? container : wrapper;
+        const stopPropagation = (event: Event) => {
+          event.stopPropagation();
+        };
+        const eventTypes = ["wheel", "touchstart", "touchmove", "touchend"];
+        eventTypes.forEach((type) => {
+          eventTarget.addEventListener(type, stopPropagation);
+        });
 
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
         let activeSite = getExtensionSiteByHost(window.location.href);
@@ -135,6 +144,9 @@ export default defineContentScript({
           root,
           wrapper,
           cleanup: () => {
+            eventTypes.forEach((type) => {
+              eventTarget.removeEventListener(type, stopPropagation);
+            });
             browser.runtime.onMessage.removeListener(runtimeListener);
             observer.disconnect();
             prefersDark.removeEventListener("change", updateTheme);

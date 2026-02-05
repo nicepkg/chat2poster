@@ -89,6 +89,7 @@ async function fetchConversation(
   const response = await fetch(`${API_ENDPOINT}/${conversationId}`, {
     method: "GET",
     credentials: "include",
+    cache: "no-store",
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -202,16 +203,16 @@ export const CHATGPT_EXT_SITE = {
   getConversationId: extractConversationId,
   theme: {
     light: {
-      primary: "#10a37f",
-      secondary: "#d1fae5",
+      primary: "#0d0d0d",
+      secondary: "#5d5d5d",
       primaryForeground: "#ffffff",
-      secondaryForeground: "#065f46",
+      secondaryForeground: "#ffffff",
     },
     dark: {
-      primary: "#34d399",
-      secondary: "#064e3b",
-      primaryForeground: "#052e16",
-      secondaryForeground: "#ecfdf5",
+      primary: "#0d0d0d",
+      secondary: "#5d5d5d",
+      primaryForeground: "#ffffff",
+      secondaryForeground: "#ffffff",
     },
   },
 } satisfies ExtensionSiteConfig;

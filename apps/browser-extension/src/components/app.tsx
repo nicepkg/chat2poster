@@ -108,27 +108,62 @@ function ExtensionShell({
   const canvasRef = useRef<HTMLDivElement>(null);
   const { exportConversation } = useConversationExport({ canvasRef });
   const { dispatch, runtimeDispatch } = useEditor();
-  const conversationId = useMemo(
-    () => activeSite?.getConversationId(currentUrl) ?? null,
-    [activeSite, currentUrl],
-  );
-  const lastConversationIdRef = useRef<string | null>(null);
-
-  const handleParseConversation = useCallback(async () => {
-    const result = await parseWithAdapters({
-      type: "ext",
-      document,
-      url: currentUrl,
-    });
-    return result.conversation;
-  }, [currentUrl]);
+  const currentUrlRef = useRef(currentUrl);
+  const lastUrlRef = useRef<string | null>(null);
+  const lastOpenRef = useRef(isPanelOpen);
 
   useEffect(() => {
-    if (lastConversationIdRef.current === conversationId) return;
-    lastConversationIdRef.current = conversationId;
+    currentUrlRef.current = currentUrl;
+  }, [currentUrl]);
+
+  const handleParseConversation = useCallback(async () => {
+    let attempt = 0;
+    let url = window.location.href;
+    let lastConversation:
+      | Awaited<ReturnType<typeof parseWithAdapters>>["conversation"]
+      | null = null;
+
+    while (attempt < 2) {
+      attempt += 1;
+      const result = await parseWithAdapters({
+        type: "ext",
+        document,
+        url,
+      });
+      lastConversation = result.conversation;
+      if (url === window.location.href) {
+        return result.conversation;
+      }
+      url = window.location.href;
+    }
+
+    if (lastConversation) {
+      return lastConversation;
+    }
+
+    throw new Error("Failed to parse conversation for current URL");
+  }, []);
+
+  const handleOpenPanel = useCallback(() => {
     dispatch({ type: "CLEAR_CONVERSATION" });
     runtimeDispatch({ type: "SET_ERROR", payload: null });
-  }, [conversationId, dispatch, runtimeDispatch]);
+    onOpenPanel();
+  }, [dispatch, onOpenPanel, runtimeDispatch]);
+
+  useEffect(() => {
+    if (lastUrlRef.current === currentUrl) return;
+    lastUrlRef.current = currentUrl;
+    dispatch({ type: "CLEAR_CONVERSATION" });
+    runtimeDispatch({ type: "SET_ERROR", payload: null });
+  }, [currentUrl, dispatch, runtimeDispatch]);
+
+  useEffect(() => {
+    if (lastOpenRef.current === isPanelOpen) return;
+    lastOpenRef.current = isPanelOpen;
+    if (!isPanelOpen) return;
+    dispatch({ type: "CLEAR_CONVERSATION" });
+    runtimeDispatch({ type: "SET_ERROR", payload: null });
+  }, [dispatch, isPanelOpen, runtimeDispatch]);
 
   return (
     <EditorDataProvider
@@ -136,7 +171,7 @@ function ExtensionShell({
       exportConversation={exportConversation}
     >
       <FloatingButton
-        onClick={onOpenPanel}
+        onClick={handleOpenPanel}
         visible={!isPanelOpen && Boolean(activeSite)}
       />
       <EditorModal
@@ -144,6 +179,7 @@ function ExtensionShell({
         open={isPanelOpen}
         onOpenChange={onOpenChange}
         canvasRef={canvasRef}
+        forceParseOnOpen
       />
     </EditorDataProvider>
   );

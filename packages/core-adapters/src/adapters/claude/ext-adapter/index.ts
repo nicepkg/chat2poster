@@ -40,6 +40,7 @@ async function fetchConversation(
     `${API_BASE}/${orgId}/chat_conversations/${conversationId}?tree=True&rendering_mode=messages&render_all_tools=true`,
     {
       method: "GET",
+      cache: "no-store",
       headers: {
         Accept: "application/json",
       },
@@ -67,13 +68,13 @@ export const CLAUDE_EXT_SITE = {
   getConversationId: extractConversationId,
   theme: {
     light: {
-      primary: "#f97316",
+      primary: "#c6613f",
       secondary: "#ffedd5",
       primaryForeground: "#ffffff",
       secondaryForeground: "#9a3412",
     },
     dark: {
-      primary: "#fb923c",
+      primary: "#c6613f",
       secondary: "#7c2d12",
       primaryForeground: "#431407",
       secondaryForeground: "#ffedd5",

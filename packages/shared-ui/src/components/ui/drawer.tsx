@@ -46,11 +46,14 @@ function DrawerOverlay({
 
 function DrawerContent({
   className,
+  mountedTo,
   children,
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+}: React.ComponentProps<typeof DrawerPrimitive.Content> & {
+  mountedTo?: Element | DocumentFragment | null | undefined;
+}) {
   return (
-    <DrawerPortal data-slot="drawer-portal">
+    <DrawerPortal container={mountedTo} data-slot="drawer-portal">
       <DrawerOverlay />
       <DrawerPrimitive.Content
         data-slot="drawer-content"
