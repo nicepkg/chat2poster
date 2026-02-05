@@ -6,42 +6,55 @@
   "description": "Adapter registry and implementations for parsing conversations from various sources",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./src/index.ts",
       "development": "./src/index.ts",
-      "import": "./dist/index.js"
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
     },
     "./adapters/*": {
-      "types": "./dist/adapters/*.d.ts",
+      "types": "./src/adapters/*.ts",
       "development": "./src/adapters/*.ts",
-      "import": "./dist/adapters/*.js"
+      "import": "./src/adapters/*.ts",
+      "default": "./src/adapters/*.ts"
     },
     "./network/*": {
-      "types": "./dist/network/*.d.ts",
+      "types": "./src/network/*.ts",
       "development": "./src/network/*.ts",
-      "import": "./dist/network/*.js"
+      "import": "./src/network/*.ts",
+      "default": "./src/network/*.ts"
     },
     "./extension-sites": {
-      "types": "./dist/extension-sites/index.d.ts",
-      "development": "./src/extension-sites/index.ts",
-      "import": "./dist/extension-sites/index.js"
+      "types": "./src/extension-sites.ts",
+      "development": "./src/extension-sites.ts",
+      "import": "./src/extension-sites.ts",
+      "default": "./src/extension-sites.ts"
+    },
+    "./extension-site-types": {
+      "types": "./src/extension-site-types.ts",
+      "development": "./src/extension-site-types.ts",
+      "import": "./src/extension-site-types.ts",
+      "default": "./src/extension-site-types.ts"
     },
     "./extension-types": {
-      "types": "./dist/extension-types.d.ts",
-      "development": "./src/extension-types.ts",
-      "import": "./dist/extension-types.js"
+      "types": "./src/extension-site-types.ts",
+      "development": "./src/extension-site-types.ts",
+      "import": "./src/extension-site-types.ts",
+      "default": "./src/extension-site-types.ts"
     },
     "./registry": {
-      "types": "./dist/registry.d.ts",
+      "types": "./src/registry.ts",
       "development": "./src/registry.ts",
-      "import": "./dist/registry.js"
+      "import": "./src/registry.ts",
+      "default": "./src/registry.ts"
     },
     "./base": {
-      "types": "./dist/base.d.ts",
+      "types": "./src/base.ts",
       "development": "./src/base.ts",
-      "import": "./dist/base.js"
+      "import": "./src/base.ts",
+      "default": "./src/base.ts"
     }
   },
   "files": [
