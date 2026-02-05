@@ -11,8 +11,7 @@
     ".": {
       "types": "./dist/index.d.ts",
       "development": "./src/index.ts",
-      "import": "./dist/index.js",
-      "require": "./src/index.ts"
+      "import": "./dist/index.js"
     },
     "./adapters/*": {
       "types": "./dist/adapters/*.d.ts",
